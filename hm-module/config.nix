@@ -10,11 +10,11 @@ let
   # otherwise, the package from this flake is guaranteed to be newer.
   defaultPackage = let
     inNixpkgs = pkgs.hyprland.version;
-    inFlake = self.packages.${pkgs.system}.hyprland.version;
+    inFlake = self.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.version;
   in if lib.versionOlder inNixpkgs inFlake then # hyprland in nixpkgs is newer
     pkgs.hyprland
   else # nixpkgs has same version or older
-    self.packages.${pkgs.system}.hyprland;
+    self.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
 
   hyprlang = pkgs.callPackage ./configFormat.nix { inherit lib; };
   configRenames = import ./configRenames.nix { inherit lib; };

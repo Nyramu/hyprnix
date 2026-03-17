@@ -10,11 +10,11 @@ let
   # guaranteed to be newer.
   defaultPackage = let
     inNixpkgs = pkgs.xdg-desktop-portal-hyprland.version;
-    inFlake = self.packages.${pkgs.system}.xdg-desktop-portal-hyprland.version;
+    inFlake = self.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland.version;
   in if lib.versionOlder inNixpkgs inFlake then
     pkgs.xdg-desktop-portal-hyprland
   else
-    self.packages.${pkgs.system}.xdg-desktop-portal-hyprland;
+    self.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
 in {
   options = {
     wayland.windowManager.hyprland.portal = {
@@ -43,7 +43,7 @@ in {
         defaultText = ''
           The package with the highest version number, chosen from:
           - `pkgs.xdg-desktop-portal-hyprland` (if the overlay is used, always this)
-          - `self.packages.''${pkgs.system}.xdg-desktop-portal-hyprland`, from the Hyprnix flake.
+          - `self.packages.''${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland`, from the Hyprnix flake.
         '';
         example = lib.literalExpression ''
           pkgs.xdg-desktop-portal-hyprland # if you use the overlay
