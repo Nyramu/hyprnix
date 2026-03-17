@@ -44,8 +44,7 @@ in {
           pkgs.hyprland # if you use the overlay
         '';
         description = lib.mdDoc ''
-          Hyprland package to use. The options in {option}`xwayland` and
-          {option}`nvidiaPatches` will be applied to the package
+          Hyprland package to use. The options in {option}`xwayland` will be applied to the package
           specified here via an override.
 
           Defaults to the one provided by the flake. Set it to
@@ -63,7 +62,7 @@ in {
         description = lib.mdDoc ''
           The final Hyprland packge that should be used in other parts of configuration.
           This is the result after applying overrides which are enabled/disabled/specified
-          by other options of this module (for example, `xwayland.enable` or `nvidiaPatches`).
+          by other options of this module (for example, `xwayland.enable`).
         '';
       };
 
@@ -80,16 +79,6 @@ in {
         default = true;
         description = lib.mdDoc ''
           Enable XWayland.
-        '';
-      };
-
-      nvidiaPatches = lib.mkOption {
-        type = lib.types.bool;
-        default = false;
-        defaultText = lib.literalExpression "false";
-        example = lib.literalExpression "true";
-        description = lib.mdDoc ''
-          Patch wlroots for better Nvidia support.
         '';
       };
 
@@ -260,7 +249,6 @@ in {
     {
       wayland.windowManager.hyprland.finalPackage = cfg.package.override {
         enableXWayland = cfg.xwayland.enable;
-        inherit (cfg) nvidiaPatches;
       };
       home.packages = [ cfg.finalPackage ]
         ++ lib.optional cfg.xwayland.enable pkgs.xwayland;
