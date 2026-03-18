@@ -3,17 +3,23 @@ formatOptions:
 let
   inherit (lib.hyprnix.hyprlang) mkSectionNode mkVariableNode attrsToNodeList;
 
-  toConfigString = lib.generators.toHyprlang
-    (formatOptions // { astBuilder = deviceAttrsToNodeList [ ]; });
+  toConfigString = lib.generators.toHyprlang (
+    formatOptions // { astBuilder = deviceAttrsToNodeList [ ]; }
+  );
 
-  deviceAttrsToNodeList = path: attrs:
-    lib.mapAttrsToList (deviceName: deviceConfig:
+  deviceAttrsToNodeList =
+    path: attrs:
+    lib.mapAttrsToList (
+      deviceName: deviceConfig:
       let
         nameNode = mkVariableNode [ "device" ] "name" deviceName;
         configNodes = attrsToNodeList [ "device" ] deviceConfig;
         sectionNodes = [ nameNode ] ++ configNodes;
-      in mkSectionNode path "device" sectionNodes) attrs;
-in {
+      in
+      mkSectionNode path "device" sectionNodes
+    ) attrs;
+in
+{
   # freeformType = types.attrsOf types.anything;
   # type = with lib.types;
   #   let

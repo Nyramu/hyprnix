@@ -8,14 +8,17 @@ let
   # If the overlay is applied to Nixpkgs, `xdg-desktop-portal-hyprland` in
   # `pkgs` is probably newer. Otherwise, the package provided by the flake is
   # guaranteed to be newer.
-  defaultPackage = let
-    inNixpkgs = pkgs.xdg-desktop-portal-hyprland.version;
-    inFlake = self.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland.version;
-  in if lib.versionOlder inNixpkgs inFlake then
-    pkgs.xdg-desktop-portal-hyprland
-  else
-    self.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-in {
+  defaultPackage =
+    let
+      inNixpkgs = pkgs.xdg-desktop-portal-hyprland.version;
+      inFlake = self.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland.version;
+    in
+    if lib.versionOlder inNixpkgs inFlake then
+      pkgs.xdg-desktop-portal-hyprland
+    else
+      self.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
+in
+{
   options = {
     wayland.windowManager.hyprland.portal = {
       enable = lib.mkOption {
@@ -65,11 +68,18 @@ in {
 
       config = lib.mkOption {
         # If this ever gets more complicated, just instantiate `configFormat.nix`.
-        type = with types;
+        type =
+          with types;
           let
-            valueType = oneOf [ bool number singleLineStr attrsOfValueTypes ];
+            valueType = oneOf [
+              bool
+              number
+              singleLineStr
+              attrsOfValueTypes
+            ];
             attrsOfValueTypes = attrsOf valueType;
-          in attrsOfValueTypes;
+          in
+          attrsOfValueTypes;
         default = { };
         description = ''
           XDPH configuration attributes.
@@ -94,13 +104,13 @@ in {
       # If the Hyprland package is `null`, it is assumed that the user is configuring
       # things using NixOS options (discouraged). We leave it up to them whether
       # they want Home Manager to configure the portal implementations.
-      wayland.windowManager.hyprland.portal.enable =
-        lib.mkDefault (config.wayland.windowManager.hyprland.package != null);
+      wayland.windowManager.hyprland.portal.enable = lib.mkDefault (
+        config.wayland.windowManager.hyprland.package != null
+      );
 
-      wayland.windowManager.hyprland.portal.finalPackage =
-        cfg.package.override {
-          hyprland = config.wayland.windowManager.hyprland.finalPackage;
-        };
+      wayland.windowManager.hyprland.portal.finalPackage = cfg.package.override {
+        hyprland = config.wayland.windowManager.hyprland.finalPackage;
+      };
     }
     (lib.mkIf cfg.enable {
       xdg.portal = {
@@ -111,8 +121,7 @@ in {
     })
     (lib.mkIf (cfg.config != { }) {
       wayland.windowManager.hyprland.configFile."xdph.conf".text =
-        lib.generators.toHyprlang
-        config.wayland.windowManager.hyprland.configFormatOptions cfg.config;
+        lib.generators.toHyprlang config.wayland.windowManager.hyprland.configFormatOptions cfg.config;
     })
   ];
 }

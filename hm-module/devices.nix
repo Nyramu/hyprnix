@@ -5,7 +5,8 @@ let
 
   hyprlang = pkgs.callPackage ./devicesFormat.nix { inherit lib; };
   devicesFormat = hyprlang cfg.configFormatOptions;
-in {
+in
+{
   options = {
     wayland.windowManager.hyprland.deviceConfig = lib.mkOption {
       type = devicesFormat.type;
@@ -19,7 +20,6 @@ in {
     wayland.windowManager.hyprland.configFile."devices.conf".text =
       devicesFormat.toConfigString cfg.deviceConfig;
 
-    wayland.windowManager.hyprland.config.source =
-      [ "${config.xdg.configHome}/hypr/devices.conf" ];
+    wayland.windowManager.hyprland.config.source = [ "${config.xdg.configHome}/hypr/devices.conf" ];
   };
 }

@@ -18,16 +18,18 @@ let
   #
   # This prefix is added to reduce the chance of collisions in
   # bash scripts.
-  addEventVarPrefixes = prefix:
-    lib.mapAttrs
-    (_: attrs@{ vars, ... }: attrs // { vars = map (v: prefix + v) vars; });
+  addEventVarPrefixes =
+    prefix: lib.mapAttrs (_: attrs@{ vars, ... }: attrs // { vars = map (v: prefix + v) vars; });
 
   # prefix to avoid any potential collisions
   eventHandlers = addEventVarPrefixes "HL_" {
     ### WINDOWS ###
     windowFocus = {
       event = "activewindow";
-      vars = [ "WINDOW_CLASS" "WINDOW_TITLE" ];
+      vars = [
+        "WINDOW_CLASS"
+        "WINDOW_TITLE"
+      ];
     };
     windowFocusV2 = {
       event = "activewindowv2";
@@ -35,8 +37,12 @@ let
     };
     windowOpen = {
       event = "openwindow";
-      vars =
-        [ "WINDOW_ADDRESS" "WORKSPACE_NAME" "WINDOW_CLASS" "WINDOW_TITLE" ];
+      vars = [
+        "WINDOW_ADDRESS"
+        "WORKSPACE_NAME"
+        "WINDOW_CLASS"
+        "WINDOW_TITLE"
+      ];
     };
     windowClose = {
       event = "movewindow";
@@ -44,11 +50,17 @@ let
     };
     windowMove = {
       event = "movewindow";
-      vars = [ "WINDOW_ADDRESS" "WORKSPACE_NAME" ];
+      vars = [
+        "WINDOW_ADDRESS"
+        "WORKSPACE_NAME"
+      ];
     };
     windowFloat = {
       event = "changefloatingmode";
-      vars = [ "WINDOW_ADDRESS" "FLOAT_STATE" ];
+      vars = [
+        "WINDOW_ADDRESS"
+        "FLOAT_STATE"
+      ];
     };
     windowFullscreen = {
       event = "fullscreen";
@@ -56,7 +68,10 @@ let
     };
     windowMinimize = {
       event = "minimize";
-      vars = [ "WINDOW_ADDRESS" "MINIMIZE_STATE" ];
+      vars = [
+        "WINDOW_ADDRESS"
+        "MINIMIZE_STATE"
+      ];
     };
     windowUrgent = {
       event = "urgent";
@@ -92,13 +107,19 @@ let
     };
     workspaceMove = {
       event = "moveworkspace";
-      vars = [ "WORKSPACE_NAME" "MONITOR_NAME" ];
+      vars = [
+        "WORKSPACE_NAME"
+        "MONITOR_NAME"
+      ];
     };
 
     ### MONITORS ###
     monitorFocus = {
       event = "focusedmon";
-      vars = [ "MONITOR_NAME" "WORKSPACE_NAME" ];
+      vars = [
+        "MONITOR_NAME"
+        "WORKSPACE_NAME"
+      ];
     };
     monitorAdd = {
       event = "monitoradded";
@@ -106,7 +127,11 @@ let
     };
     monitorAddV2 = {
       event = "monitoraddedv2";
-      vars = [ "MONITOR_ID" "MONITOR_NAME" "MONITOR_DESC" ];
+      vars = [
+        "MONITOR_ID"
+        "MONITOR_NAME"
+        "MONITOR_DESC"
+      ];
     };
     monitorRemove = {
       event = "monitorremoved";
@@ -116,7 +141,10 @@ let
     ### MISCELLANEOUS ###
     layoutChange = {
       event = "activelayout";
-      vars = [ "KEYBOARD_NAME" "LAYOUT_NAME" ];
+      vars = [
+        "KEYBOARD_NAME"
+        "LAYOUT_NAME"
+      ];
     };
     submapChange = {
       event = "submap";
@@ -124,10 +152,14 @@ let
     };
     screencastChange = {
       event = "screencast";
-      vars = [ "SCREENCAST_STATE" "SCREENCAST_OWNER" ];
+      vars = [
+        "SCREENCAST_STATE"
+        "SCREENCAST_OWNER"
+      ];
     };
   };
-in {
+in
+{
   options = {
     wayland.windowManager.hyprland.eventListener = {
       enable = lib.mkOption {
@@ -161,7 +193,8 @@ in {
         '';
       };
 
-      handler = builtins.mapAttrs (_:
+      handler = builtins.mapAttrs (
+        _:
         { event, vars, ... }:
         lib.mkOption {
           type = types.nullOr types.lines;
@@ -182,99 +215,102 @@ in {
 
             <https://wiki.hyprland.org/IPC/>
           '';
-        }) eventHandlers;
+        }
+      ) eventHandlers;
     };
   };
 
-  config = let
-    # Turn each value in `cfg.handler` into an attrset
-    # saturated with `event` and `vars` from `eventHandlers`.
-    # The existing value (string) will be kept as `script`.
-    handlerInfos = lib.pipe cfg.handler [
-      # remove handlers which are null
-      (lib.filterAttrs (_: v: v != null))
-      # map each handler name and value
-      # to have a value of `{event, vars, script}`
-      # where `event` and `vars` are from the attribute in
-      # `eventHandlers` of the same name.
-      (lib.mapAttrs (n: text: {
-        inherit (builtins.getAttr n eventHandlers) event vars;
-        script = pkgs.writeShellScript "hyprland-${n}-handler" text;
-      }))
-    ];
+  config =
+    let
+      # Turn each value in `cfg.handler` into an attrset
+      # saturated with `event` and `vars` from `eventHandlers`.
+      # The existing value (string) will be kept as `script`.
+      handlerInfos = lib.pipe cfg.handler [
+        # remove handlers which are null
+        (lib.filterAttrs (_: v: v != null))
+        # map each handler name and value
+        # to have a value of `{event, vars, script}`
+        # where `event` and `vars` are from the attribute in
+        # `eventHandlers` of the same name.
+        (lib.mapAttrs (
+          n: text: {
+            inherit (builtins.getAttr n eventHandlers) event vars;
+            script = pkgs.writeShellScript "hyprland-${n}-handler" text;
+          }
+        ))
+      ];
 
-    # Given an attrset from `handlerInfos`, create a regex pattern
-    # to match the expected socket message, the entire line including parameters.
-    # TODO vaxry, window titles can have commas in them...
-    mkEventRegex = { event, vars, ... }:
-      "^${event}\\>\\>${
-        lib.concatStringsSep ","
-        (builtins.genList (_: "(.+)") (builtins.length vars))
-      }$";
+      # Given an attrset from `handlerInfos`, create a regex pattern
+      # to match the expected socket message, the entire line including parameters.
+      # TODO vaxry, window titles can have commas in them...
+      mkEventRegex =
+        { event, vars, ... }:
+        "^${event}\\>\\>${lib.concatStringsSep "," (builtins.genList (_: "(.+)") (builtins.length vars))}$";
 
-    # This script is used in a systemd service that is `PartOf`
-    # `hyprland-session.target`.
-    # It is itself the event listener. It opens the socket, and
-    # forever reads the lines, branching out to a handler script
-    # if the line matches a pattern created from an event's name
-    # and parameter list.
-    listenerScript = pkgs.writeShellScript "hyprland-event-listener" ''
-      set -o pipefail
+      # This script is used in a systemd service that is `PartOf`
+      # `hyprland-session.target`.
+      # It is itself the event listener. It opens the socket, and
+      # forever reads the lines, branching out to a handler script
+      # if the line matches a pattern created from an event's name
+      # and parameter list.
+      listenerScript = pkgs.writeShellScript "hyprland-event-listener" ''
+        set -o pipefail
 
-      socket="$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
-      echo "INFO: opening socket: $socket"
+        socket="$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock"
+        echo "INFO: opening socket: $socket"
 
-      ${pkgs.netcat}/bin/nc -U "$socket" | while read -r line; do
-        ${
-          lib.concatStrings (lib.mapAttrsToList (_: info: ''
-            if [[ "$line" =~ ${mkEventRegex info} ]]; then
-              ${
-                lib.concatStringsSep "\n  " (lib.imap0 (i: v:
-                  ''export ${v}="''${BASH_REMATCH[${toString (i + 1)}]}"'')
-                  info.vars)
-              }
-              ${info.script}
-              exit=$?
-              if [[ $exit -ne 0 ]]; then
-                echo "ERROR: exited $exit: ''${BASH_REMATCH[0]}"
-              else
-                echo "SUCCESS: handled: ''${BASH_REMATCH[0]}"
+        ${pkgs.netcat}/bin/nc -U "$socket" | while read -r line; do
+          ${lib.concatStrings (
+            lib.mapAttrsToList (_: info: ''
+              if [[ "$line" =~ ${mkEventRegex info} ]]; then
+                ${lib.concatStringsSep "\n  " (
+                  lib.imap0 (i: v: ''export ${v}="''${BASH_REMATCH[${toString (i + 1)}]}"'') info.vars
+                )}
+                ${info.script}
+                exit=$?
+                if [[ $exit -ne 0 ]]; then
+                  echo "ERROR: exited $exit: ''${BASH_REMATCH[0]}"
+                else
+                  echo "SUCCESS: handled: ''${BASH_REMATCH[0]}"
+                fi
+                continue
               fi
-              continue
-            fi
-          '') handlerInfos)
-        }
+            '') handlerInfos
+          )}
 
-        echo "INFO: unhandled event: $line"
-      done || echo "ERROR: main pipeline failed, exit: $?"
-    '';
-  in lib.mkIf (cfg.enable && cfg.handler != { }) (lib.mkMerge [
-    # If it is a systemd service,
-    (lib.mkIf cfg.systemdService {
-      systemd.user.services.hyprland-event-listener = {
-        Unit = {
-          Description = description;
-          PartOf = "hyprland-session.target";
-        };
-        Service = {
-          Type = "simple";
-          ExecStart = "${listenerScript}";
-          Restart = "on-failure";
-          RestartSec = 5;
-        };
-        Install.WantedBy = [ "hyprland-session.target" ];
-      };
-    })
-    # Otherwise use an `execOnce` line in the Hyprland config.
-    # Requires the `extraInitConfig` to be specified by my (Jacob)
-    # `nix/hm-module/config.nix` in my Hyprland fork.
-    (lib.mkIf (!cfg.systemdService) {
-      wayland.windowManager.hyprland = {
-        # extraInitConfig = ''
-        extraConfig = ''
-          exec-once = ${listenerScript}
-        '';
-      };
-    })
-  ]);
+          echo "INFO: unhandled event: $line"
+        done || echo "ERROR: main pipeline failed, exit: $?"
+      '';
+    in
+    lib.mkIf (cfg.enable && cfg.handler != { }) (
+      lib.mkMerge [
+        # If it is a systemd service,
+        (lib.mkIf cfg.systemdService {
+          systemd.user.services.hyprland-event-listener = {
+            Unit = {
+              Description = description;
+              PartOf = "hyprland-session.target";
+            };
+            Service = {
+              Type = "simple";
+              ExecStart = "${listenerScript}";
+              Restart = "on-failure";
+              RestartSec = 5;
+            };
+            Install.WantedBy = [ "hyprland-session.target" ];
+          };
+        })
+        # Otherwise use an `execOnce` line in the Hyprland config.
+        # Requires the `extraInitConfig` to be specified by my (Jacob)
+        # `nix/hm-module/config.nix` in my Hyprland fork.
+        (lib.mkIf (!cfg.systemdService) {
+          wayland.windowManager.hyprland = {
+            # extraInitConfig = ''
+            extraConfig = ''
+              exec-once = ${listenerScript}
+            '';
+          };
+        })
+      ]
+    );
 }

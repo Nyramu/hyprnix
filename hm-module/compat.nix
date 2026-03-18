@@ -4,7 +4,8 @@ let
   inherit (lib) types;
 
   cfg = config.wayland.windowManager.hyprland;
-in {
+in
+{
   options = {
     wayland.windowManager.hyprland = {
       fufexan.enable = lib.mkOption {

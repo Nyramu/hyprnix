@@ -5,7 +5,8 @@ let
 
   hyprlang = pkgs.callPackage ./keybindsFormat.nix { inherit lib; };
   keybindsFormat = hyprlang cfg.configFormatOptions;
-in {
+in
+{
   options = {
     wayland.windowManager.hyprland.keyBinds = lib.mkOption {
       type = keybindsFormat.type;
@@ -69,7 +70,6 @@ in {
     wayland.windowManager.hyprland.configFile."keybinds.conf".text =
       keybindsFormat.toConfigString cfg.keyBinds;
 
-    wayland.windowManager.hyprland.config.source =
-      [ "${config.xdg.configHome}/hypr/keybinds.conf" ];
+    wayland.windowManager.hyprland.config.source = [ "${config.xdg.configHome}/hypr/keybinds.conf" ];
   };
 }

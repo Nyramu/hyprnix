@@ -16,7 +16,8 @@ let
     pkgs = import nixpkgs { localSystem.system = system; };
   };
 
-  mkExampleHome = system: exampleModule:
+  mkExampleHome =
+    system: exampleModule:
     home-manager.lib.homeManagerConfiguration {
       modules = [
         {
@@ -24,14 +25,16 @@ let
           home.username = "example";
           home.homeDirectory = "/home/example";
         }
-        ({ lib, ... }: {
-          imports = [ hyprnix.homeManagerModules.hyprland ];
-          wayland.windowManager.hyprland.enable = true;
-          # This is specified to avoid building twice; these examples are meant
-          # to verify functionality of the Home Manager module only.
-          wayland.windowManager.hyprland.package =
-            lib.mkDefault hyprnix.packages.${system}.hyprland;
-        })
+        (
+          { lib, ... }:
+          {
+            imports = [ hyprnix.homeManagerModules.hyprland ];
+            wayland.windowManager.hyprland.enable = true;
+            # This is specified to avoid building twice; these examples are meant
+            # to verify functionality of the Home Manager module only.
+            wayland.windowManager.hyprland.package = lib.mkDefault hyprnix.packages.${system}.hyprland;
+          }
+        )
         exampleModule
       ];
       pkgs = import nixpkgs {
@@ -39,13 +42,15 @@ let
         overlays = [ hyprnix.overlays.default ];
       };
     };
-in {
+in
+{
   # This example has an empty module (`{ }`) because it is only intended to
   # check the generation of a minimal/default configuration.
   hyprland-enable = (mkExampleHome system { }).activationPackage;
 
   # For debugging purposes,
   # `nix build path:.#checks.x86_64-linux.example-vertical-monitors` may be of use.
-  vertical-monitors = (mkExampleHome system ./vertical-monitors.nix) # #
+  vertical-monitors =
+    (mkExampleHome system ./vertical-monitors.nix) # #
     .config.wayland.windowManager.hyprland.configFile."hyprland.conf".source;
 }

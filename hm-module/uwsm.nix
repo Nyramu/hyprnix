@@ -1,11 +1,15 @@
 { lib, ... }:
-{ config, osConfig ? null, ... }:
+{
+  config,
+  osConfig ? null,
+  ...
+}:
 let
   cfg = config.programs.uwsm;
 
-  hmSessionVars =
-    "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
-in {
+  hmSessionVars = "${config.home.sessionVariablesPackage}/etc/profile.d/hm-session-vars.sh";
+in
+{
   options = {
     programs.uwsm = {
       env = lib.mkOption {

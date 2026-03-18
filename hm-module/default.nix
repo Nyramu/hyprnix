@@ -1,7 +1,9 @@
 self:
 args@{ lib, ... }:
-let lib = args.lib.extend (self.lib.overlay);
-in {
+let
+  lib = args.lib.extend (self.lib.overlay);
+in
+{
   disabledModules = [
     # module in Home Manager conflicts with this one
     "services/window-managers/hyprland.nix"
