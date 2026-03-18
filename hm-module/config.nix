@@ -8,34 +8,40 @@ let
 
   # The `hyprland` package in `pkgs` is probably newer if the overlay is used,
   # otherwise, the package from this flake is guaranteed to be newer.
-  defaultPackage = let
-    inNixpkgs = pkgs.hyprland.version;
-    inFlake = self.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.version;
-  in if lib.versionOlder inNixpkgs inFlake then # hyprland in nixpkgs is newer
-    pkgs.hyprland
-  else # nixpkgs has same version or older
-    self.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
+  defaultPackage =
+    let
+      inNixpkgs = pkgs.hyprland.version;
+      inFlake = self.packages.${pkgs.stdenv.hostPlatform.system}.hyprland.version;
+    in
+    if lib.versionOlder inNixpkgs inFlake then # hyprland in nixpkgs is newer
+      pkgs.hyprland
+    # nixpkgs has same version or older
+    else
+      self.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
 
   hyprlang = pkgs.callPackage ./configFormat.nix { inherit lib; };
   configRenames = import ./configRenames.nix { inherit lib; };
-  configFormat =
-    hyprlang (cfg.configFormatOptions // { inherit (cfg) configOrder; });
+  configFormat = hyprlang (cfg.configFormatOptions // { inherit (cfg) configOrder; });
 
-  toConfigString = attrs:
+  toConfigString =
+    attrs:
     lib.pipe attrs [
       (with configRenames; renameAttrs renames.from renames.to)
       configFormat.toConfigString
     ];
-in {
+in
+{
   options = {
     wayland.windowManager.hyprland = {
-      enable = lib.mkEnableOption (lib.mdDoc ''
-        Whether to install the Hyprland package and generate configuration files.
+      enable = lib.mkEnableOption (
+        lib.mdDoc ''
+          Whether to install the Hyprland package and generate configuration files.
 
-        ${defaultPackage.meta.description}
+          ${defaultPackage.meta.description}
 
-        See <${defaultPackage.meta.homepage}> for more information.
-      '');
+          See <${defaultPackage.meta.homepage}> for more information.
+        ''
+      );
 
       package = lib.mkOption {
         type = types.package;
@@ -145,11 +151,26 @@ in {
 
           [ "monitor" ]
           [ "monitorv2" ]
-          [ "monitorv2" "output" ]
-          [ "monitorv2" "mode" ]
-          [ "monitorv2" "position" ]
-          [ "monitorv2" "scale" ]
-          [ "monitorv2" "transform" ]
+          [
+            "monitorv2"
+            "output"
+          ]
+          [
+            "monitorv2"
+            "mode"
+          ]
+          [
+            "monitorv2"
+            "position"
+          ]
+          [
+            "monitorv2"
+            "scale"
+          ]
+          [
+            "monitorv2"
+            "transform"
+          ]
 
           [ "workspace" ]
 
@@ -158,18 +179,36 @@ in {
           [ "general" ]
           [ "cursor" ]
           [ "input" ]
-          [ "input" "touchpad" ]
-          [ "input" "touchdevice" ]
-          [ "input" "tablet" ]
+          [
+            "input"
+            "touchpad"
+          ]
+          [
+            "input"
+            "touchdevice"
+          ]
+          [
+            "input"
+            "tablet"
+          ]
           [ "device:.*" ]
           [ "binds" ]
           [ "gestures" ]
           [ "group" ]
-          [ "group" "groupbar" ]
+          [
+            "group"
+            "groupbar"
+          ]
           [ "decoration" ]
           [ "animations" ]
-          [ "animations" "bezier" ]
-          [ "animations" "animation" ]
+          [
+            "animations"
+            "bezier"
+          ]
+          [
+            "animations"
+            "animation"
+          ]
 
           [ "plugin" ]
 
@@ -245,54 +284,57 @@ in {
     };
   };
 
-  config = lib.mkIf cfg.enable (lib.mkMerge [
-    {
-      wayland.windowManager.hyprland.finalPackage = cfg.package.override {
-        enableXWayland = cfg.xwayland.enable;
-      };
-      home.packages = [ cfg.finalPackage ]
-        ++ lib.optional cfg.xwayland.enable pkgs.xwayland;
-    }
-    {
-      wayland.windowManager.hyprland.configPackage = pkgs.symlinkJoin {
-        name = "hyprland-config";
-        paths = lib.mapAttrsToList (_: file: file.source) cfg.configFile;
-      };
-    }
-    (lib.mkIf cfg.enable { xdg.configFile."hypr".source = cfg.configPackage; })
-    # Can't set `hyprland.config.plugin` because the key is expected to be unique,
-    # and that attribute should be used for plugin config, not loading them.
-    (lib.mkIf (cfg.plugins != [ ]) {
-      wayland.windowManager.hyprland.configFile."hyprland.conf".text =
-        lib.mkOrder 350 (toConfigString {
-          plugin =
-            map (package: "${package}/lib/lib${package.pname}.so") cfg.plugins;
+  config = lib.mkIf cfg.enable (
+    lib.mkMerge [
+      {
+        wayland.windowManager.hyprland.finalPackage = cfg.package.override {
+          enableXWayland = cfg.xwayland.enable;
+        };
+        home.packages = [ cfg.finalPackage ] ++ lib.optional cfg.xwayland.enable pkgs.xwayland;
+      }
+      {
+        wayland.windowManager.hyprland.configPackage = pkgs.symlinkJoin {
+          name = "hyprland-config";
+          paths = lib.mapAttrsToList (_: file: file.source) cfg.configFile;
+        };
+      }
+      (lib.mkIf cfg.enable {
+        xdg.configFile."hypr" = {
+          source = cfg.configPackage;
+          recursive = true;
+        };
+      })
+      # Can't set `hyprland.config.plugin` because the key is expected to be unique,
+      # and that attribute should be used for plugin config, not loading them.
+      (lib.mkIf (cfg.plugins != [ ]) {
+        wayland.windowManager.hyprland.configFile."hyprland.conf".text = lib.mkOrder 350 (toConfigString {
+          plugin = map (package: "${package}/lib/lib${package.pname}.so") cfg.plugins;
         });
-    })
-    (lib.mkIf (cfg.config != null) {
-      wayland.windowManager.hyprland.configFile."hyprland.conf".text =
-        lib.mkOrder 500 (toConfigString cfg.config);
-    })
-    (lib.mkIf (cfg.extraConfig != null) {
-      wayland.windowManager.hyprland.configFile."hyprland.conf".text =
-        lib.mkOrder 900 cfg.extraConfig;
-    })
-    (lib.mkIf cfg.reloadConfig {
-      wayland.windowManager.hyprland.config.misc.disable_autoreload =
-        lib.mkDefault true;
+      })
+      (lib.mkIf (cfg.config != null) {
+        wayland.windowManager.hyprland.configFile."hyprland.conf".text = lib.mkOrder 500 (
+          toConfigString cfg.config
+        );
+      })
+      (lib.mkIf (cfg.extraConfig != null) {
+        wayland.windowManager.hyprland.configFile."hyprland.conf".text = lib.mkOrder 900 cfg.extraConfig;
+      })
+      (lib.mkIf cfg.reloadConfig {
+        wayland.windowManager.hyprland.config.misc.disable_autoreload = lib.mkDefault true;
 
-      xdg.configFile."hypr".onChange = ''
-        (
-          XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
-          if [[ -d "$XDG_RUNTIME_DIR/hypr" ]]; then
-            for instance in $(${cfg.finalPackage}/bin/hyprctl instances -j | jq ".[].instance" -r); do
-              response="$(${cfg.finalPackage}/bin/hyprctl -i "$instance" reload config-only 2>&1)"
-              [[ $response =~ ^ok ]] && \
-                echo "Hyprland instance reloaded: $HYPRLAND_INSTANCE_SIGNATURE"
-            done
-          fi
-        )
-      '';
-    })
-  ]);
+        xdg.configFile."hypr".onChange = ''
+          (
+            XDG_RUNTIME_DIR=''${XDG_RUNTIME_DIR:-/run/user/$(id -u)}
+            if [[ -d "$XDG_RUNTIME_DIR/hypr" ]]; then
+              for instance in $(${cfg.finalPackage}/bin/hyprctl instances -j | jq ".[].instance" -r); do
+                response="$(${cfg.finalPackage}/bin/hyprctl -i "$instance" reload config-only 2>&1)"
+                [[ $response =~ ^ok ]] && \
+                  echo "Hyprland instance reloaded: $HYPRLAND_INSTANCE_SIGNATURE"
+              done
+            fi
+          )
+        '';
+      })
+    ]
+  );
 }
