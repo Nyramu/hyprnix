@@ -9,7 +9,7 @@ in
       cfg = config.hyprnix;
     in
     {
-      imports = with modules; [ ];
+      imports = with modules; [ bind ];
 
       options.hyprnix = {
         enable = lib.mkEnableOption "hyprnix";
