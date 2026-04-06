@@ -17,8 +17,14 @@ in
         xwayland.enable = lib.mkEnableOption "xwayland";
 
         package = lib.mkPackageOption pkgs "hyprland" {
+          default = null;
           nullable = true;
           extraDescription = "Set this to null if you use the NixOS module to install Hyprland.";
+        };
+
+        portalPackage = lib.mkPackageOption pkgs "xdg-desktop-portal-hyprland" {
+          default = null;
+          nullable = true;
         };
 
         extraConfig = lib.mkOption {
@@ -37,6 +43,7 @@ in
           systemd.enable = cfg.systemd.enable;
           xwayland.enable = cfg.xwayland.enable;
           package = cfg.package;
+          portalPackage = cfg.portalPackage;
           extraConfig = cfg.extraConfig;
         };
       };
