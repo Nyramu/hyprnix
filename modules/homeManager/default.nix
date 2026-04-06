@@ -9,7 +9,10 @@ in
       cfg = config.hyprnix;
     in
     {
-      imports = with modules; [ keybinds ];
+      imports = with modules; [
+        settings
+        keybinds
+      ];
 
       options.hyprnix = {
         enable = lib.mkEnableOption "hyprnix";
