@@ -5,7 +5,7 @@
     let
       cfg = config.hyprnix.settings;
 
-      # Generates the various "bidnxyz" options
+      # Generates the various "bindxyz" options
       mkAttrsOptions =
         names:
         lib.genAttrs names (
