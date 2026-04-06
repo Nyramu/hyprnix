@@ -9,18 +9,21 @@ in
       cfg = config.hyprnix;
     in
     {
-      imports = with modules; [ bind ];
+      imports = with modules; [ keybinds ];
 
       options.hyprnix = {
         enable = lib.mkEnableOption "hyprnix";
         systemd.enable = lib.mkEnableOption "systemd integration";
         xwayland.enable = lib.mkEnableOption "xwayland";
-        
         package = lib.mkPackageOption pkgs "hyprland" {
+          default = null;
           nullable = true;
           extraDescription = "Set this to null if you use the NixOS module to install Hyprland.";
         };
-        
+        portalPackage = lib.mkPackageOption pkgs "xdg-desktop-portal-hyprland" {
+          default = null;
+          nullable = true;
+        };
         extraConfig = lib.mkOption {
           type = lib.types.lines;
           default = "";
@@ -29,7 +32,6 @@ in
             `~/.config/hypr/hyprland.conf`.
           '';
         };
-        
         plugins = lib.mkOption {
           type = with lib.types; listOf (either package path);
           default = [ ];
@@ -46,6 +48,7 @@ in
           systemd.enable = cfg.systemd.enable;
           xwayland.enable = cfg.xwayland.enable;
           package = cfg.package;
+          portalPackage = cfg.portalPackage;
           extraConfig = cfg.extraConfig;
           plugins = cfg.plugins;
         };
