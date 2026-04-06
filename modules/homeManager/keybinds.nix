@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  flake.homeModules.bind =
+  flake.homeModules.keybinds =
     { config, ... }:
     let
       cfg = config.hyprnix.keybinds;
