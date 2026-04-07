@@ -14,16 +14,6 @@
           (lazyAttrsOf valueType)
           (listOf valueType)
         ];
-
-      flattenAttrs =
-        prefix: attrs:
-        lib.foldlAttrs (
-          acc: k: v:
-          let
-            key = if prefix == "" then k else "${prefix}.${k}";
-          in
-          if lib.isAttrs v then acc // flattenAttrs key v else acc // { ${key} = v; }
-        ) { } attrs;
     in
     {
       options.hyprnix.settings = lib.mkOption {
@@ -37,7 +27,7 @@
       };
 
       config = {
-        wayland.windowManager.hyprland.settings = flattenAttrs "" cfg;
+        wayland.windowManager.hyprland.settings = cfg;
       };
     };
 }
