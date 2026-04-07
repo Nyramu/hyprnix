@@ -11,6 +11,7 @@ in
     {
       imports = with modules; [
         keybinds
+        misc
         dwindle
       ];
 
