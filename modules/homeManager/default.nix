@@ -11,8 +11,10 @@ in
     {
       imports = with modules; [
         keybinds
-        group
+        misc
         dwindle
+        monitors
+        group
       ];
 
       options.hyprnix = {
