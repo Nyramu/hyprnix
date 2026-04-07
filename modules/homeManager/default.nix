@@ -27,6 +27,15 @@ in
           nullable = true;
         };
 
+        plugins = lib.mkOption {
+          type = with lib.types; listOf (either package path);
+          default = [ ];
+          description = ''
+            List of Hyprland plugins to use. Can either be packages or
+            absolute plugin paths.
+          '';
+        };
+
         extraConfig = lib.mkOption {
           type = lib.types.lines;
           default = "";
@@ -44,6 +53,7 @@ in
           xwayland.enable = cfg.xwayland.enable;
           package = cfg.package;
           portalPackage = cfg.portalPackage;
+          plugins = cfg.plugins;
           extraConfig = cfg.extraConfig;
         };
       };
