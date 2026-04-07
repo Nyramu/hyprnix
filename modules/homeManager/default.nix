@@ -15,6 +15,7 @@ in
         dwindle
         monitors
         group
+        workspaces
       ];
 
       options.hyprnix = {
