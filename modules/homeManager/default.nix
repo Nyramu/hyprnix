@@ -4,7 +4,7 @@ let
 in
 {
   flake.homeModules.default =
-    { config, ... }:
+    { config, pkgs, ... }:
     let
       cfg = config.hyprnix;
     in
@@ -13,10 +13,19 @@ in
 
       options.hyprnix = {
         enable = lib.mkEnableOption "hyprnix";
-
         systemd.enable = lib.mkEnableOption "systemd integration";
-
         xwayland.enable = lib.mkEnableOption "xwayland";
+
+        package = lib.mkPackageOption pkgs "hyprland" {
+          default = null;
+          nullable = true;
+          extraDescription = "Set this to null if you use the NixOS module to install Hyprland.";
+        };
+
+        portalPackage = lib.mkPackageOption pkgs "xdg-desktop-portal-hyprland" {
+          default = null;
+          nullable = true;
+        };
 
         extraConfig = lib.mkOption {
           type = lib.types.lines;
@@ -33,6 +42,8 @@ in
           enable = true;
           systemd.enable = cfg.systemd.enable;
           xwayland.enable = cfg.xwayland.enable;
+          package = cfg.package;
+          portalPackage = cfg.portalPackage;
           extraConfig = cfg.extraConfig;
         };
       };
