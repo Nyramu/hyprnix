@@ -14,6 +14,7 @@ in
         misc
         dwindle
         monitors
+        group
       ];
 
       options.hyprnix = {
