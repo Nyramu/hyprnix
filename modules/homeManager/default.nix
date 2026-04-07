@@ -13,6 +13,7 @@ in
         keybinds
         misc
         dwindle
+        monitors
       ];
 
       options.hyprnix = {
