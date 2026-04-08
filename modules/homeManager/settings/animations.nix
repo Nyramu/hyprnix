@@ -3,10 +3,11 @@
   flake.homeModules.animations =
     { config, ... }:
     let
-      inherit (lib) mkOption optionalString;
+      inherit (lib) mkIf mkOption optionalString;
       inherit (lib.types)
         number
         str
+        bool
 
         listOf
         nullOr
@@ -16,7 +17,7 @@
 
       inherit (lib.types.ints) positive;
 
-      cfg = config.hyprnix.settings;
+      cfg = config.hyprnix.settings.animations;
 
       bezierType = submodule {
         options = {
@@ -69,6 +70,18 @@
     in
     {
       options.hyprnix.settings.animations = {
+        enabled = mkOption {
+          type = nullOr bool;
+          default = null;
+          description = "enable animations";
+        };
+
+        workspace_wraparound = mkOption {
+          type = nullOr bool;
+          default = null;
+          description = "enable workspace wraparound, causing directional workspace animations to animate as if the first and last workspaces were adjacent";
+        };
+
         beziers = mkOption {
           type = listOf bezierType;
           default = [ ];
@@ -97,11 +110,21 @@
         in
         {
           wayland.windowManager.hyprland.settings =
-            lib.mkIf (notEmpty cfg.animations.beziers || notEmpty cfg.animations.animations)
+            lib.mkIf
+              # if nothing is set don't write anything
+              (
+                cfg.enabled != null
+                || cfg.workspace_wraparound != null
+                || notEmpty cfg.beziers
+                || notEmpty cfg.animations
+              )
               {
                 animations = {
-                  bezier = map bezierMapper cfg.animations.beziers;
-                  animation = map animationMapper cfg.animations.animations;
+                  enabled = mkIf (cfg.enabled != null) cfg.enabled;
+                  workspace_wraparound = mkIf (cfg.workspace_wraparound != null) cfg.workspace_wraparound;
+
+                  bezier = map bezierMapper cfg.beziers;
+                  animation = map animationMapper cfg.animations;
                 };
               };
         };
