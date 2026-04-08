@@ -16,6 +16,7 @@ in
         monitors
         group
         workspaces
+        animations
       ];
 
       options.hyprnix = {
