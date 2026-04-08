@@ -39,7 +39,9 @@
           };
 
           scale = mkOption {
-            type = addCheck number (x: x > 0);
+            type = addCheck number (x: x > 0) // {
+              description = "a positive number (> 0)";
+            };
             default = 1;
             description = "Monitor scale factor";
           };
