@@ -8,7 +8,6 @@
         bool
         str
         nullOr
-        enum
         ;
       inherit (lib.types.ints)
         positive
@@ -56,12 +55,7 @@
         };
 
         force_default_wallpaper = mkOption {
-          type = nullOr (enum [
-            (-1)
-            0
-            1
-            2
-          ]);
+          type = nullOr (between (-1) 2);
           default = null;
           description = "Enforce any of the 3 default wallpapers. Setting this to 0 or 1 disables the anime background. -1 means “random”. [-1/0/1/2]";
         };
@@ -73,12 +67,7 @@
         };
 
         vrr = mkOption {
-          type = nullOr (enum [
-            0
-            1
-            2
-            3
-          ]);
+          type = nullOr (between 0 3);
           default = null;
           description = "controls the VRR (Adaptive Sync) of your monitors. 0 - off, 1 - on, 2 - fullscreen only, 3 - fullscreen with video or game content type [0/1/2/3]";
         };
@@ -186,11 +175,7 @@
         };
 
         on_focus_under_fullscreen = mkOption {
-          type = nullOr (enum [
-            0
-            1
-            2
-          ]);
+          type = nullOr (between 0 2);
           default = null;
           description = "if there is a fullscreen or maximized window, decide whether a tiled window requested to focus should replace it, stay behind or disable the fullscreen/maximized state. 0 - ignore focus request (keep focus on fullscreen window), 1 - takes over, 2 - unfullscreen/unmaximize [0/1/2]";
         };
@@ -202,11 +187,7 @@
         };
 
         initial_workspace_tracking = mkOption {
-          type = nullOr (enum [
-            0
-            1
-            2
-          ]);
+          type = nullOr (between 0 2);
           default = null;
           description = "if enabled, windows will open on the workspace they were invoked on. 0 - disabled, 1 - single-shot, 2 - persistent (all children too)";
         };
