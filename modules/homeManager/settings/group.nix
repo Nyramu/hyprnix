@@ -318,7 +318,7 @@
       config = {
         wayland.windowManager.hyprland.settings = {
           # Only write actually set values to avoid noise in the file
-          group = lib.filterAttrs (_: v: v != null) cfg.group;
+          group = lib.filterAttrsRecursive (_: v: v != null) cfg.group;
         };
       };
     };
