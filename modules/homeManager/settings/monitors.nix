@@ -16,6 +16,10 @@
         addCheck
         ;
 
+      inherit (lib.types.ints)
+        between
+        ;
+
       cfg = config.hyprnix.settings;
 
       monitorType = submodule {
@@ -53,16 +57,7 @@
           };
 
           transform = mkOption {
-            type = nullOr (enum [
-              0
-              1
-              2
-              3
-              4
-              5
-              6
-              7
-            ]);
+            type = nullOr (between 0 7);
             default = null;
             description = "Rotation/flip (0=normal, 1=90°, 2=180°, 3=270°, 4=flipped, 5=flipped+90°, 6=flipped+180°, 7=flipped+270°)";
           };
@@ -84,32 +79,19 @@
           };
 
           vrr = mkOption {
-            type = nullOr (enum [
-              0
-              1
-              2
-              3
-            ]);
+            type = nullOr (between 0 3);
             default = null;
             description = "Variable Refresh Rate (0=off, 1=on, 2=fullscreen only, 3=fullscreen with video or game content type)";
           };
 
           supports_wide_color = mkOption {
-            type = nullOr (enum [
-              (-1)
-              0
-              1
-            ]);
+            type = nullOr (between (-1) 1);
             default = null;
             description = "Force wide color gamut support (0=auto, 1=force on, -1=force off)";
           };
 
           supports_hdr = mkOption {
-            type = nullOr (enum [
-              (-1)
-              0
-              1
-            ]);
+            type = nullOr (between (-1) 1);
             default = null;
             description = "Force HDR support, requires wide color (0=auto, 1=force on, -1=force off)";
           };
