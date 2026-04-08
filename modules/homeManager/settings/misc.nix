@@ -14,7 +14,7 @@
         between
         ;
 
-      cfg = config.hyprnix.settings;
+      cfg = config.hyprnix.settings.misc;
     in
     {
       options.hyprnix.settings.misc = {
@@ -248,10 +248,8 @@
       };
 
       config = {
-        wayland.windowManager.hyprland.settings = {
-          # Only write actually set values to avoid noise in the file
-          misc = lib.filterAttrsRecursive (_: v: v != null) cfg.misc;
-        };
+        # Only write actually set values to avoid noise in the file
+        wayland.windowManager.hyprland.settings.misc = lib.filterAttrsRecursive (_: v: v != null) cfg;
       };
     };
 }
