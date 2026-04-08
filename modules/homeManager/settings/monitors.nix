@@ -7,13 +7,17 @@
       inherit (lib.types)
         bool
         number
-        int
         str
 
         nullOr
+        enum
         listOf
         submodule
         addCheck
+        ;
+
+      inherit (lib.types.ints)
+        between
         ;
 
       cfg = config.hyprnix.settings;
@@ -39,7 +43,9 @@
           };
 
           scale = mkOption {
-            type = addCheck number (x: x > 0);
+            type = addCheck number (x: x > 0) // {
+              description = "a positive number (> 0)";
+            };
             default = 1;
             description = "Monitor scale factor";
           };
@@ -51,7 +57,7 @@
           };
 
           transform = mkOption {
-            type = nullOr (addCheck int (n: n >= 0 && n <= 7));
+            type = nullOr (between 0 7);
             default = null;
             description = "Rotation/flip (0=normal, 1=90°, 2=180°, 3=270°, 4=flipped, 5=flipped+90°, 6=flipped+180°, 7=flipped+270°)";
           };
@@ -64,25 +70,28 @@
           };
 
           bitdepth = mkOption {
-            type = nullOr (addCheck int (n: n == 8 || n == 10));
+            type = nullOr (enum [
+              8
+              10
+            ]);
             default = null;
             description = "Color bit depth";
           };
 
           vrr = mkOption {
-            type = nullOr (addCheck int (n: n >= 0 && n <= 3));
+            type = nullOr (between 0 3);
             default = null;
             description = "Variable Refresh Rate (0=off, 1=on, 2=fullscreen only, 3=fullscreen with video or game content type)";
           };
 
           supports_wide_color = mkOption {
-            type = nullOr (addCheck int (n: n <= 1 && n >= -1));
+            type = nullOr (between (-1) 1);
             default = null;
             description = "Force wide color gamut support (0=auto, 1=force on, -1=force off)";
           };
 
           supports_hdr = mkOption {
-            type = nullOr (addCheck int (n: n <= 1 && n >= -1));
+            type = nullOr (between (-1) 1);
             default = null;
             description = "Force HDR support, requires wide color (0=auto, 1=force on, -1=force off)";
           };
