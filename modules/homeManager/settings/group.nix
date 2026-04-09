@@ -57,11 +57,7 @@
         };
 
         drag_into_group = mkOption {
-          type = nullOr (enum [
-            0
-            1
-            2
-          ]);
+          type = nullOr (between 0 2);
           default = null;
           description = "whether dragging a window into a unlocked group will merge them. Options: 0 (disabled), 1 (enabled), 2 (only when dragging into the groupbar)";
         };
