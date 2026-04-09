@@ -6,13 +6,16 @@
       inherit (lib) mkOption;
       inherit (lib.types)
         bool
-        float
+        number
         nullOr
         enum
         addCheck
         ;
+      inherit (lib.types.ints)
+        between
+        ;
 
-      cfg = config.hyprnix.settings;
+      cfg = config.hyprnix.settings.dwindle;
     in
     {
       options.hyprnix.settings.dwindle = {
@@ -23,11 +26,7 @@
         };
 
         force_split = mkOption {
-          type = nullOr (enum [
-            0
-            1
-            2
-          ]);
+          type = nullOr (between 0 2);
           default = null;
           description = ''
             0 -> split follows mouse
@@ -71,13 +70,13 @@
         };
 
         special_scale_factor = mkOption {
-          type = nullOr (addCheck float (x: x >= 0.0 && x <= 1.0));
+          type = nullOr (addCheck number (x: x >= 0.0 && x <= 1.0));
           default = null;
           description = "Specifies the scale factor of windows on the special workspace";
         };
 
         split_width_multiplier = mkOption {
-          type = nullOr float;
+          type = nullOr number;
           default = null;
           description = ''
             Specifies the auto-split width multiplier.
@@ -92,7 +91,7 @@
         };
 
         default_split_ratio = mkOption {
-          type = nullOr (addCheck float (x: x >= 0.1 && x <= 1.9));
+          type = nullOr (addCheck number (x: x >= 0.1 && x <= 1.9));
           default = null;
           description = "The default split ratio on window open. 1 means even 50/50 split.";
         };
@@ -118,10 +117,8 @@
       };
 
       config = {
-        wayland.windowManager.hyprland.settings = {
-          # Only write actually set values to avoid noise in the file
-          dwindle = lib.filterAttrs (_: v: v != null) cfg.dwindle;
-        };
+        # Only write actually set values to avoid noise in the file
+        wayland.windowManager.hyprland.settings.dwindle = lib.filterAttrs (_: v: v != null) cfg;
       };
     };
 }
