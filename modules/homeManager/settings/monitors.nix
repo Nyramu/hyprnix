@@ -16,9 +16,7 @@
         addCheck
         ;
 
-      inherit (lib.types.ints)
-        between
-        ;
+      inherit (lib.types.ints) between;
 
       cfg = config.hyprnix.settings;
 

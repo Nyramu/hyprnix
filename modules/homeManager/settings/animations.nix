@@ -3,7 +3,11 @@
   flake.homeModules.animations =
     { config, ... }:
     let
-      inherit (lib) mkIf mkOption optionalString;
+      inherit (lib)
+        mkIf
+        mkOption
+        optionalString
+        ;
       inherit (lib.types)
         number
         str
