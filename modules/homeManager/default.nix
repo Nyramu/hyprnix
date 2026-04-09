@@ -17,6 +17,7 @@ in
         group
         workspaces
         animations
+        env
       ];
 
       options.hyprnix = {
