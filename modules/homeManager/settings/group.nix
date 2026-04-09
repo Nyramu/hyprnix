@@ -34,7 +34,7 @@
         "ultraheavy"
       ]);
 
-      cfg = config.hyprnix.settings;
+      cfg = config.hyprnix.settings.group;
     in
     {
       options.hyprnix.settings.group = {
@@ -312,10 +312,8 @@
       };
 
       config = {
-        wayland.windowManager.hyprland.settings = {
-          # Only write actually set values to avoid noise in the file
-          group = lib.filterAttrsRecursive (_: v: v != null) cfg.group;
-        };
+        # Only write actually set values to avoid noise in the file
+        wayland.windowManager.hyprland.settings.group = lib.filterAttrsRecursive (_: v: v != null) cfg;
       };
     };
 }
