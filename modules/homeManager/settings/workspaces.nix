@@ -16,6 +16,7 @@
         between
         unsigned
         ;
+
       cfg = config.hyprnix.settings;
 
       valueToString = v: if builtins.isBool v then lib.boolToString v else toString v;
@@ -27,73 +28,73 @@
             default = null;
             description = "Binds a workspace to a monitor.";
           };
-          
+
           default = mkOption {
             type = nullOr bool;
             default = null;
             description = "Whether this workspace should be the default workspace for the given monitor";
           };
-          
+
           gapsin = mkOption {
             type = nullOr unsigned;
             default = null;
             description = "Set the gaps between windows (equivalent to General->gaps_in)";
           };
-          
+
           gapsout = mkOption {
             type = nullOr unsigned;
             default = null;
             description = "Set the gaps between windows and monitor edges (equivalent to General->gaps_out)";
           };
-          
+
           bordersize = mkOption {
             type = nullOr positive;
             default = null;
             description = "Set the border size around windows (equivalent to General->border_size)";
           };
-          
+
           border = mkOption {
             type = nullOr bool;
             default = null;
             description = "Whether to draw borders or not";
           };
-          
+
           shadow = mkOption {
             type = nullOr bool;
             default = null;
             description = "Whether to draw shadows or not";
           };
-          
+
           rounding = mkOption {
             type = nullOr bool;
             default = null;
             description = "Whether to draw rounded windows or not";
           };
-          
+
           decorate = mkOption {
             type = nullOr bool;
             default = null;
             description = "Whether to draw window decorations or not";
           };
-          
+
           persistent = mkOption {
             type = nullOr bool;
             default = null;
             description = "Keep this workspace alive even if empty and inactive";
           };
-          
+
           defaultName = mkOption {
             type = nullOr str;
             default = null;
             description = "A default name for the workspace.";
           };
-          
+
           layout = mkOption {
             type = nullOr str;
             default = null;
             description = "The layout to use for this workspace.";
           };
-          
+
           animations = mkOption {
             type = nullOr str;
             default = null;
