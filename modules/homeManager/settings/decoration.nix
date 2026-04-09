@@ -90,7 +90,7 @@
           description = "a path to a custom shader to be applied at the end of rendering. See examples/screenShader.frag for an example.";
         };
 
-        border_part_of_window = {
+        border_part_of_window = mkOption {
           type = nullOr bool;
           default = null;
           description = "whether the window border should be a part of the window";
