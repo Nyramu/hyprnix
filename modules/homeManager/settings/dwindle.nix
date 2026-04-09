@@ -15,7 +15,7 @@
         between
         ;
 
-      cfg = config.hyprnix.settings;
+      cfg = config.hyprnix.settings.dwindle;
     in
     {
       options.hyprnix.settings.dwindle = {
@@ -117,10 +117,8 @@
       };
 
       config = {
-        wayland.windowManager.hyprland.settings = {
-          # Only write actually set values to avoid noise in the file
-          dwindle = lib.filterAttrs (_: v: v != null) cfg.dwindle;
-        };
+        # Only write actually set values to avoid noise in the file
+        wayland.windowManager.hyprland.settings.dwindle = lib.filterAttrs (_: v: v != null) cfg;
       };
     };
 }
