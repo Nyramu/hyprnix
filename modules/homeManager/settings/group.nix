@@ -8,7 +8,7 @@
         bool
         str
         int
-        float
+        number
         nullOr
         enum
         either
@@ -208,7 +208,7 @@
           };
 
           rounding_power = mkOption {
-            type = nullOr (addCheck float (x: x >= 1.0 && x <= 10.0));
+            type = nullOr (addCheck number (x: x >= 1.0 && x <= 10.0));
             default = null;
             description = "adjusts the curve used for rounding groupbar corners, larger is smoother, 2.0 is a circle, 4.0 is a squircle, 1.0 is a triangular corner. [1.0 - 10.0]";
           };
@@ -220,7 +220,7 @@
           };
 
           gradient_rounding_power = mkOption {
-            type = nullOr (addCheck float (x: x >= 1.0 && x <= 10.0));
+            type = nullOr (addCheck number (x: x >= 1.0 && x <= 10.0));
             default = null;
             description = "adjusts the curve used for rounding gradient corners, larger is smoother, 2.0 is a circle, 4.0 is a squircle, 1.0 is a triangular corner. [1.0 - 10.0]";
           };
