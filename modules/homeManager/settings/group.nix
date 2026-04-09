@@ -8,7 +8,7 @@
         bool
         str
         int
-        float
+        number
         nullOr
         enum
         either
@@ -34,7 +34,7 @@
         "ultraheavy"
       ]);
 
-      cfg = config.hyprnix.settings;
+      cfg = config.hyprnix.settings.group;
     in
     {
       options.hyprnix.settings.group = {
@@ -57,11 +57,7 @@
         };
 
         drag_into_group = mkOption {
-          type = nullOr (enum [
-            0
-            1
-            2
-          ]);
+          type = nullOr (between 0 2);
           default = null;
           description = "whether dragging a window into a unlocked group will merge them. Options: 0 (disabled), 1 (enabled), 2 (only when dragging into the groupbar)";
         };
@@ -212,7 +208,7 @@
           };
 
           rounding_power = mkOption {
-            type = nullOr (addCheck float (x: x >= 1.0 && x <= 10.0));
+            type = nullOr (addCheck number (x: x >= 1.0 && x <= 10.0));
             default = null;
             description = "adjusts the curve used for rounding groupbar corners, larger is smoother, 2.0 is a circle, 4.0 is a squircle, 1.0 is a triangular corner. [1.0 - 10.0]";
           };
@@ -224,7 +220,7 @@
           };
 
           gradient_rounding_power = mkOption {
-            type = nullOr (addCheck float (x: x >= 1.0 && x <= 10.0));
+            type = nullOr (addCheck number (x: x >= 1.0 && x <= 10.0));
             default = null;
             description = "adjusts the curve used for rounding gradient corners, larger is smoother, 2.0 is a circle, 4.0 is a squircle, 1.0 is a triangular corner. [1.0 - 10.0]";
           };
@@ -316,10 +312,8 @@
       };
 
       config = {
-        wayland.windowManager.hyprland.settings = {
-          # Only write actually set values to avoid noise in the file
-          group = lib.filterAttrsRecursive (_: v: v != null) cfg.group;
-        };
+        # Only write actually set values to avoid noise in the file
+        wayland.windowManager.hyprland.settings.group = lib.filterAttrsRecursive (_: v: v != null) cfg;
       };
     };
 }
