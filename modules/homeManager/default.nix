@@ -20,6 +20,7 @@ in
         env
         exec
         general
+        decoration
       ];
 
       options.hyprnix = {
