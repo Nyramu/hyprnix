@@ -11,6 +11,9 @@
         enum
         addCheck
         ;
+      inherit (lib.types.ints)
+        between
+        ;
 
       cfg = config.hyprnix.settings;
     in
@@ -23,11 +26,7 @@
         };
 
         force_split = mkOption {
-          type = nullOr (enum [
-            0
-            1
-            2
-          ]);
+          type = nullOr (between 0 2);
           default = null;
           description = ''
             0 -> split follows mouse
