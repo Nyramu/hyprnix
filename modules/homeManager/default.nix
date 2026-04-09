@@ -19,6 +19,7 @@ in
         animations
         env
         exec
+        general
       ];
 
       options.hyprnix = {
