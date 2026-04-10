@@ -146,7 +146,7 @@
         };
 
         scroll_factor = mkOption {
-          type = nullOr (addCheck number (x: x >= 0.1));
+          type = nullOr number;
           default = null;
           description = "Multiplier added to scroll movement for external mice. Note that there is a separate setting for touchpad scroll_factor.";
         };
