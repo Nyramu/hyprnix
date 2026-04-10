@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ self, lib, ... }:
 {
   flake.homeModules.dwindle =
     { config, ... }:
@@ -9,11 +9,10 @@
         number
         nullOr
         enum
-        addCheck
+        ints
         ;
-      inherit (lib.types.ints)
-        between
-        ;
+
+      inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.dwindle;
     in
@@ -26,7 +25,7 @@
         };
 
         force_split = mkOption {
-          type = nullOr (between 0 2);
+          type = nullOr (ints.between 0 2);
           default = null;
           description = ''
             0 -> split follows mouse
@@ -70,7 +69,7 @@
         };
 
         special_scale_factor = mkOption {
-          type = nullOr (addCheck number (x: x >= 0.0 && x <= 1.0));
+          type = nullOr (numbers.between 0 1);
           default = null;
           description = "Specifies the scale factor of windows on the special workspace";
         };
@@ -91,7 +90,7 @@
         };
 
         default_split_ratio = mkOption {
-          type = nullOr (addCheck number (x: x >= 0.1 && x <= 1.9));
+          type = nullOr (numbers.between 0.1 1.9);
           default = null;
           description = "The default split ratio on window open. 1 means even 50/50 split.";
         };
