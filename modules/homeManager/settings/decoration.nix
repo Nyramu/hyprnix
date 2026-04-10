@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ self, lib, ... }:
 {
   flake.homeModules.decoration =
     { config, ... }:
@@ -13,43 +13,41 @@
         either
         path
         addCheck
+        ints
         ;
-      inherit (lib.types.ints)
-        between
-        positive
-        unsigned
-        ;
+
+      inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.decoration;
     in
     {
       options.hyprnix.settings.decoration = {
         rounding = mkOption {
-          type = nullOr unsigned;
+          type = nullOr ints.unsigned;
           default = null;
           description = "rounded corners’ radius (in layout px)";
         };
 
         rounding_power = mkOption {
-          type = nullOr (addCheck number (x: x >= 1 && x <= 10));
+          type = nullOr (numbers.between 1 10);
           default = null;
           description = "adjusts the curve used for rounding corners, larger is smoother, 2.0 is a circle, 4.0 is a squircle, 1.0 is a triangular corner. [1.0 - 10.0]";
         };
 
         active_opacity = mkOption {
-          type = nullOr (addCheck number (x: x >= 0 && x <= 1));
+          type = nullOr (numbers.between 0 1);
           default = null;
           description = "opacity of active windows. [0.0 - 1.0]";
         };
 
         inactive_opacity = mkOption {
-          type = nullOr (addCheck number (x: x >= 0 && x <= 1));
+          type = nullOr (numbers.between 0 1);
           default = null;
           description = "opacity of inactive windows. [0.0 - 1.0]";
         };
 
         fullscreen_opacity = mkOption {
-          type = nullOr (addCheck number (x: x >= 0 && x <= 1));
+          type = nullOr (numbers.between 0 1);
           default = null;
           description = "opacity of fullscreen windows. [0.0 - 1.0]";
         };
@@ -67,19 +65,19 @@
         };
 
         dim_strength = mkOption {
-          type = nullOr (addCheck number (x: x >= 0 && x <= 1));
+          type = nullOr (numbers.between 0 1);
           default = null;
           description = "how much inactive windows should be dimmed [0.0 - 1.0]";
         };
 
         dim_special = mkOption {
-          type = nullOr (addCheck number (x: x >= 0 && x <= 1));
+          type = nullOr (numbers.between 0 1);
           default = null;
           description = "how much to dim the rest of the screen by when a special workspace is open. [0.0 - 1.0]";
         };
 
         dim_around = mkOption {
-          type = nullOr (addCheck number (x: x >= 0 && x <= 1));
+          type = nullOr (numbers.between 0 1);
           default = null;
           description = "how much the dim_around window rule should dim by. [0.0 - 1.0]";
         };
@@ -104,13 +102,13 @@
           };
 
           size = mkOption {
-            type = nullOr positive;
+            type = nullOr ints.positive;
             default = null;
             description = "blur size (distance)";
           };
 
           passes = mkOption {
-            type = nullOr positive;
+            type = nullOr ints.positive;
             default = null;
             description = "the amount of passes to perform";
           };
@@ -134,19 +132,19 @@
           };
 
           noise = mkOption {
-            type = nullOr (addCheck number (x: x >= 0 && x <= 1));
+            type = nullOr (numbers.between 0 1);
             default = null;
             description = "how much noise to apply. [0.0 - 1.0]";
           };
 
           contrast = mkOption {
-            type = nullOr (addCheck number (x: x >= 0 && x <= 2));
+            type = nullOr (numbers.between 0 2);
             default = null;
             description = "contrast modulation for blur. [0.0 - 2.0]";
           };
 
           brightness = mkOption {
-            type = nullOr (addCheck number (x: x >= 0 && x <= 2));
+            type = nullOr (numbers.between 0 2);
             default = null;
             description = "brightness modulation for blur. [0.0 - 2.0]";
           };
@@ -158,7 +156,7 @@
           };
 
           vibrancy_darkness = mkOption {
-            type = nullOr (addCheck number (x: x >= 0 && x <= 1));
+            type = nullOr (numbers.between 0 1);
             default = null;
             description = "How strong the effect of vibrancy is on dark areas . [0.0 - 1.0]";
           };
@@ -176,7 +174,7 @@
           };
 
           popups_ignorealpha = mkOption {
-            type = nullOr (addCheck number (x: x >= 0 && x <= 1));
+            type = nullOr (numbers.between 0 1);
             default = null;
             description = "works like ignore_alpha in layer rules. If pixel opacity is below set value, will not blur. [0.0 - 1.0]";
           };
@@ -188,7 +186,7 @@
           };
 
           input_methods_ignorealpha = mkOption {
-            type = nullOr (addCheck number (x: x >= 0 && x <= 1));
+            type = nullOr (numbers.between 0 1);
             default = null;
             description = "works like ignore_alpha in layer rules. If pixel opacity is below set value, will not blur. [0.0 - 1.0]";
           };
@@ -202,13 +200,13 @@
           };
 
           range = mkOption {
-            type = nullOr positive;
+            type = nullOr ints.positive;
             default = null;
             description = "Shadow range (“size”) in layout px";
           };
 
           render_power = mkOption {
-            type = nullOr (between 1 4);
+            type = nullOr (ints.between 1 4);
             default = null;
             description = "in what power to render the falloff (more power, the faster the falloff) [1 - 4]";
           };
@@ -258,13 +256,13 @@
           };
 
           range = mkOption {
-            type = nullOr positive;
+            type = nullOr ints.positive;
             default = null;
             description = "Glow range (“size”) in layout px";
           };
 
           render_power = mkOption {
-            type = nullOr (between 1 4);
+            type = nullOr (ints.between 1 4);
             default = null;
             description = "in what power to render the falloff (more power, the faster the falloff) [1 - 4]";
           };
