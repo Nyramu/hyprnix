@@ -6,17 +6,14 @@
       inherit (lib) mkOption;
       inherit (lib.types)
         bool
-        number
         nullOr
-        listOf
         str
         either
         path
-        addCheck
         ints
         ;
 
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (self.lib.hyprnix.types) numbers tuple;
 
       cfg = config.hyprnix.settings.decoration;
     in
@@ -150,7 +147,7 @@
           };
 
           vibrancy = mkOption {
-            type = nullOr (addCheck number (x: x >= 0 && x <= 1));
+            type = nullOr (numbers.between 0 1);
             default = null;
             description = "Increase saturation of blurred colors. [0.0 - 1.0]";
           };
@@ -236,13 +233,13 @@
           };
 
           offset = mkOption {
-            type = nullOr (addCheck (listOf number) (l: builtins.length l == 2));
+            type = nullOr (tuple 2);
             default = null;
             description = "shadow’s rendering offset.";
           };
 
           scale = mkOption {
-            type = nullOr (addCheck number (x: x >= 0 && x <= 1));
+            type = nullOr (numbers.between 0 1);
             default = null;
             description = "shadow’s scale. [0.0 - 1.0]";
           };
