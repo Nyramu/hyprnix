@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ self, lib, ... }:
 {
   flake.homeModules.group =
     { config, ... }:
@@ -8,18 +8,15 @@
         bool
         str
         int
-        number
         nullOr
         enum
         either
-        addCheck
+        ints
         ;
-      inherit (lib.types.ints)
-        unsigned
-        positive
-        between
-        ;
-      font_weight = either (between 100 1000) (enum [
+
+      inherit (self.lib.hyprnix.types) numbers;
+
+      font_weight = either (ints.between 100 1000) (enum [
         "thin"
         "ultralight"
         "light"
@@ -57,7 +54,7 @@
         };
 
         drag_into_group = mkOption {
-          type = nullOr (between 0 2);
+          type = nullOr (ints.between 0 2);
           default = null;
           description = "whether dragging a window into a unlocked group will merge them. Options: 0 (disabled), 1 (enabled), 2 (only when dragging into the groupbar)";
         };
@@ -124,7 +121,7 @@
           };
 
           font_size = mkOption {
-            type = nullOr positive;
+            type = nullOr ints.positive;
             default = null;
             description = "font size of groupbar title";
           };
@@ -148,19 +145,19 @@
           };
 
           height = mkOption {
-            type = nullOr positive;
+            type = nullOr ints.positive;
             default = null;
             description = "height of the groupbar";
           };
 
           indicator_gap = mkOption {
-            type = nullOr unsigned;
+            type = nullOr ints.unsigned;
             default = null;
             description = "height of gap between groupbar indicator and title";
           };
 
           indicator_height = mkOption {
-            type = nullOr positive;
+            type = nullOr ints.positive;
             default = null;
             description = "height of the groupbar indicator";
           };
@@ -190,7 +187,7 @@
           };
 
           text_padding = mkOption {
-            type = nullOr unsigned;
+            type = nullOr ints.unsigned;
             default = null;
             description = "set horizontal padding for titles";
           };
@@ -202,25 +199,25 @@
           };
 
           rounding = mkOption {
-            type = nullOr unsigned;
+            type = nullOr ints.unsigned;
             default = null;
             description = "how much to round the indicator";
           };
 
           rounding_power = mkOption {
-            type = nullOr (addCheck number (x: x >= 1.0 && x <= 10.0));
+            type = nullOr (numbers.between 1 10);
             default = null;
             description = "adjusts the curve used for rounding groupbar corners, larger is smoother, 2.0 is a circle, 4.0 is a squircle, 1.0 is a triangular corner. [1.0 - 10.0]";
           };
 
           gradient_rounding = mkOption {
-            type = nullOr unsigned;
+            type = nullOr ints.unsigned;
             default = null;
             description = "how much to round the gradients";
           };
 
           gradient_rounding_power = mkOption {
-            type = nullOr (addCheck number (x: x >= 1.0 && x <= 10.0));
+            type = nullOr (numbers.between 1 10);
             default = null;
             description = "adjusts the curve used for rounding gradient corners, larger is smoother, 2.0 is a circle, 4.0 is a squircle, 1.0 is a triangular corner. [1.0 - 10.0]";
           };
@@ -286,13 +283,13 @@
           };
 
           gaps_in = mkOption {
-            type = nullOr unsigned;
+            type = nullOr ints.unsigned;
             default = null;
             description = "gap size between gradients";
           };
 
           gaps_out = mkOption {
-            type = nullOr unsigned;
+            type = nullOr ints.unsigned;
             default = null;
             description = "gap size between gradients and window";
           };
