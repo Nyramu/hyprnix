@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ self, lib, ... }:
 {
   flake.homeModules.input =
     { config, ... }:
@@ -6,23 +6,18 @@
       inherit (lib) mkOption;
       inherit (lib.types)
         bool
-        number
         str
-        listOf
         nullOr
-        addCheck
+        ints
         ;
-      inherit (lib.types.ints)
-        between
-        ;
-      vec2 = (addCheck (listOf number) (x: builtins.length x == 2));
+      inherit (self.lib.hyprnix.types) tuple;
 
       cfg = config.hyprnix.settings.input.tablet;
     in
     {
       options.hyprnix.settings.input.tablet = {
         transform = mkOption {
-          type = nullOr (between (-1) 7);
+          type = nullOr (ints.between (-1) 7);
           default = null;
           description = "transform the input from tablets. The possible transformations are the same as those of the monitors. -1 means it’s unset.";
         };
@@ -34,7 +29,7 @@
         };
 
         region_position = mkOption {
-          type = nullOr vec2;
+          type = nullOr (tuple 2);
           default = null;
           description = "position of the mapped region in monitor layout relative to the top left corner of the bound monitor or all monitors.";
         };
@@ -46,7 +41,7 @@
         };
 
         region_size = mkOption {
-          type = nullOr vec2;
+          type = nullOr (tuple 2);
           default = null;
           description = "size of the mapped region. When this variable is set, tablet input will be mapped to the region. [0, 0] or invalid size means unset.";
         };
@@ -64,13 +59,13 @@
         };
 
         active_area_size = mkOption {
-          type = nullOr vec2;
+          type = nullOr (tuple 2);
           default = null;
           description = "size of tablet’s active area in mm";
         };
 
         active_area_position = mkOption {
-          type = nullOr vec2;
+          type = nullOr (tuple 2);
           default = null;
           description = "position of the active area in mm";
         };
