@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ self, lib, ... }:
 {
   flake.homeModules.animations =
     { config, ... }:
@@ -9,7 +9,6 @@
         optionalString
         ;
       inherit (lib.types)
-        number
         str
         bool
 
@@ -17,16 +16,12 @@
         attrsOf
         nullOr
         submodule
-        addCheck
         ;
 
       inherit (lib.types.ints) positive;
+      inherit (self.lib.hyprnix.types) tuple;
 
       cfg = config.hyprnix.settings.animations;
-
-      bezierType = addCheck (listOf number) (l: builtins.length l == 4) // {
-        description = "a list of 4 numbers";
-      };
 
       animationType = submodule {
         options = {
@@ -72,7 +67,7 @@
         };
 
         bezier = mkOption {
-          type = attrsOf bezierType;
+          type = attrsOf (tuple 4);
           default = { };
           example = {
             linear = [
