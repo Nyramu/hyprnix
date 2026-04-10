@@ -9,7 +9,6 @@
         number
         nullOr
         enum
-        addCheck
         ;
       inherit (lib.types.ints)
         between
@@ -32,7 +31,7 @@
         };
 
         scroll_factor = mkOption {
-          type = nullOr (addCheck number (x: x >= 0.1));
+          type = nullOr number;
           default = null;
           description = "Multiplier applied to the amount of scroll movement.";
         };
