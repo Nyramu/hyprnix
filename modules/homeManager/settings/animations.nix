@@ -14,6 +14,7 @@
         bool
 
         listOf
+        attrsOf
         nullOr
         submodule
         addCheck
@@ -23,24 +24,8 @@
 
       cfg = config.hyprnix.settings.animations;
 
-      bezierType = submodule {
-        options = {
-          name = mkOption {
-            type = str;
-            description = "Name of your choice for the curve";
-            example = "linear";
-          };
-          points = mkOption {
-            type = addCheck (listOf number) (l: builtins.length l == 4);
-            description = "Control points [x0 y0 x1 y1]";
-            example = [
-              0.0
-              0.0
-              1.0
-              1.0
-            ];
-          };
-        };
+      bezierType = addCheck (listOf number) (l: builtins.length l == 4) // {
+        description = "a list of 4 numbers";
       };
 
       animationType = submodule {
@@ -86,9 +71,17 @@
           description = "enable workspace wraparound, causing directional workspace animations to animate as if the first and last workspaces were adjacent";
         };
 
-        beziers = mkOption {
-          type = listOf bezierType;
-          default = [ ];
+        bezier = mkOption {
+          type = attrsOf bezierType;
+          default = { };
+          example = {
+            linear = [
+              0
+              0
+              1
+              1
+            ];
+          };
         };
 
         animations = mkOption {
@@ -102,11 +95,11 @@
           notEmpty = l: builtins.length l > 0;
 
           bezierMapper =
-            b:
+            name: points:
             let
-              p = builtins.concatStringsSep ", " (map toString b.points);
+              p = builtins.concatStringsSep ", " (map toString points);
             in
-            "${b.name}, ${p}";
+            "${name}, ${p}";
 
           animationMapper =
             a:
@@ -119,7 +112,7 @@
               (
                 cfg.enabled != null
                 || cfg.workspace_wraparound != null
-                || notEmpty cfg.beziers
+                || cfg.bezier != { }
                 || notEmpty cfg.animations
               )
               {
@@ -127,7 +120,7 @@
                   enabled = mkIf (cfg.enabled != null) cfg.enabled;
                   workspace_wraparound = mkIf (cfg.workspace_wraparound != null) cfg.workspace_wraparound;
 
-                  bezier = map bezierMapper cfg.beziers;
+                  bezier = lib.mapAttrsToList bezierMapper cfg.bezier;
                   animation = map animationMapper cfg.animations;
                 };
               };
