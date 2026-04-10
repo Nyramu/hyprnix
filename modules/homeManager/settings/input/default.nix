@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ self, lib, ... }:
 {
   flake.homeModules.input =
     { config, ... }:
@@ -8,6 +8,7 @@
         bool
         number
         int
+        ints
         either
         str
         path
@@ -15,11 +16,7 @@
         enum
         addCheck
         ;
-      inherit (lib.types.ints)
-        between
-        positive
-        unsigned
-        ;
+      inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.input;
     in
@@ -74,7 +71,7 @@
         };
 
         repeat_rate = mkOption {
-          type = nullOr positive;
+          type = nullOr ints.positive;
           default = null;
           description = "The repeat rate for held-down keys, in repeats per second.";
         };
@@ -86,7 +83,7 @@
         };
 
         sensitivity = mkOption {
-          type = nullOr (addCheck number (x: x >= (-1) && x <= 1));
+          type = nullOr (numbers.between (-1) 1);
           default = null;
           description = "Sets the mouse input sensitivity. Value is clamped to the range -1.0 to 1.0.";
         };
@@ -108,7 +105,7 @@
         };
 
         rotation = mkOption {
-          type = nullOr (between 0 359);
+          type = nullOr (ints.between 0 359);
           default = null;
           description = "Sets the rotation of a device in degrees clockwise off the logical neutral position. Value is clamped to the range 0 to 359.";
         };
@@ -137,7 +134,7 @@
         };
 
         scroll_button = mkOption {
-          type = nullOr unsigned;
+          type = nullOr ints.unsigned;
           default = null;
           description = "Sets the scroll button. Has to be an int, cannot be a string. Check wev if you have any doubts regarding the ID. 0 means default.";
         };
@@ -161,19 +158,19 @@
         };
 
         follow_mouse = mkOption {
-          type = nullOr (between 0 3);
+          type = nullOr (ints.between 0 3);
           default = null;
           description = "Specify if and how cursor movement should affect window focus. See the note below. [0/1/2/3]";
         };
 
         follow_mouse_threshold = mkOption {
-          type = nullOr (addCheck number (x: x >= 0));
+          type = nullOr numbers.unsigned;
           default = null;
           description = "The smallest distance in logical pixels the mouse needs to travel for the window under it to get focused. Works only with follow_mouse = 1.";
         };
 
         focus_on_close = mkOption {
-          type = nullOr (between 0 2);
+          type = nullOr (ints.between 0 2);
           default = null;
           description = "Controls the window focus behavior when a window is closed. When set to 0, focus will shift to the next window candidate. When set to 1, focus will shift to the window under the cursor. When set to 2, focus will shift to the most recently used/active window. [0/1/2]";
         };
@@ -185,7 +182,7 @@
         };
 
         float_switch_override_focus = mkOption {
-          type = nullOr (between 1 2);
+          type = nullOr (ints.between 1 2);
           default = null;
           description = "If enabled (1 or 2), focus will change to the window under the cursor when changing from tiled-to-floating and vice versa. If 2, focus will also follow mouse on float-to-float switches.";
         };
@@ -197,13 +194,13 @@
         };
 
         off_window_axis_events = mkOption {
-          type = nullOr (between 0 3);
+          type = nullOr (ints.between 0 3);
           default = null;
           description = "Handles axis events around (gaps/border for tiled, dragarea/border for floated) a focused window. 0 ignores axis events 1 sends out-of-bound coordinates 2 fakes pointer coordinates to the closest point inside the window 3 warps the cursor to the closest point inside the window";
         };
 
         emulate_discrete_scroll = mkOption {
-          type = nullOr (between 0 2);
+          type = nullOr (ints.between 0 2);
           default = null;
           description = "Emulates discrete scrolling from high resolution scrolling events. 0 disables it, 1 enables handling of non-standard events only, and 2 force enables all scroll wheel events to be handled";
         };
