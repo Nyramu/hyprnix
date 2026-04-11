@@ -19,7 +19,7 @@
         ;
 
       inherit (lib.types.ints) positive;
-      inherit (self.lib.hyprnix.types) tuple;
+      inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.animations;
 
@@ -67,7 +67,7 @@
         };
 
         bezier = mkOption {
-          type = attrsOf (tuple 4);
+          type = attrsOf (numbers.tuple 4);
           default = { };
           example = {
             linear = [
