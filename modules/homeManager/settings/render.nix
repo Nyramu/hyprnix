@@ -1,4 +1,4 @@
-{ self, lib, ... }:
+{ lib, ... }:
 {
   flake.homeModules.render =
     { config, ... }:
@@ -6,14 +6,11 @@
       inherit (lib) mkOption;
       inherit (lib.types)
         bool
-        number
         str
         nullOr
         enum
         ints
         ;
-
-      inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.render;
     in
@@ -52,11 +49,7 @@
         };
 
         cm_fs_passthrough = mkOption {
-          type = nullOr (enum [
-            0
-            1
-            2
-          ]);
+          type = nullOr (ints.between 0 2);
           default = null;
           description = ''
             Passthrough color settings for fullscreen apps when possible.
@@ -77,11 +70,7 @@
         };
 
         cm_auto_hdr = mkOption {
-          type = nullOr (enum [
-            0
-            1
-            2
-          ]);
+          type = nullOr (ints.between 0 2);
           default = null;
           description = ''
             Auto-switch to HDR in fullscreen when needed.
@@ -96,12 +85,7 @@
         };
 
         non_shader_cm = mkOption {
-          type = nullOr (enum [
-            0
-            1
-            2
-            3
-          ]);
+          type = nullOr (ints.between 0 3);
           default = null;
           description = ''
             Enable CM without shader.
