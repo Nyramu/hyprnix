@@ -24,6 +24,7 @@ in
         input
         gesture
         layout
+        binds
       ];
 
       options.hyprnix = {
