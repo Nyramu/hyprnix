@@ -23,6 +23,7 @@ in
         decoration
         input
         gesture
+        layout
       ];
 
       options.hyprnix = {
