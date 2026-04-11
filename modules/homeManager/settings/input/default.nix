@@ -160,7 +160,7 @@
         follow_mouse = mkOption {
           type = nullOr (ints.between 0 3);
           default = null;
-          description = "Specify if and how cursor movement should affect window focus. See the note below. [0/1/2/3]";
+          description = "Specify if and how cursor movement should affect window focus. 0 - Cursor movement will not change focus. 1 - Cursor movement will always change focus to the window under the cursor. 2 - Cursor focus will be detached from keyboard focus. Clicking on a window will move keyboard focus to that window. 3 - Cursor focus will be completely separate from keyboard focus. Clicking on a window will not change keyboard focus.";
         };
 
         follow_mouse_threshold = mkOption {
