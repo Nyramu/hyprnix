@@ -77,7 +77,7 @@
         };
 
         repeat_delay = mkOption {
-          type = nullOr (addCheck int (x: x >= 100));
+          type = nullOr ints.unsigned;
           default = null;
           description = "Delay before a held-down key is repeated, in milliseconds.";
         };
