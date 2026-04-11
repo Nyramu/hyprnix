@@ -13,7 +13,7 @@
         ints
         ;
 
-      inherit (self.lib.hyprnix.types) numbers tuple;
+      inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.decoration;
     in
@@ -233,7 +233,7 @@
           };
 
           offset = mkOption {
-            type = nullOr (tuple 2);
+            type = nullOr (numbers.tuple 2);
             default = null;
             description = "shadow’s rendering offset.";
           };
