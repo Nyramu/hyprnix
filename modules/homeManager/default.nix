@@ -21,6 +21,7 @@ in
         exec
         general
         decoration
+        input
       ];
 
       options.hyprnix = {
