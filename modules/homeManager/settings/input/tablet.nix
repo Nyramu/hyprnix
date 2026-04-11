@@ -10,7 +10,7 @@
         nullOr
         ints
         ;
-      inherit (self.lib.hyprnix.types) tuple;
+      inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.input.tablet;
     in
@@ -29,7 +29,7 @@
         };
 
         region_position = mkOption {
-          type = nullOr (tuple 2);
+          type = nullOr (numbers.tuple 2);
           default = null;
           description = "position of the mapped region in monitor layout relative to the top left corner of the bound monitor or all monitors.";
         };
@@ -41,7 +41,7 @@
         };
 
         region_size = mkOption {
-          type = nullOr (tuple 2);
+          type = nullOr (numbers.tuple 2);
           default = null;
           description = "size of the mapped region. When this variable is set, tablet input will be mapped to the region. [0, 0] or invalid size means unset.";
         };
@@ -59,13 +59,13 @@
         };
 
         active_area_size = mkOption {
-          type = nullOr (tuple 2);
+          type = nullOr (numbers.tuple 2);
           default = null;
           description = "size of tablet’s active area in mm";
         };
 
         active_area_position = mkOption {
-          type = nullOr (tuple 2);
+          type = nullOr (numbers.tuple 2);
           default = null;
           description = "position of the active area in mm";
         };
