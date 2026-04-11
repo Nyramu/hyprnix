@@ -1,20 +1,13 @@
 # Hyprnix
 > **WORK IN PROGRESS** - Check the configuration steps below!
-### A wrapper for [Home Manager's Hyprland module](https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland.nix), greatly inspired by [this](https://github.com/hyprland-community/hyprnix) Hyprnix project.
 
-## Why should I use this Hyprnix?
-While it mostly works, the other Hyprnix is, unfortunately, rarely updated.
-This makes it prone to rebuild errors and warnings, mainly because some options get deprecated, or some dependencies get replaced/renamed.
-We want to preserve its advantages while also trying to enhance its structure, without breaking compatibility with Hyprland's Home Manager module.
-Here are some reasons to use it:
-- Easy to install and configure
-- Enhanced syntax for keybind definitions and other options
-- Entirely based on Home Manager's `wayland.windowManager.hyprland` options, to ensure compatibility
-  - Hyprland is not a flake dependency. Hyprnix installs it by automatically enabling `wayland.windowManager.hyprland.enable`
-- Config errors make the rebuild crash, in line with NixOS logic
-- Frequent updates (until it will cover every option)
+A wrapper for [Home Manager's Hyprland module](https://github.com/nix-community/home-manager/blob/master/modules/services/window-managers/hyprland.nix),
+greatly inspired by [this](https://github.com/hyprland-community/hyprnix) Hyprnix project.
 
-## Installation
+## Quickstart
+See the full docs [here](https://nyramu.github.io/hyprnix)
+
+### Installation
 Add the flake as an input.
 ```nix
 # flake.nix
@@ -28,7 +21,7 @@ Add the flake as an input.
 }
 ```
 
-## Configuration
+### Configuration
 > **Disclaimer**:
 > As we said earlier, this project is a work-in-progress, so not all options are available or working at this time.
 > The options shown in the following example are currently available.
@@ -41,7 +34,7 @@ down to your Home Manager configuration, you can use the module in `imports`
 somewhere. The following is just an example.
 ```nix
 # home.nix
-{ config, lib, pkgs, inputs, ... }:
+{ inputs, ... }:
 
 {
   imports = [
@@ -53,12 +46,41 @@ somewhere. The following is just an example.
     systemd.enable = true;
     xwayland.enable = true;
     settings = {
-      bind = {
-        "SUPER, RETURN" = "exec, kitty";
-        "SUPER, E" = "exit";
-      };
-      bindl = {
-        # more keybinds
+      monitors = [
+        {
+          output = "HDMI-A-1";
+          mode = "1920x1080@100";
+          position = "auto";
+        }
+        {
+          output = "DP-1";
+          mode = "1920x1080@100";
+          position = "auto";
+        }
+      ];
+
+      workspaces = [
+        {
+          id = 1;
+          rules = {
+            default = true;
+            persistent = true;
+          };
+        }
+        {
+          id = 2;
+          rules.persistent = true;
+        }
+      ];
+
+      keybinds = {
+        bind = {
+          "SUPER, RETURN" = "exec, kitty";
+          "SUPER, E" = "exit";
+        };
+        bindl = {
+          # more keybinds
+        };
       };
       # etc...
     };
@@ -69,6 +91,17 @@ somewhere. The following is just an example.
   };
 }
 ```
+
+## Why should I use this Hyprnix?
+While it mostly works, the other Hyprnix is, unfortunately, rarely updated.
+This makes it prone to rebuild errors and warnings, mainly because some options get deprecated, or some dependencies get replaced/renamed.
+We want to preserve its advantages while also trying to enhance its structure, without breaking compatibility with Hyprland's Home Manager module.
+Here are some reasons to use it:
+- Easy to install and configure
+- Enhanced syntax for keybind definitions and other options
+- Entirely based on Home Manager's `wayland.windowManager.hyprland` options, to ensure compatibility
+- Config errors make the rebuild crash, in line with NixOS logic
+- Frequent updates (until it will cover every option)
 
 ## Contributing
 You can help this project by making a pull request or reporting an issue.

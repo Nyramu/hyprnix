@@ -7,14 +7,12 @@
       inherit (lib.types)
         bool
         number
-        int
         ints
         either
         str
         path
         nullOr
         enum
-        addCheck
         ;
       inherit (self.lib.hyprnix.types) numbers;
 
@@ -67,7 +65,11 @@
         resolve_binds_by_sym = mkOption {
           type = nullOr bool;
           default = null;
-          description = "Determines how keybinds act when multiple layouts are used. If false, keybinds will always act as if the first specified layout is active. If true, keybinds specified by symbols are activated when you type the respective symbol with the current layout.";
+          description = ''
+            Determines how keybinds act when multiple layouts are used.
+            If false, keybinds will always act as if the first specified layout is active.
+            If true, keybinds specified by symbols are activated when you type the respective symbol with the current layout.
+          '';
         };
 
         repeat_rate = mkOption {
@@ -85,7 +87,7 @@
         sensitivity = mkOption {
           type = nullOr (numbers.between (-1) 1);
           default = null;
-          description = "Sets the mouse input sensitivity. Value is clamped to the range -1.0 to 1.0.";
+          description = "Sets the mouse input sensitivity.";
         };
 
         accel_profile = mkOption {
@@ -95,19 +97,23 @@
             "custom"
           ]);
           default = null;
-          description = "Sets the cursor acceleration profile. Can be one of adaptive, flat. Can also be custom, see below. Leave empty to use libinput’s default mode for your input device.";
+          description = "Sets the cursor acceleration profile. Leave empty to use libinput’s default mode for your input device.";
         };
 
         force_no_accel = mkOption {
           type = nullOr bool;
           default = null;
-          description = "Force no cursor acceleration. This bypasses most of your pointer settings to get as raw of a signal as possible. Enabling this is not recommended due to potential cursor desynchronization.";
+          description = ''
+            Force no cursor acceleration.
+            This bypasses most of your pointer settings to get as raw of a signal as possible.
+            Enabling this is not recommended due to potential cursor desynchronization.
+          '';
         };
 
         rotation = mkOption {
           type = nullOr (ints.between 0 359);
           default = null;
-          description = "Sets the rotation of a device in degrees clockwise off the logical neutral position. Value is clamped to the range 0 to 359.";
+          description = "Sets the rotation of a device in degrees clockwise off the logical neutral position.";
         };
 
         left_handed = mkOption {
@@ -119,7 +125,10 @@
         scroll_points = mkOption {
           type = nullOr str;
           default = null;
-          description = "Sets the scroll acceleration profile, when accel_profile is set to custom. Has to be in the form <step> <points>. Leave empty to have a flat scroll curve.";
+          description = ''
+            Sets the scroll acceleration profile, when accel_profile is set to custom.
+            Has to be in the form <step> <points>. Leave empty to have a flat scroll curve.
+          '';
         };
 
         scroll_method = mkOption {
@@ -130,19 +139,23 @@
             "no_scroll"
           ]);
           default = null;
-          description = "Sets the scroll method. Can be one of 2fg (2 fingers), edge, on_button_down, no_scroll.";
+          description = "Sets the scroll method.";
         };
 
         scroll_button = mkOption {
           type = nullOr ints.unsigned;
           default = null;
-          description = "Sets the scroll button. Has to be an int, cannot be a string. Check wev if you have any doubts regarding the ID. 0 means default.";
+          description = "Sets the scroll button. Check wev if you have any doubts regarding the ID. 0 means default.";
         };
 
         scroll_button_lock = mkOption {
           type = nullOr bool;
           default = null;
-          description = "If the scroll button lock is enabled, the button does not need to be held down. Pressing and releasing the button toggles the button lock, which logically holds the button down or releases it. While the button is logically held down, motion events are converted to scroll events.";
+          description = ''
+            If the scroll button lock is enabled, the button does not need to be held down.
+            Pressing and releasing the button toggles the button lock, which logically holds the button down or releases it.
+            While the button is logically held down, motion events are converted to scroll events.
+          '';
         };
 
         scroll_factor = mkOption {
@@ -160,7 +173,13 @@
         follow_mouse = mkOption {
           type = nullOr (ints.between 0 3);
           default = null;
-          description = "Specify if and how cursor movement should affect window focus. 0 - Cursor movement will not change focus. 1 - Cursor movement will always change focus to the window under the cursor. 2 - Cursor focus will be detached from keyboard focus. Clicking on a window will move keyboard focus to that window. 3 - Cursor focus will be completely separate from keyboard focus. Clicking on a window will not change keyboard focus.";
+          description = ''
+            Specify if and how cursor movement should affect window focus.
+            0 - Cursor movement will not change focus.
+            1 - Cursor movement will always change focus to the window under the cursor.
+            2 - Cursor focus will be detached from keyboard focus. Clicking on a window will move keyboard focus to that window.
+            3 - Cursor focus will be completely separate from keyboard focus. Clicking on a window will not change keyboard focus.
+          '';
         };
 
         follow_mouse_threshold = mkOption {
@@ -172,7 +191,12 @@
         focus_on_close = mkOption {
           type = nullOr (ints.between 0 2);
           default = null;
-          description = "Controls the window focus behavior when a window is closed. When set to 0, focus will shift to the next window candidate. When set to 1, focus will shift to the window under the cursor. When set to 2, focus will shift to the most recently used/active window. [0/1/2]";
+          description = ''
+            Controls the window focus behavior when a window is closed.
+            When set to 0, focus will shift to the next window candidate.
+            When set to 1, focus will shift to the window under the cursor.
+            When set to 2, focus will shift to the most recently used/active window.
+          '';
         };
 
         mouse_refocus = mkOption {
@@ -184,7 +208,10 @@
         float_switch_override_focus = mkOption {
           type = nullOr (ints.between 1 2);
           default = null;
-          description = "If enabled (1 or 2), focus will change to the window under the cursor when changing from tiled-to-floating and vice versa. If 2, focus will also follow mouse on float-to-float switches.";
+          description = ''
+            If enabled, focus will change to the window under the cursor when changing from tiled-to-floating and vice versa.
+            If 2, focus will also follow mouse on float-to-float switches.
+          '';
         };
 
         special_fallthrough = mkOption {
@@ -196,13 +223,24 @@
         off_window_axis_events = mkOption {
           type = nullOr (ints.between 0 3);
           default = null;
-          description = "Handles axis events around (gaps/border for tiled, dragarea/border for floated) a focused window. 0 ignores axis events 1 sends out-of-bound coordinates 2 fakes pointer coordinates to the closest point inside the window 3 warps the cursor to the closest point inside the window";
+          description = ''
+            Handles axis events around (gaps/border for tiled, dragarea/border for floated) a focused window.
+            0 ignores axis events.
+            1 sends out-of-bound coordinates.
+            2 fakes pointer coordinates to the closest point inside the window.
+            3 warps the cursor to the closest point inside the window.
+          '';
         };
 
         emulate_discrete_scroll = mkOption {
           type = nullOr (ints.between 0 2);
           default = null;
-          description = "Emulates discrete scrolling from high resolution scrolling events. 0 disables it, 1 enables handling of non-standard events only, and 2 force enables all scroll wheel events to be handled";
+          description = ''
+            Emulates discrete scrolling from high resolution scrolling events.
+            0 disables it.
+            1 enables handling of non-standard events only.
+            2 force enables all scroll wheel events to be handled.
+          '';
         };
       };
 

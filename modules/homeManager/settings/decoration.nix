@@ -28,25 +28,25 @@
         rounding_power = mkOption {
           type = nullOr (numbers.between 1 10);
           default = null;
-          description = "adjusts the curve used for rounding corners, larger is smoother, 2.0 is a circle, 4.0 is a squircle, 1.0 is a triangular corner. [1.0 - 10.0]";
+          description = "adjusts the curve used for rounding corners, larger is smoother, 2.0 is a circle, 4.0 is a squircle, 1.0 is a triangular corner";
         };
 
         active_opacity = mkOption {
           type = nullOr (numbers.between 0 1);
           default = null;
-          description = "opacity of active windows. [0.0 - 1.0]";
+          description = "opacity of active windows";
         };
 
         inactive_opacity = mkOption {
           type = nullOr (numbers.between 0 1);
           default = null;
-          description = "opacity of inactive windows. [0.0 - 1.0]";
+          description = "opacity of inactive windows";
         };
 
         fullscreen_opacity = mkOption {
           type = nullOr (numbers.between 0 1);
           default = null;
-          description = "opacity of fullscreen windows. [0.0 - 1.0]";
+          description = "opacity of fullscreen windows";
         };
 
         dim_modal = mkOption {
@@ -64,19 +64,19 @@
         dim_strength = mkOption {
           type = nullOr (numbers.between 0 1);
           default = null;
-          description = "how much inactive windows should be dimmed [0.0 - 1.0]";
+          description = "how much inactive windows should be dimmed";
         };
 
         dim_special = mkOption {
           type = nullOr (numbers.between 0 1);
           default = null;
-          description = "how much to dim the rest of the screen by when a special workspace is open. [0.0 - 1.0]";
+          description = "how much to dim the rest of the screen by when a special workspace is open";
         };
 
         dim_around = mkOption {
           type = nullOr (numbers.between 0 1);
           default = null;
-          description = "how much the dim_around window rule should dim by. [0.0 - 1.0]";
+          description = "how much the dim_around window rule should dim by";
         };
 
         screen_shader = mkOption {
@@ -131,31 +131,31 @@
           noise = mkOption {
             type = nullOr (numbers.between 0 1);
             default = null;
-            description = "how much noise to apply. [0.0 - 1.0]";
+            description = "how much noise to apply";
           };
 
           contrast = mkOption {
             type = nullOr (numbers.between 0 2);
             default = null;
-            description = "contrast modulation for blur. [0.0 - 2.0]";
+            description = "contrast modulation for blur";
           };
 
           brightness = mkOption {
             type = nullOr (numbers.between 0 2);
             default = null;
-            description = "brightness modulation for blur. [0.0 - 2.0]";
+            description = "brightness modulation for blur";
           };
 
           vibrancy = mkOption {
             type = nullOr (numbers.between 0 1);
             default = null;
-            description = "Increase saturation of blurred colors. [0.0 - 1.0]";
+            description = "Increase saturation of blurred colors";
           };
 
           vibrancy_darkness = mkOption {
             type = nullOr (numbers.between 0 1);
             default = null;
-            description = "How strong the effect of vibrancy is on dark areas . [0.0 - 1.0]";
+            description = "How strong the effect of vibrancy is on dark areas";
           };
 
           special = mkOption {
@@ -173,7 +173,7 @@
           popups_ignorealpha = mkOption {
             type = nullOr (numbers.between 0 1);
             default = null;
-            description = "works like ignore_alpha in layer rules. If pixel opacity is below set value, will not blur. [0.0 - 1.0]";
+            description = "works like ignore_alpha in layer rules. If pixel opacity is below set value, will not blur";
           };
 
           input_methods = mkOption {
@@ -185,7 +185,7 @@
           input_methods_ignorealpha = mkOption {
             type = nullOr (numbers.between 0 1);
             default = null;
-            description = "works like ignore_alpha in layer rules. If pixel opacity is below set value, will not blur. [0.0 - 1.0]";
+            description = "works like ignore_alpha in layer rules. If pixel opacity is below set value, will not blur";
           };
         };
 
@@ -199,13 +199,13 @@
           range = mkOption {
             type = nullOr ints.positive;
             default = null;
-            description = "Shadow range (“size”) in layout px";
+            description = "Shadow range (\"size\") in layout px";
           };
 
           render_power = mkOption {
             type = nullOr (ints.between 1 4);
             default = null;
-            description = "in what power to render the falloff (more power, the faster the falloff) [1 - 4]";
+            description = "in what power to render the falloff (more power, the faster the falloff)";
           };
 
           sharp = mkOption {
@@ -241,7 +241,7 @@
           scale = mkOption {
             type = nullOr (numbers.between 0 1);
             default = null;
-            description = "shadow’s scale. [0.0 - 1.0]";
+            description = "shadow's scale";
           };
         };
 
@@ -255,13 +255,13 @@
           range = mkOption {
             type = nullOr ints.positive;
             default = null;
-            description = "Glow range (“size”) in layout px";
+            description = "Glow range (\"size\") in layout px";
           };
 
           render_power = mkOption {
             type = nullOr (ints.between 1 4);
             default = null;
-            description = "in what power to render the falloff (more power, the faster the falloff) [1 - 4]";
+            description = "in what power to render the falloff (more power, the faster the falloff)";
           };
 
           color = mkOption {

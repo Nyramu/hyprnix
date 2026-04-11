@@ -84,7 +84,7 @@
             "monocle"
           ]);
           default = null;
-          description = "which layout to use. [dwindle/master/scrolling/monocle]";
+          description = "which layout to use";
         };
 
         no_focus_fallback = mkOption {

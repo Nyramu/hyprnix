@@ -108,7 +108,7 @@
           id = mkOption {
             type = nullOr (between 1 9);
             default = null;
-            description = "The workspace's id (1-9).";
+            description = "The workspace's id.";
           };
           rules = mkOption {
             type = rulesType;
