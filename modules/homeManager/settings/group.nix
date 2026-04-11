@@ -38,7 +38,10 @@
         auto_group = mkOption {
           type = nullOr bool;
           default = null;
-          description = "whether new windows will be automatically grouped into the focused unlocked group. Note: if you want to disable auto_group only for specific windows, use the “group barred” window rule instead.";
+          description = ''
+            whether new windows will be automatically grouped into the focused unlocked group.
+            Note: if you want to disable auto_group only for specific windows, use the "group barred" window rule instead.
+          '';
         };
 
         insert_after_current = mkOption {
@@ -56,7 +59,12 @@
         drag_into_group = mkOption {
           type = nullOr (ints.between 0 2);
           default = null;
-          description = "whether dragging a window into a unlocked group will merge them. Options: 0 (disabled), 1 (enabled), 2 (only when dragging into the groupbar)";
+          description = ''
+            whether dragging a window into a unlocked group will merge them.
+            0 -> disabled.
+            1 -> enabled.
+            2 -> only when dragging into the groupbar.
+          '';
         };
 
         merge_groups_on_drag = mkOption {
@@ -207,7 +215,7 @@
           rounding_power = mkOption {
             type = nullOr (numbers.between 1 10);
             default = null;
-            description = "adjusts the curve used for rounding groupbar corners, larger is smoother, 2.0 is a circle, 4.0 is a squircle, 1.0 is a triangular corner. [1.0 - 10.0]";
+            description = "adjusts the curve used for rounding groupbar corners, larger is smoother, 2.0 is a circle, 4.0 is a squircle, 1.0 is a triangular corner";
           };
 
           gradient_rounding = mkOption {
@@ -219,7 +227,7 @@
           gradient_rounding_power = mkOption {
             type = nullOr (numbers.between 1 10);
             default = null;
-            description = "adjusts the curve used for rounding gradient corners, larger is smoother, 2.0 is a circle, 4.0 is a squircle, 1.0 is a triangular corner. [1.0 - 10.0]";
+            description = "adjusts the curve used for rounding gradient corners, larger is smoother, 2.0 is a circle, 4.0 is a squircle, 1.0 is a triangular corner";
           };
 
           round_only_edges = mkOption {

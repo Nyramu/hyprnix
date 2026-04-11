@@ -38,15 +38,13 @@ in
         portalPackage = lib.mkPackageOption pkgs "xdg-desktop-portal-hyprland" {
           default = null;
           nullable = true;
+          extraDescription = "Set this to null if you use the NixOS module to install Hyprland.";
         };
 
         plugins = lib.mkOption {
           type = with lib.types; listOf (either package path);
           default = [ ];
-          description = ''
-            List of Hyprland plugins to use. Can either be packages or
-            absolute plugin paths.
-          '';
+          description = "List of Hyprland plugins to use.";
         };
 
         extraConfig = lib.mkOption {

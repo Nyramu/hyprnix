@@ -19,7 +19,12 @@
         share_states = mkOption {
           type = nullOr (between 0 2);
           default = null;
-          description = "Unify key down states and modifier states with other keyboards. 0 -> no, 1 -> yes, 2 -> yes unless IME client";
+          description = ''
+            Unify key down states and modifier states with other keyboards.
+            0 -> no.
+            1 -> yes.
+            2 -> yes unless IME client.
+          '';
         };
 
         release_pressed_on_close = mkOption {

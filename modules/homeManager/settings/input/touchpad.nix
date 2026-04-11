@@ -39,7 +39,10 @@
         middle_button_emulation = mkOption {
           type = nullOr bool;
           default = null;
-          description = "Sending LMB and RMB simultaneously will be interpreted as a middle click. This disables any touchpad area that would normally send a middle click based on location.";
+          description = ''
+            Sending LMB and RMB simultaneously will be interpreted as a middle click.
+            This disables any touchpad area that would normally send a middle click based on location.
+          '';
         };
 
         tap_button_map = mkOption {
@@ -48,13 +51,16 @@
             "lmr"
           ]);
           default = null;
-          description = "Sets the tap button mapping for touchpad button emulation. Can be one of lrm (default) or lmr (Left, Middle, Right Buttons). [lrm/lmr]";
+          description = "Sets the tap button mapping for touchpad button emulation. Can be one of lrm (default) or lmr (Left, Middle, Right Buttons)";
         };
 
         clickfinger_behavior = mkOption {
           type = nullOr bool;
           default = null;
-          description = "Button presses with 1, 2, or 3 fingers will be mapped to LMB, RMB, and MMB respectively. This disables interpretation of clicks based on location on the touchpad.";
+          description = ''
+            Button presses with 1, 2, or 3 fingers will be mapped to LMB, RMB, and MMB respectively.
+            This disables interpretation of clicks based on location on the touchpad.
+          '';
         };
 
         tap-to-click = mkOption {
@@ -66,7 +72,12 @@
         drag_lock = mkOption {
           type = nullOr (between 0 2);
           default = null;
-          description = "When enabled, lifting the finger off while dragging will not drop the dragged item. 0 -> disabled, 1 -> enabled with timeout, 2 -> enabled sticky.";
+          description = ''
+            When enabled, lifting the finger off while dragging will not drop the dragged item.
+            0 -> disabled.
+            1 -> enabled with timeout.
+            2 -> enabled sticky.
+          '';
         };
 
         tap-and-drag = mkOption {
@@ -90,7 +101,12 @@
         drag_3fd = mkOption {
           type = nullOr (between 0 2);
           default = null;
-          description = "enables three finger drag, 0 -> disabled, 1 -> 3 fingers, 2 -> 4 fingers";
+          description = ''
+            enables three finger drag.
+            0 -> disabled.
+            1 -> 3 fingers.
+            2 -> 4 fingers.
+          '';
         };
       };
 

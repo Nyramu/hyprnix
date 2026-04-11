@@ -57,19 +57,25 @@
         force_default_wallpaper = mkOption {
           type = nullOr (between (-1) 2);
           default = null;
-          description = "Enforce any of the 3 default wallpapers. Setting this to 0 or 1 disables the anime background. -1 means “random”. [-1/0/1/2]";
+          description = "Enforce any of the 3 default wallpapers. Setting this to 0 or 1 disables the anime background. -1 means “random”.";
         };
 
         vfr = mkOption {
           type = nullOr bool;
           default = null;
-          description = "controls the VFR status of Hyprland. Heavily recommended to leave enabled to conserve resources.";
+          description = ''
+            controls the VFR status of Hyprland.
+            Heavily recommended to leave enabled to conserve resources.
+          '';
         };
 
         vrr = mkOption {
           type = nullOr (between 0 3);
           default = null;
-          description = "controls the VRR (Adaptive Sync) of your monitors. 0 - off, 1 - on, 2 - fullscreen only, 3 - fullscreen with video or game content type [0/1/2/3]";
+          description = ''
+            controls the VRR (Adaptive Sync) of your monitors.
+            0 - off, 1 - on, 2 - fullscreen only, 3 - fullscreen with video or game content type.
+          '';
         };
 
         mouse_move_enables_dpms = mkOption {
@@ -87,13 +93,19 @@
         name_vk_after_proc = mkOption {
           type = nullOr bool;
           default = null;
-          description = "Name virtual keyboards after the processes that create them. E.g. /usr/bin/fcitx5 will have hl-virtual-keyboard-fcitx5.";
+          description = ''
+            Name virtual keyboards after the processes that create them.
+            E.g. /usr/bin/fcitx5 will have hl-virtual-keyboard-fcitx5.
+          '';
         };
 
         always_follow_on_dnd = mkOption {
           type = nullOr bool;
           default = null;
-          description = "Will make mouse focus follow the mouse when drag and dropping. Recommended to leave it enabled, especially for people using focus follows mouse at 0.";
+          description = ''
+            Will make mouse focus follow the mouse when drag and dropping.
+            Recommended to leave it enabled, especially for people using focus follows mouse at 0.
+          '';
         };
 
         layers_hog_keyboard_focus = mkOption {
@@ -117,7 +129,11 @@
         disable_autoreload = mkOption {
           type = nullOr bool;
           default = null;
-          description = "If true, the config will not reload automatically on save, and instead needs to be reloaded with hyprctl reload. Might save on battery.";
+          description = ''
+            If true, the config will not reload automatically on save,
+            and instead needs to be reloaded with hyprctl reload.
+            Might save on battery.
+          '';
         };
 
         enable_swallow = mkOption {
@@ -135,7 +151,10 @@
         swallow_exception_regex = mkOption {
           type = nullOr str;
           default = null;
-          description = "The title regex to be used for windows that should not be swallowed by the windows specified in swallow_regex (e.g. wev). The regex is matched against the parent (e.g. Kitty) window’s title on the assumption that it changes to whatever process it’s running.";
+          description = ''
+            The title regex to be used for windows that should not be swallowed by the windows specified in swallow_regex(e.g. wev).
+            The regex is matched against the parent (e.g. Kitty) window’s title on the assumption that it changes to whatever process it’s running.
+          '';
         };
 
         focus_on_activate = mkOption {
@@ -177,7 +196,10 @@
         on_focus_under_fullscreen = mkOption {
           type = nullOr (between 0 2);
           default = null;
-          description = "if there is a fullscreen or maximized window, decide whether a tiled window requested to focus should replace it, stay behind or disable the fullscreen/maximized state. 0 - ignore focus request (keep focus on fullscreen window), 1 - takes over, 2 - unfullscreen/unmaximize [0/1/2]";
+          description = ''
+            if there is a fullscreen or maximized window, decide whether a tiled window requested to focus should replace it, stay behind or disable the fullscreen/maximized state.
+            0 - ignore focus request (keep focus on fullscreen window), 1 - takes over, 2 - unfullscreen/unmaximize
+          '';
         };
 
         exit_window_retains_fullscreen = mkOption {
@@ -189,7 +211,10 @@
         initial_workspace_tracking = mkOption {
           type = nullOr (between 0 2);
           default = null;
-          description = "if enabled, windows will open on the workspace they were invoked on. 0 - disabled, 1 - single-shot, 2 - persistent (all children too)";
+          description = ''
+            if enabled, windows will open on the workspace they were invoked on.
+            0 - disabled, 1 - single-shot, 2 - persistent (all children too)
+          '';
         };
 
         middle_click_paste = mkOption {
@@ -219,7 +244,7 @@
         lockdead_screen_delay = mkOption {
           type = nullOr (between 100 5000);
           default = null;
-          description = "delay after which the “lockdead” screen will appear in case a lockscreen app fails to cover all the outputs (5 seconds max)";
+          description = "delay after which the \"lockdead\" screen will appear in case a lockscreen app fails to cover all the outputs (5 seconds max)";
         };
 
         enable_anr_dialog = mkOption {
