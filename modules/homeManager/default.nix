@@ -34,12 +34,12 @@ in
         debug
         ecosystem
         cursor
+        xwayland
       ];
 
       options.hyprnix = {
         enable = lib.mkEnableOption "hyprnix";
         systemd.enable = lib.mkEnableOption "systemd integration";
-        xwayland.enable = lib.mkEnableOption "xwayland";
 
         package = lib.mkPackageOption pkgs "hyprland" {
           default = null;
@@ -73,7 +73,6 @@ in
         wayland.windowManager.hyprland = {
           enable = true;
           systemd.enable = cfg.systemd.enable;
-          xwayland.enable = cfg.xwayland.enable;
           package = cfg.package;
           portalPackage = cfg.portalPackage;
           plugins = cfg.plugins;
