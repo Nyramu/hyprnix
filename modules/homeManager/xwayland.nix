@@ -32,7 +32,7 @@
           default = null;
           description = ''
             Create the abstract Unix domain socket for XWayland connections.
-            (XWayland restart is required for changes to take effect; Linux only)
+            XWayland restart is required for changes to take effect.
           '';
         };
       };
