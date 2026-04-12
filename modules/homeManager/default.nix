@@ -26,6 +26,7 @@ in
         layout
         binds
         render
+        scrolling
         permissions
         master
         opengl
