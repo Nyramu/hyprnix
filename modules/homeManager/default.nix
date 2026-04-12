@@ -35,6 +35,7 @@ in
         ecosystem
         cursor
         xwayland
+        windowrules
       ];
 
       options.hyprnix = {
