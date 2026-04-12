@@ -17,28 +17,7 @@
 
       cfg = config.hyprnix.settings.windowrules;
 
-      opt =
-        type:
-        mkOption {
-          type = nullOr type;
-          default = null;
-        };
-      opts = lib.mapAttrs (_: opt);
-
-      effectValue =
-        v:
-        if v == null || v == false then
-          null
-        else if v == true then
-          "on"
-        else if builtins.isList v then
-          lib.concatMapStringsSep " " toString v
-        else
-          toString v;
-
-      matchValue = v: if builtins.isBool v then lib.boolToString v else toString v;
-
-      matchTypes = {
+      matches = {
         class = str;
         title = str;
         initial_class = str;
@@ -58,7 +37,7 @@
         content = ints.between 0 3;
       };
 
-      effectTypes = {
+      effects = {
         float = bool;
         tile = bool;
         fullscreen = bool;
@@ -88,17 +67,65 @@
         tag = str;
       };
 
-      ruleType = submodule {
+      windowruleType = submodule {
         options = {
-          name = opt str;
+          name = mkOption {
+            type = nullOr str;
+            default = null;
+            description = "Name of the windowrule";
+          };
+
           match = mkOption {
-            type = submodule { options = opts matchTypes; };
+            type = submodule {
+              options = lib.mapAttrs (
+                _: type:
+                mkOption {
+                  type = nullOr type;
+                  default = null;
+                }
+              ) matches;
+            };
             default = { };
             description = "Match conditions.";
           };
         }
-        // opts effectTypes;
+        // lib.mapAttrs (
+          _: type:
+          mkOption {
+            type = nullOr type;
+            default = null;
+          }
+        ) effects;
       };
+
+      effectParser =
+        v:
+        if v == null || v == false then
+          null
+        else if v == true then
+          "on"
+        else if builtins.isList v then
+          lib.concatMapStringsSep " " toString v
+        else
+          toString v;
+
+      matchParser = v: if builtins.isBool v then lib.boolToString v else toString v;
+
+      getEffectPairs =
+        rule:
+        lib.concatMapAttrs (
+          n: v:
+          let
+            val = effectParser v;
+          in
+          if val != null then { "${n}" = val; } else { }
+        ) (builtins.intersectAttrs effects rule);
+
+      getMatchPairs =
+        rule:
+        lib.mapAttrs' (p: v: lib.nameValuePair "match:${p}" (matchParser v)) (
+          lib.filterAttrs (_: v: v != null) rule.match
+        );
 
       serialize =
         rule:
@@ -106,24 +133,17 @@
           rule
         else
           let
-            effectPairs = lib.pipe (builtins.attrNames effectTypes) [
-              (map (n: lib.nameValuePair n (effectValue rule.${n})))
-              (builtins.filter (nv: nv.value != null))
-            ];
-            matchPairs = lib.pipe rule.match [
-              (lib.filterAttrs (_: v: v != null))
-              (lib.mapAttrsToList (p: v: lib.nameValuePair "match:${p}" (matchValue v)))
-            ];
+            allPairs = lib.mapAttrsToList lib.nameValuePair (getEffectPairs rule // getMatchPairs rule);
           in
           if rule.name == null then
-            lib.concatStringsSep ", " (map (nv: "${nv.name} ${nv.value}") (effectPairs ++ matchPairs))
+            lib.concatStringsSep ", " (map (nv: "${nv.name} ${nv.value}") allPairs)
           else
-            { name = rule.name; } // lib.listToAttrs effectPairs // lib.listToAttrs matchPairs;
+            { name = rule.name; } // lib.listToAttrs allPairs;
 
     in
     {
       options.hyprnix.settings.windowrules = mkOption {
-        type = listOf ruleType;
+        type = listOf windowruleType;
         default = [ ];
         description = "Hyprland windowrules configuration.";
         example = [
