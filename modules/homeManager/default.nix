@@ -26,6 +26,7 @@ in
         layout
         binds
         render
+        ecosystem
       ];
 
       options.hyprnix = {
