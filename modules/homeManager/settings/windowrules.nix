@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ self, lib, ... }:
 {
   flake.homeModules.windowrules =
     { config, ... }:
@@ -6,14 +6,18 @@
       inherit (lib) mkOption;
       inherit (lib.types)
         bool
-        float
+        enum
+        number
         str
         ints
         either
         nullOr
         listOf
+        addCheck
         submodule
         ;
+      tuple = n: (addCheck (listOf ints.unsigned) (l: builtins.length l == n));
+      inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.windowrules;
 
@@ -23,7 +27,6 @@
         initial_class = str;
         initial_title = str;
         tag = str;
-        xdg_tag = str;
         xwayland = bool;
         float = bool;
         fullscreen = bool;
@@ -35,36 +38,82 @@
         fullscreen_state_internal = ints.between 0 3;
         workspace = either ints.unsigned str;
         content = ints.between 0 3;
+        xdg_tag = str;
       };
 
       effects = {
+        # Static effects
         float = bool;
         tile = bool;
         fullscreen = bool;
         maximize = bool;
-        center = either bool ints.unsigned;
-        pin = bool;
+        fullscreen_state = ints.between 0 3;
+        move = either str (tuple 2);
+        size = either str (tuple 2);
+        center = bool;
         pseudo = bool;
-        stayfocused = bool;
-        immediate = bool;
-        keepaspectratio = bool;
-        nofocus = bool;
-        noshadow = bool;
-        nodim = bool;
-        noanim = bool;
-        forcergbx = bool;
-        size = either str (listOf ints.unsigned);
-        minsize = either str (listOf ints.unsigned);
-        maxsize = either str (listOf ints.unsigned);
-        move = str;
-        opacity = either float (listOf float);
-        rounding = ints.unsigned;
-        border_size = ints.unsigned;
-        bordercolor = str;
-        workspace = either ints.unsigned str;
         monitor = either ints.unsigned str;
+        workspace = either ints.unsigned str;
+        no_initial_focus = bool;
+        pin = bool;
+        suppress_event = enum [
+          "fullscreen"
+          "maximize"
+          "activate"
+          "activatefocus"
+          "fullscreenoutput"
+        ];
+        content = enum [
+          "none"
+          "photo"
+          "video"
+          "game"
+        ];
+        no_close_for = ints.unsigned;
+        scrolling_width = numbers.unsigned;
+        # Dynamic effects - should make Hyprland give parsing errors if
+        # used on anonymous windowrules instead of named windowrules
+        persistent_size = bool;
+        no_max_size = bool;
+        stay_focused = bool;
         animation = str;
+        border_color = str;
+        idle_inhibit = enum [
+          "none"
+          "always"
+          "focus"
+          "fullscreen"
+        ];
+        opacity = (addCheck (listOf number) (l: builtins.length l > 0 && builtins.length l <= 3));
         tag = str;
+        max_size = tuple 2;
+        min_size = tuple 2;
+        border_size = ints.unsigned;
+        rounding = ints.unsigned;
+        rounding_power = numbers.unsigned;
+        allows_input = bool;
+        dim_around = bool;
+        decorate = bool;
+        focus_on_activate = bool;
+        keep_aspect_ratio = bool;
+        nearest_neighbor = bool;
+        no_anim = bool;
+        no_blur = bool;
+        no_dim = bool;
+        no_focus = bool;
+        no_follow_mouse = bool;
+        no_shadow = bool;
+        no_shortcuts_inhibit = bool;
+        no_screen_share = bool;
+        no_vrr = bool;
+        opaque = bool;
+        force_rgbx = bool;
+        sync_fullscreen = bool;
+        immediate = bool;
+        xray = bool;
+        render_unfocused = bool;
+        scroll_mouse = numbers.unsigned;
+        scroll_touchpad = numbers.unsigned;
       };
 
       windowruleType = submodule {
