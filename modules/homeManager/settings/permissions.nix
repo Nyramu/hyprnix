@@ -59,11 +59,13 @@
           type = nullOr (listOf permissionType);
           default = [ ];
           description = "Hyprland permissions configuration";
-          example = {
-            executable = "${"lib.getExe pkgs.grim"}";
-            permission = "screencopy";
-            mode = "allow";
-          };
+          example = [
+            {
+              executable = "${"lib.getExe pkgs.grim"}";
+              permission = "screencopy";
+              mode = "allow";
+            }
+          ];
         };
       };
 
