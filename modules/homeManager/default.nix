@@ -27,6 +27,8 @@ in
         binds
         render
         debug
+        ecosystem
+        cursor
       ];
 
       options.hyprnix = {
