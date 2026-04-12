@@ -26,6 +26,7 @@ in
         layout
         binds
         render
+        opengl
       ];
 
       options.hyprnix = {
