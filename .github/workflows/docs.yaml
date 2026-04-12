@@ -24,20 +24,8 @@ jobs:
           name: hyprnix
           authToken: ${{ secrets.CACHIX_AUTH_TOKEN }}
 
-      - name: Build options JSON
-        run: nix build .#options-json
-
       - name: Generate docs
-        run: |
-          nix run github:feel-co/ndg#ndg -- html \
-            --input-dir ./docs \
-            --module-options ./result/share/doc/nixos/options.json \
-            --output-dir ./docs-out \
-            --title "Hyprnix Documentation" \
-            --generate-search \
-            --highlight-code \
-            --revision main \
-            --footer "Hyprnix docs - made with ndg"
+        run: nix build .#docs --out-link docs-out
 
       - uses: actions/upload-pages-artifact@v3
         with:
