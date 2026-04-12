@@ -123,7 +123,7 @@
     in
     {
       options.hyprnix.settings.windowrules = mkOption {
-        type = listOf (either ruleType str);
+        type = listOf ruleType;
         default = [ ];
         description = "Hyprland windowrules configuration.";
         example = [
