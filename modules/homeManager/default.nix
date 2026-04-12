@@ -26,6 +26,7 @@ in
         layout
         binds
         render
+        quirks
         debug
         ecosystem
         cursor
