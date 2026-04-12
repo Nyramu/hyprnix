@@ -27,6 +27,13 @@ in
         binds
         render
         scrolling
+        permissions
+        master
+        opengl
+        quirks
+        debug
+        ecosystem
+        cursor
       ];
 
       options.hyprnix = {
