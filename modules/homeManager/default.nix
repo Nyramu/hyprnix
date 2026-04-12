@@ -26,6 +26,7 @@ in
         layout
         binds
         render
+        debug
         ecosystem
         cursor
       ];
