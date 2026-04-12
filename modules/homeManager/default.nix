@@ -26,6 +26,7 @@ in
         layout
         binds
         render
+        opengl
         quirks
         debug
         ecosystem
