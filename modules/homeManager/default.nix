@@ -27,6 +27,10 @@ in
         binds
         render
         opengl
+        quirks
+        debug
+        ecosystem
+        cursor
       ];
 
       options.hyprnix = {
