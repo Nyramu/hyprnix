@@ -1,0 +1,8 @@
+input_dir = "docs"
+title = "Hyprnix Documentation"
+footer_text = "Hyprnix docs - made with ndg"
+hilight_code = true
+revision = "main"
+
+[search]
+enable = true
