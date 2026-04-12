@@ -26,6 +26,7 @@ in
         layout
         binds
         render
+        master
       ];
 
       options.hyprnix = {
