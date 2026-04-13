@@ -84,7 +84,14 @@
           "focus"
           "fullscreen"
         ];
-        opacity = (addCheck (listOf number) (l: builtins.length l > 0 && builtins.length l <= 3));
+        opacity = (addCheck (listOf number) (l: builtins.length l > 0 && builtins.length l <= 3)) // {
+          description = ''
+            Additional opacity multiplier.
+            One value -> sets an overall opacity
+            Two values -> sets active_opacity and inactive_opacity respectively
+            Three values -> sets active_opacity, inactive_opacity and fullscreen_opacity respectively.
+          '';
+        };
         tag = str;
         max_size = tuple 2;
         min_size = tuple 2;
