@@ -174,7 +174,7 @@
           let
             val = effectParser v;
           in
-          if val != null then { "${n}" = val; } else { }
+          if val != null then { ${n} = val; } else { }
         ) (builtins.intersectAttrs effects rule);
 
       getMatchPairs =
