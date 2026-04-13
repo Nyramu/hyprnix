@@ -7,7 +7,8 @@
       inherit (lib.types)
         bool
         nullOr
-        str
+        listOf
+        number
         enum
         ints
         ;
@@ -15,6 +16,12 @@
       inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.scrolling;
+
+      cfg' = cfg // {
+        explicit_column_widths = lib.mapNullable (
+          l: lib.concatStringsSep ", " (map toString l)
+        ) cfg.explicit_column_widths;
+      };
     in
     {
       options.hyprnix.settings.scrolling = {
@@ -55,9 +62,9 @@
         };
 
         explicit_column_widths = mkOption {
-          type = nullOr str;
+          type = nullOr (listOf number);
           default = null;
-          description = "A comma-separated list of preconfigured widths for colresize +conf/-conf";
+          description = "A list of preconfigured widths for colresize +conf/-conf";
         };
 
         wrap_focus = mkOption {
@@ -86,7 +93,7 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.scrolling = lib.filterAttrs (_: v: v != null) cfg;
+        wayland.windowManager.hyprland.settings.scrolling = lib.filterAttrs (_: v: v != null) cfg';
       };
     };
 }
