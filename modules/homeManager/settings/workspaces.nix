@@ -7,14 +7,10 @@
       inherit (lib.types)
         bool
         str
+        ints
         nullOr
         listOf
         submodule
-        ;
-      inherit (lib.types.ints)
-        positive
-        between
-        unsigned
         ;
 
       cfg = config.hyprnix.settings;
@@ -36,19 +32,19 @@
           };
 
           gapsin = mkOption {
-            type = nullOr unsigned;
+            type = nullOr ints.unsigned;
             default = null;
             description = "Set the gaps between windows (equivalent to General->gaps_in)";
           };
 
           gapsout = mkOption {
-            type = nullOr unsigned;
+            type = nullOr ints.unsigned;
             default = null;
             description = "Set the gaps between windows and monitor edges (equivalent to General->gaps_out)";
           };
 
           bordersize = mkOption {
-            type = nullOr positive;
+            type = nullOr ints.positive;
             default = null;
             description = "Set the border size around windows (equivalent to General->border_size)";
           };
@@ -106,13 +102,11 @@
       workspaceType = submodule {
         options = {
           id = mkOption {
-            type = nullOr (between 1 9);
-            default = null;
+            type = ints.between 1 9;
             description = "The workspace's id.";
           };
           rules = mkOption {
             type = rulesType;
-            default = { };
             description = "Rules for this workspace. At least one must be set.";
           };
         };
@@ -145,10 +139,6 @@
 
       config = {
         assertions = lib.concatMap (ws: [
-          {
-            assertion = ws.id != null;
-            message = "hyprnix.settings.workspaces: every workspace's id must be set";
-          }
           {
             assertion = lib.any (v: v != null) (lib.attrValues ws.rules);
             message = "hyprnix.settings.workspaces[${toString ws.id}]: at least one rule must be set";
