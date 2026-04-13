@@ -64,7 +64,7 @@
         explicit_column_widths = mkOption {
           type = nullOr (listOf number);
           default = null;
-          description = "A comma-separated list of preconfigured widths for colresize +conf/-conf";
+          description = "A list of preconfigured widths for colresize +conf/-conf";
         };
 
         wrap_focus = mkOption {
