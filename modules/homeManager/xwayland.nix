@@ -10,6 +10,8 @@
         ;
 
       cfg = config.hyprnix.xwayland;
+
+      cfg' = lib.filterAttrs (_: v: v != null) cfg;
     in
     {
       options.hyprnix.xwayland = {
@@ -39,7 +41,9 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.xwayland = lib.filterAttrs (_: v: v != null) cfg;
+        wayland.windowManager.hyprland = {
+          xwayland = lib.mkIf (cfg' != { }) cfg';
+        };
       };
     };
 }
