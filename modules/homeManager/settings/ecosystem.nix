@@ -8,7 +8,9 @@
         bool
         nullOr
         ;
+
       cfg = config.hyprnix.settings.ecosystem;
+      cfg' = lib.filterAttrs (_: v: v != null) cfg;
     in
     {
       options.hyprnix.settings.ecosystem = {
@@ -34,7 +36,7 @@
       config = {
         wayland.windowManager.hyprland.settings = {
           # Only write actually set values to avoid noise in the file
-          ecosystem = lib.filterAttrs (_: v: v != null) cfg;
+          ecosystem = lib.mkIf (cfg' != { }) cfg';
         };
       };
     };
