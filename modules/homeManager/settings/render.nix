@@ -13,6 +13,7 @@
         ;
 
       cfg = config.hyprnix.settings.render;
+      cfg' = lib.filterAttrs (_: v: v != null) cfg;
     in
     {
       options.hyprnix.settings.render = {
@@ -115,7 +116,9 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.render = lib.filterAttrs (_: v: v != null) cfg;
+        wayland.windowManager.hyprland.settings = {
+          render = lib.mkIf (cfg' != { }) cfg';
+        };
       };
     };
 }
