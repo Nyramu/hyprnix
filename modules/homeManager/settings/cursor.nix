@@ -15,6 +15,13 @@
       inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.cursor;
+
+      cfg' = (
+        cfg
+        // lib.optionalAttrs (cfg.hyprcursor.enable != null) {
+          enable_hyprcursor = cfg.hyprcursor.enable;
+        }
+      );
     in
     {
       options.hyprnix.settings.cursor = {
@@ -199,12 +206,9 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.cursor =
-          lib.filterAttrs (k: v: k != "hyprcursor" && v != null) cfg
-          # Set enable_hyprcursor in hyprland.conf
-          // lib.optionalAttrs (cfg.hyprcursor.enable != null) {
-            enable_hyprcursor = cfg.hyprcursor.enable;
-          };
+        wayland.windowManager.hyprland.settings = {
+          cursor = lib.filterAttrs (k: v: k != "hyprcursor" && v != null) cfg';
+        };
 
         # Set the hyprcursor
         hyprnix.settings.env = lib.mkIf (cfg.hyprcursor.enable == true) (
