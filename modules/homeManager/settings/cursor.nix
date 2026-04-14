@@ -187,19 +187,19 @@
           package = mkOption {
             type = nullOr package;
             default = null;
-            description = "set hyprcursor package to install";
+            description = "set cursor's package to install";
           };
 
           name = mkOption {
             type = nullOr str;
             default = null;
-            description = "set hyprcursor's name. Requires Hyprland restart.";
+            description = "set cursor's name. Requires Hyprland restart.";
           };
 
           size = mkOption {
             type = nullOr ints.positive;
             default = null;
-            description = "set hyprcursor's size. Requires Hyprland restart.";
+            description = "set cursor's size. Requires Hyprland restart.";
           };
         };
       };
