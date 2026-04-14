@@ -17,11 +17,15 @@
 
       cfg = config.hyprnix.settings.scrolling;
 
-      cfg' = cfg // {
-        explicit_column_widths = lib.mapNullable (
-          l: lib.concatStringsSep ", " (map toString l)
-        ) cfg.explicit_column_widths;
-      };
+      cfg' = lib.pipe cfg [
+        ( c: c // {
+            explicit_column_widths = lib.mapNullable (
+              l: lib.concatStringsSep ", " (map toString l)
+            ) c.explicit_column_widths;
+        })
+        (lib.filterAttrsRecursive (_: v: v != null))
+        (lib.filterAttrsRecursive (_: v: v != { }))
+      ];
     in
     {
       options.hyprnix.settings.scrolling = {
@@ -93,7 +97,9 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.scrolling = lib.filterAttrs (_: v: v != null) cfg';
+        wayland.windowManager.hyprland.settings = {
+          scrolling = lib.mkIf (cfg' != { }) cfg';
+        };
       };
     };
 }
