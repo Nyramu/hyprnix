@@ -32,6 +32,10 @@
       ]);
 
       cfg = config.hyprnix.settings.group;
+      cfg' = lib.pipe cfg [
+        (lib.filterAttrsRecursive (_: v: v != null))
+        (lib.filterAttrsRecursive (_: v: v != { }))
+      ];
     in
     {
       options.hyprnix.settings.group = {
@@ -318,7 +322,9 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.group = lib.filterAttrsRecursive (_: v: v != null) cfg;
+        wayland.windowManager.hyprland.settings = {
+          group = lib.mkIf (cfg' != { }) cfg';
+        };
       };
     };
 }
