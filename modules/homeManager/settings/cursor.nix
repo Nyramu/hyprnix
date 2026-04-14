@@ -17,7 +17,7 @@
       cfg = config.hyprnix.settings.cursor;
 
       cfg' = (
-        cfg
+        lib.filterAttrs (k: v: k != "hyprcursor" && v != null) cfg
         // lib.optionalAttrs (cfg.hyprcursor.enable != null) {
           enable_hyprcursor = cfg.hyprcursor.enable;
         }
@@ -207,7 +207,7 @@
       config = {
         # Only write actually set values to avoid noise in the file
         wayland.windowManager.hyprland.settings = {
-          cursor = lib.filterAttrs (k: v: k != "hyprcursor" && v != null) cfg';
+          cursor = lib.mkIf (cfg' != { }) cfg';
         };
 
         # Set the hyprcursor
