@@ -1,7 +1,7 @@
 { self, lib, ... }:
 {
   flake.homeModules.input =
-    { config, ... }:
+    { ... }:
     let
       inherit (lib) mkOption;
       inherit (lib.types)
@@ -11,8 +11,6 @@
         ints
         ;
       inherit (self.lib.hyprnix.types) numbers;
-
-      cfg = config.hyprnix.settings.input.tablet;
     in
     {
       options.hyprnix.settings.input.tablet = {
@@ -68,13 +66,6 @@
           type = nullOr (numbers.tuple 2);
           default = null;
           description = "position of the active area in mm";
-        };
-      };
-
-      config = {
-        # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.input = {
-          tablet = lib.filterAttrsRecursive (_: v: v != null) cfg;
         };
       };
     };

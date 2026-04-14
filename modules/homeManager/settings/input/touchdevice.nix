@@ -1,7 +1,7 @@
 { lib, ... }:
 {
   flake.homeModules.input =
-    { config, ... }:
+    { ... }:
     let
       inherit (lib) mkOption;
       inherit (lib.types)
@@ -12,8 +12,6 @@
       inherit (lib.types.ints)
         between
         ;
-
-      cfg = config.hyprnix.settings.input.touchdevice;
     in
     {
       options.hyprnix.settings.input.touchdevice = {
@@ -33,13 +31,6 @@
           type = nullOr bool;
           default = null;
           description = "Whether input is enabled for touch devices.";
-        };
-      };
-
-      config = {
-        # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.input = {
-          touchdevice = lib.filterAttrsRecursive (_: v: v != null) cfg;
         };
       };
     };

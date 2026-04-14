@@ -1,7 +1,7 @@
 { lib, ... }:
 {
   flake.homeModules.input =
-    { config, ... }:
+    { ... }:
     let
       inherit (lib) mkOption;
       inherit (lib.types)
@@ -11,8 +11,6 @@
       inherit (lib.types.ints)
         between
         ;
-
-      cfg = config.hyprnix.settings.input.virtualkeyboard;
     in
     {
       options.hyprnix.settings.input.virtualkeyboard = {
@@ -31,13 +29,6 @@
           type = nullOr bool;
           default = null;
           description = "Release all pressed keys by virtual keyboard on close.";
-        };
-      };
-
-      config = {
-        # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.input = {
-          virtualkeyboard = lib.filterAttrsRecursive (_: v: v != null) cfg;
         };
       };
     };
