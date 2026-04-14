@@ -8,12 +8,20 @@
         bool
         str
         nullOr
+        package
         ints
         ;
 
       inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.cursor;
+
+      cfg' = (
+        cfg
+        // lib.optionalAttrs (cfg.hyprcursor.enable != null) {
+          enable_hyprcursor = cfg.hyprcursor.enable;
+        }
+      );
     in
     {
       options.hyprnix.settings.cursor = {
@@ -129,12 +137,6 @@
           description = "detach the camera from the mouse when zoomed in, only ever moving the camera to keep the mouse in view when it goes past the screen edges";
         };
 
-        enable_hyprcursor = mkOption {
-          type = nullOr bool;
-          default = null;
-          description = "whether to enable hyprcursor support";
-        };
-
         hide_on_key_press = mkOption {
           type = nullOr bool;
           default = null;
@@ -174,11 +176,51 @@
           default = null;
           description = "disable antialiasing when zooming, which means things will be pixelated instead of blurry";
         };
+
+        hyprcursor = {
+          enable = mkOption {
+            type = nullOr bool;
+            default = null;
+            description = "whether to enable hyprcursor support";
+          };
+
+          package = mkOption {
+            type = nullOr package;
+            default = null;
+            description = "set cursor's package to install";
+          };
+
+          name = mkOption {
+            type = nullOr str;
+            default = null;
+            description = "set cursor's name. Requires Hyprland restart.";
+          };
+
+          size = mkOption {
+            type = nullOr ints.positive;
+            default = null;
+            description = "set cursor's size. Requires Hyprland restart.";
+          };
+        };
       };
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.cursor = lib.filterAttrs (_: v: v != null) cfg;
+        wayland.windowManager.hyprland.settings = {
+          cursor = lib.filterAttrs (k: v: k != "hyprcursor" && v != null) cfg';
+        };
+
+        # Set the hyprcursor
+        hyprnix.settings.env = lib.mkIf (cfg.hyprcursor.enable == true) (
+          lib.filterAttrs (_: v: v != null) {
+            HYPRCURSOR_THEME = cfg.hyprcursor.name;
+            HYPRCURSOR_SIZE = cfg.hyprcursor.size;
+          }
+        );
+
+        home.packages = lib.mkIf (cfg.hyprcursor.enable == true && cfg.hyprcursor.package != null) [
+          cfg.hyprcursor.package
+        ];
       };
     };
 }
