@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ self, lib, ... }:
 {
   flake.homeModules.quirks =
     { config, ... }:
@@ -8,9 +8,10 @@
         nullOr
         ints
         ;
+      inherit (self.lib.hyprnix.types) filterValidAttrs;
 
       cfg = config.hyprnix.settings.quirks;
-      cfg' = lib.filterAttrs (_: v: v != null) cfg;
+      cfg' = filterValidAttrs cfg;
     in
     {
       options.hyprnix.settings.quirks = {

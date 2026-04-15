@@ -13,14 +13,13 @@
         ints
         ;
 
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (self.lib.hyprnix.types) numbers filterValidAttrs;
 
       cfg = config.hyprnix.settings.scrolling;
 
       cfg' = lib.pipe cfg [
         extract_column_widths
-        (lib.filterAttrsRecursive (_: v: v != null))
-        (lib.filterAttrsRecursive (_: v: v != { }))
+        filterValidAttrs
       ];
 
       extract_column_widths = (

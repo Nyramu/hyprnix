@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ self, lib, ... }:
 {
   flake.homeModules.misc =
     { config, ... }:
@@ -13,12 +13,10 @@
         positive
         between
         ;
+      inherit (self.lib.hyprnix.types) filterValidAttrs;
 
       cfg = config.hyprnix.settings.misc;
-      cfg' = lib.pipe cfg [
-        (lib.filterAttrsRecursive (_: v: v != null))
-        (lib.filterAttrsRecursive (_: v: v != { }))
-      ];
+      cfg' = filterValidAttrs cfg;
     in
     {
       options.hyprnix.settings.misc = {
