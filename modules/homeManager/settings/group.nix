@@ -14,7 +14,7 @@
         ints
         ;
 
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (self.lib.hyprnix.types) numbers filterValidAttrs;
 
       font_weight = either (ints.between 100 1000) (enum [
         "thin"
@@ -32,10 +32,7 @@
       ]);
 
       cfg = config.hyprnix.settings.group;
-      cfg' = lib.pipe cfg [
-        (lib.filterAttrsRecursive (_: v: v != null))
-        (lib.filterAttrsRecursive (_: v: v != { }))
-      ];
+      cfg' = filterValidAttrs cfg;
     in
     {
       options.hyprnix.settings.group = {

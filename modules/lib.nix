@@ -33,5 +33,12 @@ in
         };
     };
 
+    filterValidAttrs = (
+      a:
+      lib.pipe a [
+        (lib.filterAttrsRecursive (_: v: v != null))
+        (lib.filterAttrsRecursive (_: v: v != { }))
+      ]
+    );
   };
 }

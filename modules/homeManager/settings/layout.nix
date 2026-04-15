@@ -11,10 +11,10 @@
         addCheck
         ;
 
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (self.lib.hyprnix.types) numbers filterValidAttrs;
 
       cfg = config.hyprnix.settings.layout;
-      cfg' = lib.filterAttrs (_: v: v != null) cfg;
+      cfg' = filterValidAttrs cfg;
     in
     {
       options.hyprnix.settings.layout = {

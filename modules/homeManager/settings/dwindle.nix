@@ -12,10 +12,10 @@
         ints
         ;
 
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (self.lib.hyprnix.types) numbers filterValidAttrs;
 
       cfg = config.hyprnix.settings.dwindle;
-      cfg' = lib.filterAttrs (_: v: v != null) cfg;
+      cfg' = filterValidAttrs cfg;
     in
     {
       options.hyprnix.settings.dwindle = {

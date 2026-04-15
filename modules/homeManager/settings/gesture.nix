@@ -15,12 +15,12 @@
         listOf
         ;
 
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (self.lib.hyprnix.types) numbers filterValidAttrs;
 
       cfg = config.hyprnix.settings.gesture;
       cfg' = lib.pipe cfg [
-        (lib.filterAttrsRecursive (k: v: k != "gestures" && v != null))
-        (lib.filterAttrsRecursive (_: v: v != { }))
+        (lib.filterAttrsRecursive (k: _: k != "gestures"))
+        filterValidAttrs
       ];
 
       directions = enum [

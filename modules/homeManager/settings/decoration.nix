@@ -13,13 +13,10 @@
         ints
         ;
 
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (self.lib.hyprnix.types) numbers filterValidAttrs;
 
       cfg = config.hyprnix.settings.decoration;
-      cfg' = lib.pipe cfg [
-        (lib.filterAttrsRecursive (_: v: v != null))
-        (lib.filterAttrsRecursive (_: v: v != { }))
-      ];
+      cfg' = filterValidAttrs cfg;
     in
     {
       options.hyprnix.settings.decoration = {

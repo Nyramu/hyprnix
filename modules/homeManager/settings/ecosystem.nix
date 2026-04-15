@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ self, lib, ... }:
 {
   flake.homeModules.ecosystem =
     { config, ... }:
@@ -8,9 +8,10 @@
         bool
         nullOr
         ;
+      inherit (self.lib.hyprnix.types) filterValidAttrs;
 
       cfg = config.hyprnix.settings.ecosystem;
-      cfg' = lib.filterAttrs (_: v: v != null) cfg;
+      cfg' = filterValidAttrs cfg;
     in
     {
       options.hyprnix.settings.ecosystem = {

@@ -12,12 +12,19 @@
         ints
         ;
 
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (self.lib.hyprnix.types) numbers filterValidAttrs;
 
       cfg = config.hyprnix.settings.cursor;
 
-      cfg' = (
-        lib.filterAttrs (k: v: k != "hyprcursor" && v != null) cfg
+      cfg' = lib.pipe cfg [
+        extractEnableHyprcursor
+        (lib.filterAttrsRecursive (k: _: k != "hyprcursor"))
+        filterValidAttrs
+      ];
+
+      extractEnableHyprcursor = (
+        cfg:
+        cfg
         // lib.optionalAttrs (cfg.hyprcursor.enable != null) {
           enable_hyprcursor = cfg.hyprcursor.enable;
         }

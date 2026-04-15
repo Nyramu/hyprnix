@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ self, lib, ... }:
 {
   flake.homeModules.render =
     { config, ... }:
@@ -11,9 +11,10 @@
         enum
         ints
         ;
+      inherit (self.lib.hyprnix.types) filterValidAttrs;
 
       cfg = config.hyprnix.settings.render;
-      cfg' = lib.filterAttrs (_: v: v != null) cfg;
+      cfg' = filterValidAttrs cfg;
     in
     {
       options.hyprnix.settings.render = {
