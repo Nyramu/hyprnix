@@ -1,7 +1,7 @@
 { lib, ... }:
 {
   flake.homeModules.keybinds =
-    { config, ... }:
+    { config, ... }@hmArgs:
     let
       inherit (lib)
         mkOption
@@ -47,7 +47,11 @@
           message = "'${name}' is not a valid bind: it must begin with 'bind' followed only by valid characters (${concatStrings validFlags})";
         }) cfg;
 
-        wayland.windowManager.hyprland.settings = mapAttrs (_: formatBinds) cfg;
+        xdg.configFile."hypr/keybinds.conf".text = hmArgs.lib.hm.generators.toHyprconf {
+          attrs = mapAttrs (_: formatBinds) cfg;
+        };
+
+        wayland.windowManager.hyprland.settings.source = [ "keybinds.conf" ];
       };
     };
 }
