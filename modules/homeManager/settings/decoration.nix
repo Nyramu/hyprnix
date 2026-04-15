@@ -16,6 +16,10 @@
       inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.decoration;
+      cfg' = lib.pipe cfg [
+        (lib.filterAttrsRecursive (_: v: v != null))
+        (lib.filterAttrsRecursive (_: v: v != { }))
+      ];
     in
     {
       options.hyprnix.settings.decoration = {
@@ -280,7 +284,9 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.decoration = lib.filterAttrsRecursive (_: v: v != null) cfg;
+        wayland.windowManager.hyprland.settings = {
+          decoration = lib.mkIf (cfg' != { }) cfg';
+        };
       };
     };
 }

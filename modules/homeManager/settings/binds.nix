@@ -12,6 +12,7 @@
         ;
 
       cfg = config.hyprnix.settings.binds;
+      cfg' = lib.filterAttrsRecursive (_: v: v != null) cfg;
     in
     {
       options.hyprnix.settings.binds = {
@@ -115,7 +116,9 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.binds = lib.filterAttrs (_: v: v != null) cfg;
+        wayland.windowManager.hyprland.settings = {
+          binds = lib.mkIf (cfg' != { }) cfg';
+        };
       };
     };
 }

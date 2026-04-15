@@ -14,6 +14,7 @@
       inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.layout;
+      cfg' = lib.filterAttrs (_: v: v != null) cfg;
     in
     {
       options.hyprnix.settings.layout = {
@@ -43,7 +44,9 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.layout = lib.filterAttrs (_: v: v != null) cfg;
+        wayland.windowManager.hyprland.settings = {
+          layout = lib.mkIf (cfg' != { }) cfg';
+        };
       };
     };
 }

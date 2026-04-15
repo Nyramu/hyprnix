@@ -18,6 +18,10 @@
       inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.gesture;
+      cfg' = lib.pipe cfg [
+        (lib.filterAttrsRecursive (k: v: k != "gestures" && v != null))
+        (lib.filterAttrsRecursive (_: v: v != { }))
+      ];
 
       directions = enum [
         "swipe"
@@ -167,7 +171,7 @@
         # Only write actually set values to avoid noise in the file,
         # and exclude gestures option
         wayland.windowManager.hyprland.settings = {
-          gestures = lib.filterAttrs (k: v: k != "gestures" && v != null) cfg;
+          gestures = lib.mkIf (cfg' != { }) cfg';
 
           # Map all gestures defined by the user
           gesture = gestureToString cfg.gestures;

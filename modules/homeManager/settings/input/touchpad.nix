@@ -1,7 +1,7 @@
 { lib, ... }:
 {
   flake.homeModules.input =
-    { config, ... }:
+    { ... }:
     let
       inherit (lib) mkOption;
       inherit (lib.types)
@@ -13,8 +13,6 @@
       inherit (lib.types.ints)
         between
         ;
-
-      cfg = config.hyprnix.settings.input.touchpad;
     in
     {
       options.hyprnix.settings.input.touchpad = {
@@ -107,13 +105,6 @@
             1 -> 3 fingers.
             2 -> 4 fingers.
           '';
-        };
-      };
-
-      config = {
-        # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.input = {
-          touchpad = lib.filterAttrsRecursive (_: v: v != null) cfg;
         };
       };
     };

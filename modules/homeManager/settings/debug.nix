@@ -11,6 +11,7 @@
         ;
 
       cfg = config.hyprnix.settings.debug;
+      cfg' = lib.filterAttrs (_: v: v != null) cfg;
     in
     {
       options.hyprnix.settings.debug = {
@@ -116,7 +117,9 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.debug = lib.filterAttrs (_: v: v != null) cfg;
+        wayland.windowManager.hyprland.settings = {
+          debug = lib.mkIf (cfg' != { }) cfg';
+        };
       };
     };
 }

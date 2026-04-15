@@ -15,6 +15,7 @@
       inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.dwindle;
+      cfg' = lib.filterAttrs (_: v: v != null) cfg;
     in
     {
       options.hyprnix.settings.dwindle = {
@@ -117,7 +118,9 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.dwindle = lib.filterAttrs (_: v: v != null) cfg;
+        wayland.windowManager.hyprland.settings = {
+          dwindle = lib.mkIf (cfg' != { }) cfg';
+        };
       };
     };
 }

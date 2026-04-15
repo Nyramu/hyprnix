@@ -10,6 +10,7 @@
         ;
 
       cfg = config.hyprnix.settings.opengl;
+      cfg' = lib.filterAttrs (_: v: v != null) cfg;
     in
     {
       options.hyprnix.settings.opengl = {
@@ -22,7 +23,9 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings.opengl = lib.filterAttrs (_: v: v != null) cfg;
+        wayland.windowManager.hyprland.settings = {
+          opengl = lib.mkIf (cfg' != { }) cfg';
+        };
       };
     };
 }
