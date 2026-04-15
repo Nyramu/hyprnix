@@ -18,18 +18,20 @@
       cfg = config.hyprnix.settings.scrolling;
 
       cfg' = lib.pipe cfg [
-        (
-          c:
-          c
-          // {
-            explicit_column_widths = lib.mapNullable (
-              l: lib.concatStringsSep ", " (map toString l)
-            ) c.explicit_column_widths;
-          }
-        )
+        extract_column_widths
         (lib.filterAttrsRecursive (_: v: v != null))
         (lib.filterAttrsRecursive (_: v: v != { }))
       ];
+
+      extract_column_widths = (
+        c:
+        c
+        // {
+          explicit_column_widths = lib.mapNullable (
+            l: lib.concatStringsSep ", " (map toString l)
+          ) c.explicit_column_widths;
+        }
+      );
     in
     {
       options.hyprnix.settings.scrolling = {
