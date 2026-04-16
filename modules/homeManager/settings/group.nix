@@ -32,7 +32,16 @@
       ]);
 
       cfg = config.hyprnix.settings.group;
-      cfg' = filterValidAttrs cfg;
+      cfg' = lib.pipe cfg [
+        filterValidAttrs
+        parseColOptions
+      ];
+
+      parseColOptions = (
+        attrs:
+        (lib.mapAttrs (k: v: if lib.isAttrs v then parseColOptions v else v) (removeAttrs attrs [ "col" ]))
+        // lib.mapAttrs' (n: v: lib.nameValuePair "col.${n}" v) (attrs.col or { })
+      );
     in
     {
       options.hyprnix.settings.group = {
