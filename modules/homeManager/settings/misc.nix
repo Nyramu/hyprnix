@@ -16,7 +16,16 @@
       inherit (self.lib.hyprnix.types) filterValidAttrs;
 
       cfg = config.hyprnix.settings.misc;
-      cfg' = filterValidAttrs cfg;
+      cfg' = lib.pipe cfg [
+        filterValidAttrs
+        parseColOptions
+      ];
+
+      parseColOptions = (
+        attrs:
+        (removeAttrs attrs [ "col" ])
+        // lib.mapAttrs' (n: v: lib.nameValuePair "col.${n}" v) (attrs.col or { })
+      );
     in
     {
       options.hyprnix.settings.misc = {
