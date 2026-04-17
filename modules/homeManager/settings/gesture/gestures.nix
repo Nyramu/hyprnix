@@ -3,18 +3,15 @@
   flake.homeModules.gesture =
     { config, ... }:
     let
-      inherit (lib)
-        mkOption
-        mkIf
-        mapAttrsToList
-        ;
+      inherit (lib) mkOption mkIf concatStringsSep;
       inherit (lib.types)
         str
         ints
         enum
         submodule
         listOf
-        oneOf
+        attrsOf
+        either
         ;
 
       cfg = config.hyprnix.settings.gesture.gestures;
@@ -32,7 +29,7 @@
         "pinchout"
       ];
 
-      simpleActions = enum [
+      simpleActions = [
         "workspace"
         "move"
         "resize"
@@ -42,38 +39,41 @@
         "cursorZoom"
       ];
 
-      complexActionTypes = {
-        dispatcher = submodule {
-          options = {
-            dispatcher = mkOption {
-              type = str;
-              description = "dispatcher action";
-              example = "movefocus, r";
-            };
-          };
-        };
-      };
-
-      complexActionParsers = {
-        dispatcher = args: "dispatcher, ${args}";
-      };
+      complexActions = [
+        "dispatcher"
+        "special"
+        "float"
+        "fullscreen"
+        "cursorZoom"
+      ];
 
       gestureToString =
-        g:
+        {
+          fingers,
+          direction,
+          action,
+        }:
         let
           actionStr =
-            if builtins.isString g.action then
-              g.action
+            if builtins.isString action then
+              action
             else
               let
-                # It is ensured by the option definition that there can be only 1
-                actionName = builtins.head (builtins.attrNames g.action);
-                actionArgs = g.action.${actionName};
-                parser = complexActionParsers.${actionName};
+                name = builtins.head (builtins.attrNames action);
               in
-              parser actionArgs;
+              "${name}, ${action.${name}}";
         in
-        "${toString g.fingers}, ${g.direction}, ${actionStr}";
+        "${toString fingers}, ${direction}, ${actionStr}";
+
+      isOnlyOneKey =
+        { action, ... }:
+        builtins.isString action # if str then it's an already valid simple action
+        || builtins.length (builtins.attrNames action) == 1;
+
+      isValidKey =
+        { action, ... }:
+        builtins.isString action # if str then it's an already valid simple action
+        || builtins.elem (builtins.head (builtins.attrNames action)) complexActions;
 
       gestureType = submodule {
         options = {
@@ -90,7 +90,7 @@
           };
 
           action = mkOption {
-            type = oneOf ([ simpleActions ] ++ mapAttrsToList (_: v: v) complexActionTypes);
+            type = either (enum simpleActions) (attrsOf str);
             description = "action to perform once the gesture ends";
             example = "close";
           };
@@ -105,7 +105,7 @@
         example = [
           {
             fingers = 2;
-            direction = "pinchOut";
+            direction = "pinchout";
             action = "close";
           }
           {
@@ -115,10 +115,27 @@
               dispatcher = "movefocus, r";
             };
           }
+          {
+            fingers = 2;
+            direction = "pinchin";
+            action = {
+              special = "mySpecialWorkspace";
+            };
+          }
         ];
       };
 
       config = mkIf (cfg != [ ]) {
+        assertions =
+          map (g: {
+            assertion = isOnlyOneKey g;
+            message = "Gesture action must be either one of [ ${concatStringsSep ", " simpleActions} ] or an attrset with exactly one key.";
+          }) cfg
+          ++ map (g: {
+            assertion = isValidKey g;
+            message = "Invalid action key. Must be one of: [ ${concatStringsSep ", " complexActions} ]";
+          }) cfg;
+
         wayland.windowManager.hyprland.settings = {
           gesture = map gestureToString cfg;
         };
