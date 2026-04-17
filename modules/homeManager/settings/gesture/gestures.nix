@@ -3,7 +3,11 @@
   flake.homeModules.gesture =
     { config, ... }:
     let
-      inherit (lib) mkOption mkIf;
+      inherit (lib)
+        mkOption
+        mkIf
+        mapAttrsToList
+        ;
       inherit (lib.types)
         str
         ints
@@ -62,9 +66,8 @@
               g.action
             else
               let
-                actionNames = builtins.attrNames g.action;
                 # It is ensured by the option definition that there can be only 1
-                actionName = builtins.head actionNames;
+                actionName = builtins.head (builtins.attrNames g.action);
                 actionArgs = g.action.${actionName};
                 parser = complexActionParsers.${actionName};
               in
@@ -87,12 +90,7 @@
           };
 
           action = mkOption {
-            type = oneOf [
-              simpleActions
-
-              # TODO: use lib.mapAttrsToList
-              complexActionTypes.dispatcher
-            ];
+            type = oneOf ([ simpleActions ] ++ mapAttrsToList (_: v: v) complexActionTypes);
             description = "action to perform once the gesture ends";
             example = "close";
           };
