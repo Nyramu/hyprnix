@@ -4,90 +4,19 @@
     { config, ... }:
     let
       inherit (lib) mkOption;
-      inherit (lib.types)
-        bool
-        nullOr
-        ints
-        enum
-        str
-        either
-        submodule
-        listOf
-        ;
+      inherit (lib.types) bool nullOr ints;
 
       inherit (self.lib.hyprnix.types) numbers filterValidAttrs;
 
       cfg = config.hyprnix.settings.gesture;
       cfg' = lib.pipe cfg [
+        # gestures are taken care of in the gestures.nix file
         (lib.filterAttrsRecursive (k: _: k != "gestures"))
         filterValidAttrs
       ];
-
-      directions = enum [
-        "swipe"
-        "horizontal"
-        "vertical"
-        "left"
-        "right"
-        "up"
-        "down"
-        "pinch"
-        "pinchin"
-        "pinchout"
-      ];
-
-      actions = enum [
-        "workspace"
-        "move"
-        "resize"
-        "close"
-        "fullscreen"
-        "float"
-        "cursorZoom"
-      ];
-
-      gestureType = submodule {
-        options = {
-          fingers = mkOption {
-            type = ints.positive;
-            description = "number of fingers required for the gesture";
-            example = 3;
-          };
-
-          direction = mkOption {
-            type = directions;
-            description = "the direction that triggers the gesture";
-            example = "pinch";
-          };
-
-          action = mkOption {
-            type = actions;
-            description = "action to perform once the gesture ends";
-            example = "close";
-          };
-        };
-      };
-
-      gestureToString = map (
-        g: if builtins.isString g then g else "${toString g.fingers}, ${g.direction}, ${g.action}"
-      );
     in
     {
       options.hyprnix.settings.gesture = {
-        gestures = mkOption {
-          type = nullOr (listOf (either str gestureType));
-          default = [ ];
-          description = "list of gestures";
-          example = [
-            {
-              fingers = 2;
-              direction = "pinchOut";
-              action = "close";
-            }
-            "3, up, mod: SUPER, scale: 1.5, fullscreen"
-          ];
-        };
-
         workspace_swipe_distance = mkOption {
           type = nullOr ints.unsigned;
           default = null;
@@ -168,13 +97,9 @@
       };
 
       config = {
-        # Only write actually set values to avoid noise in the file,
-        # and exclude gestures option
+        # Only write actually set values to avoid noise in the file
         wayland.windowManager.hyprland.settings = {
           gestures = lib.mkIf (cfg' != { }) cfg';
-
-          # Map all gestures defined by the user
-          gesture = gestureToString cfg.gestures;
         };
       };
     };
