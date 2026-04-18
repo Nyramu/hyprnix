@@ -247,7 +247,7 @@ use it:
 ## Contributing
 
 You can help this project by making a pull request or reporting an issue. If you
-want to try generating local documentation, you can do it by using
+want to try generating local documentation, you can do it by using the
 `cachix use hyprnix` command.
 
 ## Credits
