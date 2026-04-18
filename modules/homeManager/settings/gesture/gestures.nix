@@ -3,7 +3,11 @@
   flake.homeModules.gesture =
     { config, ... }:
     let
-      inherit (lib) mkOption mkIf concatStringsSep;
+      inherit (lib)
+        mkOption
+        mkIf
+        concatStringsSep
+        ;
       inherit (lib.types)
         str
         ints
@@ -15,6 +19,16 @@
         ;
 
       cfg = config.hyprnix.settings.gesture.gestures;
+
+      cfg' = lib.pipe cfg [
+        groupGesturesByFlag
+        (lib.mapAttrs' (
+          suffix: gesture: {
+            name = "gesture${suffix}";
+            value = map gestureToString gesture;
+          }
+        ))
+      ];
 
       directions = enum [
         "swipe"
@@ -47,11 +61,30 @@
         "cursorZoom"
       ];
 
+      supportedFlags = [ "p" ];
+
+      getFlagSuffix =
+        flags:
+        lib.pipe flags [
+          (lib.filter (f: builtins.elem f supportedFlags))
+          lib.unique
+          (builtins.concatStringsSep "")
+        ];
+
+      groupGesturesByFlag = lib.foldl' (
+        acc: g:
+        let
+          suffix = getFlagSuffix g.flags;
+        in
+        acc // { ${suffix} = (acc.${suffix} or [ ]) ++ [ g ]; }
+      ) { };
+
       gestureToString =
         {
           fingers,
           direction,
           action,
+          ...
         }:
         let
           actionStr =
@@ -65,15 +98,13 @@
         in
         "${toString fingers}, ${direction}, ${actionStr}";
 
-      isOnlyOneKey =
-        { action, ... }:
+      isValidAction =
+        action:
         builtins.isString action # if str then it's an already valid simple action
-        || builtins.length (builtins.attrNames action) == 1;
-
-      isValidKey =
-        { action, ... }:
-        builtins.isString action # if str then it's an already valid simple action
-        || builtins.elem (builtins.head (builtins.attrNames action)) complexActions;
+        || (
+          builtins.length (builtins.attrNames action) == 1
+          && builtins.elem (builtins.head (builtins.attrNames action)) complexActions
+        );
 
       gestureType = submodule {
         options = {
@@ -93,6 +124,15 @@
             type = either (enum simpleActions) (attrsOf str);
             description = "action to perform once the gesture ends";
             example = "close";
+          };
+
+          flags = mkOption {
+            type = listOf (enum supportedFlags);
+            default = [ ];
+            description = ''
+              special flags for the gesture.
+              p -> Allows the gesture to bypass shortcut inhibitors.
+            '';
           };
         };
       };
@@ -126,19 +166,27 @@
       };
 
       config = mkIf (cfg != [ ]) {
-        assertions =
-          map (g: {
-            assertion = isOnlyOneKey g;
-            message = "Gesture action must be either one of [ ${concatStringsSep ", " simpleActions} ] or an attrset with exactly one key.";
-          }) cfg
-          ++ map (g: {
-            assertion = isValidKey g;
-            message = "Invalid action key. Must be one of: [ ${concatStringsSep ", " complexActions} ]";
-          }) cfg;
+        assertions = lib.concatMap (g: [
+          {
+            assertion = isValidAction g.action;
+            message =
+              let
+                actionStr =
+                  if builtins.isString g.action then
+                    "\"${g.action}\""
+                  else
+                    "{ ${concatStringsSep "; " (map (k: "${k} = ...") (builtins.attrNames g.action))} }";
+              in
+              ''
+                Invalid gesture action: "${actionStr}".
+                Must be either:
+                  - a simple action string: [ ${concatStringsSep ", " simpleActions} ]
+                  - an attrset with exactly one key from: [ ${concatStringsSep ", " complexActions} ]
+              '';
+          }
+        ]) cfg;
 
-        wayland.windowManager.hyprland.settings = {
-          gesture = map gestureToString cfg;
-        };
+        wayland.windowManager.hyprland.settings = cfg';
       };
     };
 }
