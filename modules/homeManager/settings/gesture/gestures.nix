@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ self, lib, ... }:
 {
   flake.homeModules.gesture =
     { config, ... }:
@@ -15,8 +15,11 @@
         submodule
         listOf
         attrsOf
+        nullOr
         either
         ;
+
+      inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.gesture.gestures;
 
@@ -84,6 +87,8 @@
           fingers,
           direction,
           action,
+          mod,
+          scale,
           ...
         }:
         let
@@ -95,8 +100,19 @@
                 name = builtins.head (builtins.attrNames action);
               in
               "${name}, ${action.${name}}";
+          extras =
+            lib.pipe
+              [
+                (lib.optionalString (mod != null) "mod: ${mod}")
+                (lib.optionalString (scale != null) "scale: ${toString scale}")
+              ]
+              [
+                (builtins.filter (s: s != ""))
+                (builtins.concatStringsSep ", ")
+                (s: if s != "" then ", ${s}" else "")
+              ];
         in
-        "${toString fingers}, ${direction}, ${actionStr}";
+        "${toString fingers}, ${direction}${extras}, ${actionStr}";
 
       isValidAction =
         action:
@@ -124,6 +140,20 @@
             type = either (enum simpleActions) (attrsOf str);
             description = "action to perform once the gesture ends";
             example = "close";
+          };
+
+          mod = mkOption {
+            type = nullOr str;
+            default = null;
+            description = "modifier mask to restrict the gesture";
+            example = "SUPER";
+          };
+
+          scale = mkOption {
+            type = nullOr numbers.unsigned;
+            default = null;
+            description = "scale factor for the animation speed";
+            example = 1.5;
           };
 
           flags = mkOption {
