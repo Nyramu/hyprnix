@@ -8,7 +8,6 @@
         bool
         nullOr
         str
-        either
         path
         ints
         ;
@@ -16,7 +15,17 @@
       inherit (self.lib.hyprnix.types) numbers filterValidAttrs;
 
       cfg = config.hyprnix.settings.decoration;
-      cfg' = filterValidAttrs cfg;
+
+      # Replace Hyprnix screen_shader option with the HM one to apply the shader
+      cfg' = lib.pipe cfg [
+        (lib.filterAttrsRecursive (k: _: k != "screen_shader"))
+        hyprScreenShader
+        filterValidAttrs
+      ];
+
+      hyprScreenShader = (
+        x: x // { screen_shader = lib.mkIf (cfg.screen_shader != null) "shader.frag"; }
+      );
     in
     {
       options.hyprnix.settings.decoration = {
@@ -81,9 +90,9 @@
         };
 
         screen_shader = mkOption {
-          type = nullOr (either str path);
+          type = nullOr path;
           default = null;
-          description = "a path to a custom shader to be applied at the end of rendering. See examples/screenShader.frag for an example.";
+          description = "a path to a custom shader to be applied at the end of rendering.";
         };
 
         border_part_of_window = mkOption {
@@ -283,6 +292,11 @@
         # Only write actually set values to avoid noise in the file
         wayland.windowManager.hyprland.settings = {
           decoration = lib.mkIf (cfg' != { }) cfg';
+        };
+
+        # Create a symlink for the shader
+        xdg.configFile = lib.mkIf (cfg.screen_shader != null) {
+          "hypr/shader.frag".source = cfg.screen_shader;
         };
       };
     };
