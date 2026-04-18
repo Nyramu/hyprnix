@@ -239,8 +239,8 @@ use it:
 - Entirely based on Home Manager's `wayland.windowManager.hyprland` options, to
   ensure compatibility
 - Enhanced syntax for keybinds, windowrules, gestures and other Hyprland options
-- Hyprnix-exclusive options like `hyprnix.settings.cursor.hyprcursor.*`, that
-  make the experience more comfortable, take a look at the configurations above
+- Hyprnix-exclusive options like `hyprnix.settings.cursor.hyprcursor.*` that
+  make the experience more comfortable. More examples in the configurations above
 - Config errors make the rebuild crash, in line with NixOS logic
 - Gets updated whenever Hyprland changes/adds/removes an option
 
