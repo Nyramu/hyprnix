@@ -92,7 +92,7 @@
         screen_shader = mkOption {
           type = nullOr path;
           default = null;
-          description = "a path to a custom shader to be applied at the end of rendering. The shader will be sourced by Hyprland as a symlink created via xdg.";
+          description = "a path to a custom shader to be applied at the end of rendering.";
         };
 
         border_part_of_window = mkOption {
