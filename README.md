@@ -90,20 +90,24 @@ example of what you could do:
     systemd.enable = true;
     xwayland.enable = true;
     settings = {
-      workspaces = [
-        {
-          id = 1;
-          rules = {
-            default = true;
-            persistent = true;
-          };
-        }
-        {
-          id = 2;
-          rules.persistent = true;
-        }
-      ];
-
+      gesture = {
+        gestures = [
+          {
+            fingers = 3;
+            direction = "pinch";
+            action = {
+              fullscreen = "maximize";
+            };
+          }
+          {
+            fingers = 2;
+            direction = "up";
+            mod = "SUPER";
+            action = "close";
+          }
+        ];
+      };
+      
       windowrules = [
         {
           # You can remove name, making it an anonymous windowrule
@@ -118,6 +122,12 @@ example of what you could do:
         } 
       ];
 
+      decoration = {
+        rounding = 8;
+        blur.enable = true;
+        screen_shader = /home/host/myShader.frag;
+      };      
+
       cursor = {
         hyprcursor = {
           enable = true;
@@ -129,20 +139,19 @@ example of what you could do:
         hide_on_key_press = true;
       };
 
-      gesture = {
-        gestures = [
-          {
-            fingers = 3;
-            direction = "pinch";
-            action = "fullscreen";
-          }
-          {
-            fingers = 3;
-            direction = "horizontal";
-            action = "workspace";
-          }
-        ];
-      };
+      workspaces = [
+        {
+          id = 1;
+          rules = {
+            default = true;
+            persistent = true;
+          };
+        }
+        {
+          id = 2;
+          rules.persistent = true;
+        }
+      ];
 
       animations = {
         enabled = true;
@@ -221,8 +230,8 @@ example of what you could do:
 
 While it mostly works, the other Hyprnix is, unfortunately, rarely updated. This
 makes it prone to rebuild errors and warnings, mainly because some options get
-deprecated, or some dependencies get replaced/renamed. We want to **preserve** its
-advantages while also trying to enhance its structure, **without breaking
+deprecated, or some dependencies get replaced/renamed. We want to **preserve**
+its advantages while also trying to enhance its structure, **without breaking
 compatibility** with Hyprland's Home Manager module. Here are some reasons to
 use it:
 
