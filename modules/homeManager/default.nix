@@ -73,6 +73,7 @@ in
       config = lib.mkIf cfg.enable {
         wayland.windowManager.hyprland = {
           enable = true;
+          configType = "hyprlang";
           systemd.enable = cfg.systemd.enable;
           package = cfg.package;
           portalPackage = cfg.portalPackage;
