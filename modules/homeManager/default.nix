@@ -10,32 +10,32 @@ in
     in
     {
       imports = with modules; [
-        keybinds
-        misc
-        dwindle
-        monitors
-        group
-        workspaces
-        animations
-        env
-        exec
-        general
-        decoration
-        input
-        gesture
-        layout
-        binds
-        render
-        scrolling
-        permissions
-        master
-        opengl
-        quirks
-        debug
-        ecosystem
-        cursor
-        xwayland
-        windowrules
+        # keybinds
+        # misc
+        # dwindle
+        # monitors
+        # group
+        # workspaces
+        # animations
+        # env
+        # exec
+        # general
+        # decoration
+        # input
+        # gesture
+        # layout
+        # binds
+        # render
+        # scrolling
+        # permissions
+        # master
+        # opengl
+        # quirks
+        # debug
+        # ecosystem
+        # cursor
+        # xwayland
+        # windowrules
       ];
 
       options.hyprnix = {
@@ -73,7 +73,7 @@ in
       config = lib.mkIf cfg.enable {
         wayland.windowManager.hyprland = {
           enable = true;
-          configType = "hyprlang";
+          configType = lib.mkForce "lua";
           systemd.enable = cfg.systemd.enable;
           package = cfg.package;
           portalPackage = cfg.portalPackage;
