@@ -19,7 +19,7 @@ in
         # animations
         # env
         # exec
-        # general
+        general
         # decoration
         # input
         # gesture
