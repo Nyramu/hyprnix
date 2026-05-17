@@ -1,4 +1,4 @@
-{ self, lib, ... }:
+{ lib, hyprlib, ... }:
 {
   flake.homeModules.input =
     { config, ... }:
@@ -15,8 +15,8 @@
         enum
         ;
 
-      inherit (self.lib.hyprnix) filterValidAttrs recursiveMkPreferred;
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred;
+      inherit (hyprlib.types) numbers;
 
       cfg = config.hyprnix.settings.input;
       cfg' = lib.pipe cfg [

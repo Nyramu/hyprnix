@@ -1,4 +1,4 @@
-{ self, lib, ... }:
+{ lib, hyprlib, ... }:
 {
   flake.homeModules.animations =
     { config, ... }:
@@ -19,7 +19,7 @@
         ;
 
       inherit (lib.types.ints) positive;
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (hyprlib.types) numbers;
 
       cfg = config.hyprnix.settings.animations;
 

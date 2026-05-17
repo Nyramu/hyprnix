@@ -1,4 +1,4 @@
-{ self, lib, ... }:
+{ lib, hyprlib, ... }:
 {
   flake.homeModules.gesture =
     { config, ... }:
@@ -6,8 +6,8 @@
       inherit (lib) mkOption;
       inherit (lib.types) bool nullOr ints;
 
-      inherit (self.lib.hyprnix) filterValidAttrs recursiveMkPreferred;
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred;
+      inherit (hyprlib.types) numbers;
 
       cfg = config.hyprnix.settings.gesture;
       cfg' = lib.pipe cfg [
