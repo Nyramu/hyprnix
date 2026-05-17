@@ -1,4 +1,4 @@
-{ self, lib, ... }:
+{ lib, hyprlib, ... }:
 {
   flake.homeModules.layout =
     { config, ... }:
@@ -11,8 +11,8 @@
         addCheck
         ;
 
-      inherit (self.lib.hyprnix) filterValidAttrs recursiveMkPreferred;
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred;
+      inherit (hyprlib.types) numbers;
 
       cfg = config.hyprnix.settings.layout;
       cfg' = lib.pipe cfg [

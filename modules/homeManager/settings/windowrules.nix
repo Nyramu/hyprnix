@@ -1,4 +1,4 @@
-{ self, lib, ... }:
+{ lib, hyprlib, ... }:
 {
   flake.homeModules.windowrules =
     { config, ... }:
@@ -17,7 +17,8 @@
         submodule
         ;
       tuple = n: (addCheck (listOf ints.unsigned) (l: builtins.length l == n));
-      inherit (self.lib.hyprnix.types) numbers;
+
+      inherit (hyprlib.types) numbers;
 
       cfg = config.hyprnix.settings.windowrules;
 

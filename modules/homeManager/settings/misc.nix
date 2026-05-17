@@ -1,4 +1,4 @@
-{ self, lib, ... }:
+{ lib, hyprlib, ... }:
 {
   flake.homeModules.misc =
     { config, ... }:
@@ -14,7 +14,7 @@
         between
         ;
 
-      inherit (self.lib.hyprnix) filterValidAttrs recursiveMkPreferred;
+      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred;
 
       cfg = config.hyprnix.settings.misc;
       cfg' = lib.pipe cfg [

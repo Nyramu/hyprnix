@@ -1,4 +1,4 @@
-{ self, lib, ... }:
+{ lib, hyprlib, ... }:
 {
   flake.homeModules.cursor =
     { config, ... }:
@@ -12,8 +12,8 @@
         ints
         ;
 
-      inherit (self.lib.hyprnix) filterValidAttrs recursiveMkPreferred;
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred;
+      inherit (hyprlib.types) numbers;
 
       cfg = config.hyprnix.settings.cursor;
 

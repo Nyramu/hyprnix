@@ -1,4 +1,4 @@
-{ self, lib, ... }:
+{ lib, hyprlib, ... }:
 {
   flake.homeModules.gesture =
     { config, ... }:
@@ -19,7 +19,7 @@
         either
         ;
 
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (hyprlib.types) numbers;
 
       cfg = config.hyprnix.settings.gesture.gestures;
 

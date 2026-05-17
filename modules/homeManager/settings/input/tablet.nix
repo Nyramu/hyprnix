@@ -1,4 +1,4 @@
-{ self, lib, ... }:
+{ lib, hyprlib, ... }:
 {
   flake.homeModules.input =
     { ... }:
@@ -10,7 +10,7 @@
         nullOr
         ints
         ;
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (hyprlib.types) numbers;
     in
     {
       options.hyprnix.settings.input.tablet = {

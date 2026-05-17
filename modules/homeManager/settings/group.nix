@@ -1,4 +1,4 @@
-{ self, lib, ... }:
+{ lib, hyprlib, ... }:
 {
   flake.homeModules.group =
     { config, ... }:
@@ -14,8 +14,8 @@
         ints
         ;
 
-      inherit (self.lib.hyprnix) filterValidAttrs recursiveMkPreferred;
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred;
+      inherit (hyprlib.types) numbers;
 
       font_weight = either (ints.between 100 1000) (enum [
         "thin"

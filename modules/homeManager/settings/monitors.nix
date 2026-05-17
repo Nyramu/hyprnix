@@ -1,4 +1,4 @@
-{ self, lib, ... }:
+{ lib, hyprlib, ... }:
 {
   flake.homeModules.monitors =
     { config, ... }:
@@ -15,7 +15,7 @@
         listOf
         submodule
         ;
-      inherit (self.lib.hyprnix.types) numbers;
+      inherit (hyprlib.types) numbers;
 
       cfg = config.hyprnix.settings;
 
