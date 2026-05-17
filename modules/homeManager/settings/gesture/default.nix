@@ -6,7 +6,8 @@
       inherit (lib) mkOption;
       inherit (lib.types) bool nullOr ints;
 
-      inherit (self.lib.hyprnix.types) numbers filterValidAttrs;
+      inherit (self.lib.hyprnix) filterValidAttrs;
+      inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.gesture;
       cfg' = lib.pipe cfg [
