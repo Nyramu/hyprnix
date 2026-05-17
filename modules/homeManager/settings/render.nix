@@ -12,10 +12,13 @@
         ints
         ;
 
-      inherit (self.lib.hyprnix) filterValidAttrs;
+      inherit (self.lib.hyprnix) filterValidAttrs recursiveMkPreferred;
 
       cfg = config.hyprnix.settings.render;
-      cfg' = filterValidAttrs cfg;
+      cfg' = lib.pipe cfg [
+        filterValidAttrs
+        recursiveMkPreferred
+      ];
     in
     {
       options.hyprnix.settings.render = {

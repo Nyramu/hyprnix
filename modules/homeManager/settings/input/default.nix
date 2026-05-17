@@ -15,11 +15,14 @@
         enum
         ;
 
-      inherit (self.lib.hyprnix) filterValidAttrs;
+      inherit (self.lib.hyprnix) filterValidAttrs recursiveMkPreferred;
       inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.input;
-      cfg' = filterValidAttrs cfg;
+      cfg' = lib.pipe cfg [
+        filterValidAttrs
+        recursiveMkPreferred
+      ];
     in
     {
       options.hyprnix.settings.input = {

@@ -12,7 +12,7 @@
         ints
         ;
 
-      inherit (self.lib.hyprnix) filterValidAttrs;
+      inherit (self.lib.hyprnix) filterValidAttrs recursiveMkPreferred;
       inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.decoration;
@@ -22,10 +22,11 @@
         (lib.filterAttrsRecursive (k: _: k != "screen_shader"))
         hyprScreenShader
         filterValidAttrs
+        recursiveMkPreferred
       ];
 
       hyprScreenShader = (
-        x: x // { screen_shader = lib.mkIf (cfg.screen_shader != null) "shader.frag"; }
+        x: x // { screen_shader = if (cfg.screen_shader != null) then "shader.frag" else null; }
       );
     in
     {

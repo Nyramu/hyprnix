@@ -4,7 +4,7 @@ let
   inherit (lib.types) number addCheck listOf;
 in
 {
-  flake.lib.hyprnix = {
+  flake.lib.hyprnix = rec {
     types = {
       numbers = {
         unsigned = addCheck number (n: n >= 0) // {
@@ -42,5 +42,9 @@ in
         (lib.filterAttrsRecursive (_: v: v != { }))
       ]
     );
+
+    mkPreferred = lib.mkOverride 75;
+
+    recursiveMkPreferred = (lib.mapAttrsRecursive (_: mkPreferred));
   };
 }

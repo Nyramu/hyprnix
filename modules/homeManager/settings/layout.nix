@@ -11,11 +11,14 @@
         addCheck
         ;
 
-      inherit (self.lib.hyprnix) filterValidAttrs;
+      inherit (self.lib.hyprnix) filterValidAttrs recursiveMkPreferred;
       inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.layout;
-      cfg' = filterValidAttrs cfg;
+      cfg' = lib.pipe cfg [
+        filterValidAttrs
+        recursiveMkPreferred
+      ];
     in
     {
       options.hyprnix.settings.layout = {
