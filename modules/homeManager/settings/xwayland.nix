@@ -11,15 +11,15 @@
 
       inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred;
 
-      cfg = config.hyprnix.xwayland;
+      cfg = config.hyprnix.settings.xwayland;
       cfg' = lib.pipe cfg [
         filterValidAttrs
         recursiveMkPreferred
       ];
     in
     {
-      options.hyprnix.xwayland = {
-        enable = lib.mkEnableOption "allow running applications using X11";
+      options.hyprnix.settings.xwayland = {
+        enabled = lib.mkEnableOption "allow running applications using X11";
 
         use_nearest_neighbor = mkOption {
           type = nullOr bool;
@@ -45,7 +45,7 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland = {
+        wayland.windowManager.hyprland.settings.config = {
           xwayland = lib.mkIf (cfg' != { }) cfg';
         };
       };

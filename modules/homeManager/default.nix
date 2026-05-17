@@ -34,7 +34,7 @@ in
         # debug
         # ecosystem
         # cursor
-        # xwayland
+        xwayland
         # windowrules
       ];
 
