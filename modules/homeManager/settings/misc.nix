@@ -13,7 +13,8 @@
         positive
         between
         ;
-      inherit (self.lib.hyprnix.types) filterValidAttrs;
+
+      inherit (self.lib.hyprnix) filterValidAttrs;
 
       cfg = config.hyprnix.settings.misc;
       cfg' = lib.pipe cfg [

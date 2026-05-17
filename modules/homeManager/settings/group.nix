@@ -14,7 +14,8 @@
         ints
         ;
 
-      inherit (self.lib.hyprnix.types) numbers filterValidAttrs;
+      inherit (self.lib.hyprnix) filterValidAttrs;
+      inherit (self.lib.hyprnix.types) numbers;
 
       font_weight = either (ints.between 100 1000) (enum [
         "thin"

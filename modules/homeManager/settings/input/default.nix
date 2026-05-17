@@ -14,7 +14,9 @@
         nullOr
         enum
         ;
-      inherit (self.lib.hyprnix.types) numbers filterValidAttrs;
+
+      inherit (self.lib.hyprnix) filterValidAttrs;
+      inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.input;
       cfg' = filterValidAttrs cfg;

@@ -11,7 +11,8 @@
         enum
         ints
         ;
-      inherit (self.lib.hyprnix.types) filterValidAttrs;
+
+      inherit (self.lib.hyprnix) filterValidAttrs;
 
       cfg = config.hyprnix.settings.render;
       cfg' = filterValidAttrs cfg;

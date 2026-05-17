@@ -17,7 +17,8 @@
         positive
         unsigned
         ;
-      inherit (self.lib.hyprnix.types) filterValidAttrs;
+
+      inherit (self.lib.hyprnix) filterValidAttrs;
 
       cfg = config.hyprnix.settings.general;
       cfg' = lib.pipe cfg [

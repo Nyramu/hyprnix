@@ -8,7 +8,8 @@
         bool
         nullOr
         ;
-      inherit (self.lib.hyprnix.types) filterValidAttrs;
+
+      inherit (self.lib.hyprnix) filterValidAttrs;
 
       cfg = config.hyprnix.settings.ecosystem;
       cfg' = filterValidAttrs cfg;
