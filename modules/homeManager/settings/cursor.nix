@@ -12,7 +12,7 @@
         ints
         ;
 
-      inherit (self.lib.hyprnix) filterValidAttrs;
+      inherit (self.lib.hyprnix) filterValidAttrs recursiveMkPreferred;
       inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.cursor;
@@ -21,6 +21,7 @@
         extractEnableHyprcursor
         (lib.filterAttrsRecursive (k: _: k != "hyprcursor"))
         filterValidAttrs
+        recursiveMkPreferred
       ];
 
       extractEnableHyprcursor = (

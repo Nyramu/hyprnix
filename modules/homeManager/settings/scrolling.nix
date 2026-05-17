@@ -13,7 +13,7 @@
         ints
         ;
 
-      inherit (self.lib.hyprnix) filterValidAttrs;
+      inherit (self.lib.hyprnix) filterValidAttrs recursiveMkPreferred;
       inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.scrolling;
@@ -21,6 +21,7 @@
       cfg' = lib.pipe cfg [
         extract_column_widths
         filterValidAttrs
+        recursiveMkPreferred
       ];
 
       extract_column_widths = (

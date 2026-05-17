@@ -18,12 +18,13 @@
         unsigned
         ;
 
-      inherit (self.lib.hyprnix) filterValidAttrs;
+      inherit (self.lib.hyprnix) filterValidAttrs recursiveMkPreferred;
 
       cfg = config.hyprnix.settings.general;
       cfg' = lib.pipe cfg [
         filterValidAttrs
         parseColOptions
+        recursiveMkPreferred
       ];
 
       parseColOptions = (

@@ -6,7 +6,7 @@
       inherit (lib) mkOption;
       inherit (lib.types) bool nullOr ints;
 
-      inherit (self.lib.hyprnix) filterValidAttrs;
+      inherit (self.lib.hyprnix) filterValidAttrs recursiveMkPreferred;
       inherit (self.lib.hyprnix.types) numbers;
 
       cfg = config.hyprnix.settings.gesture;
@@ -14,6 +14,7 @@
         # gestures are taken care of in the gestures.nix file
         (lib.filterAttrsRecursive (k: _: k != "gestures"))
         filterValidAttrs
+        recursiveMkPreferred
       ];
     in
     {
