@@ -226,12 +226,6 @@
             description = "if enabled, will make the shadows sharp, akin to an infinite render power";
           };
 
-          ignore_window = mkOption {
-            type = nullOr bool;
-            default = null;
-            description = "if true, the shadow will not be rendered behind the window itself, only around it.";
-          };
-
           color = mkOption {
             type = nullOr str;
             default = null;
@@ -292,7 +286,7 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings = {
+        wayland.windowManager.hyprland.settings.config = {
           decoration = lib.mkIf (cfg' != { }) cfg';
         };
 

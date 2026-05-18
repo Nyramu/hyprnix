@@ -20,7 +20,7 @@ in
         # env
         # exec
         general
-        # decoration
+        decoration
         input
         # gesture
         layout
