@@ -1,6 +1,13 @@
 { lib }:
 let
-  inherit (lib.types) number addCheck listOf;
+  inherit (lib.types)
+    number
+    addCheck
+    listOf
+    oneOf
+    submodule
+    enum
+    ;
 in
 {
   numbers = {
@@ -30,4 +37,27 @@ in
         description = "list with ${toString n} number values";
       };
   };
+
+  # custom implementation of oneOf that can handle
+  # partially overlapping submodules variants
+  oneOfTagged =
+    variants:
+    oneOf (
+      lib.mapAttrsToList (
+        tag: mod:
+        let
+          base = submodule {
+            options = mod.options // {
+              _type = lib.mkOption {
+                type = lib.types.enum [ tag ];
+                default = tag;
+                readOnly = true;
+                internal = true;
+              };
+            };
+          };
+        in
+        base // { check = v: base.check v && (v._type or "") == tag; }
+      ) variants
+    );
 }
