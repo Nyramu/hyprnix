@@ -29,7 +29,7 @@ in
         scrolling
         # permissions
         master
-        # opengl
+        opengl
         quirks
         debug
         ecosystem
