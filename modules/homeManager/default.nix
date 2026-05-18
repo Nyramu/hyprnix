@@ -33,7 +33,7 @@ in
         quirks
         debug
         ecosystem
-        # cursor
+        cursor
         xwayland
         # windowrules
       ];
