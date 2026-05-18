@@ -26,7 +26,7 @@ in
         # layout
         # binds
         # render
-        # scrolling
+        scrolling
         # permissions
         # master
         # opengl
