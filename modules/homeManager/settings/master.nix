@@ -128,11 +128,17 @@
           default = null;
           description = "whether to keep the master window in its configured position when there are no slave windows";
         };
+
+        focus_master_on_close = mkOption {
+          type = nullOr bool;
+          default = null;
+          description = "when enabled, closing a window focuses the master window";
+        };
       };
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings = {
+        wayland.windowManager.hyprland.settings.config = {
           master = lib.mkIf (cfg' != { }) cfg';
         };
       };

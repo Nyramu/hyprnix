@@ -28,7 +28,7 @@ in
         # render
         scrolling
         # permissions
-        # master
+        master
         # opengl
         # quirks
         # debug
