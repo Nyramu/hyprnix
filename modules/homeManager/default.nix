@@ -23,7 +23,7 @@ in
         # decoration
         input
         # gesture
-        # layout
+        layout
         # binds
         # render
         scrolling
