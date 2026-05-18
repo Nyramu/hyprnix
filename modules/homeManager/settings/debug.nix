@@ -38,6 +38,12 @@
           description = "enables OpenGL debugging with glGetError and EGL_KHR_debug, requires a restart after changing.";
         };
 
+        vfr = mkOption {
+          type = nullOr bool;
+          default = null;
+          description = "controls the VFR status of Hyprland. Heavily recommended to leave enabled to conserve resources.";
+        };
+
         disable_logs = mkOption {
           type = nullOr bool;
           default = null;
@@ -118,11 +124,20 @@
           default = null;
           description = "claims support for all cm proto features (requires restart)";
         };
+
+        invalidate_fp16 = mkOption {
+          type = nullOr (ints.between 0 2);
+          default = null;
+          description = ''
+            Allow fp16 buffer invalidation (invalidation increases performance but produces glitches on some systems).
+            0 - not allowed, 1 - allowed, 2 - not allowed on nvidia
+          '';
+        };
       };
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings = {
+        wayland.windowManager.hyprland.settings.config = {
           debug = lib.mkIf (cfg' != { }) cfg';
         };
       };

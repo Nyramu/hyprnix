@@ -31,7 +31,7 @@ in
         master
         # opengl
         quirks
-        # debug
+        debug
         ecosystem
         # cursor
         xwayland
