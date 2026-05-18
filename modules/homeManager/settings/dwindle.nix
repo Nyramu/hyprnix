@@ -23,12 +23,6 @@
     in
     {
       options.hyprnix.settings.dwindle = {
-        pseudotile = mkOption {
-          type = nullOr bool;
-          default = null;
-          description = "Pseudotiled windows retain their floating size when tiled.";
-        };
-
         force_split = mkOption {
           type = nullOr (ints.between 0 2);
           default = null;
@@ -122,7 +116,7 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings = {
+        wayland.windowManager.hyprland.settings.config = {
           dwindle = lib.mkIf (cfg' != { }) cfg';
         };
       };

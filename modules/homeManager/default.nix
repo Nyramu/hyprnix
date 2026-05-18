@@ -12,7 +12,7 @@ in
       imports = with modules; [
         # keybinds
         # misc
-        # dwindle
+        dwindle
         # monitors
         # group
         # workspaces
