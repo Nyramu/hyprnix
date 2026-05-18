@@ -11,7 +11,7 @@ in
     {
       imports = with modules; [
         # keybinds
-        # misc
+        misc
         dwindle
         # monitors
         # group

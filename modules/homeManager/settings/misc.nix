@@ -287,7 +287,7 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings = {
+        wayland.windowManager.hyprland.settings.config = {
           misc = lib.mkIf (cfg' != { }) cfg';
         };
       };
