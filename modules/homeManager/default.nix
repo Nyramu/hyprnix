@@ -17,7 +17,7 @@ in
         # group
         # workspaces
         # animations
-        # env
+        env
         # exec
         general
         decoration

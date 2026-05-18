@@ -3,11 +3,8 @@
   flake.homeModules.env =
     { config, ... }:
     let
-      inherit (lib)
-        mkIf
-        mkOption
-        mapAttrsToList
-        ;
+      inherit (lib) mkOption mapAttrsToList;
+
       inherit (lib.types)
         str
         number
@@ -18,6 +15,14 @@
         ;
 
       cfg = config.hyprnix.settings.env;
+      cfg' = mapAttrsToList mkLuaEnv cfg;
+
+      mkLuaEnv = key: value: {
+        _args = [
+          key
+          (toString value)
+        ];
+      };
     in
     {
       options.hyprnix.settings.env = mkOption {
@@ -31,12 +36,10 @@
         };
       };
 
-      config =
-        let
-          envMapper = mapAttrsToList (name: value: "${name},${toString value}");
-        in
-        {
-          wayland.windowManager.hyprland.settings.env = mkIf (cfg != null) (envMapper cfg);
+      config = {
+        wayland.windowManager.hyprland.settings = {
+          env = cfg';
         };
+      };
     };
 }
