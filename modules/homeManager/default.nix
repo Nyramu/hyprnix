@@ -32,7 +32,7 @@ in
         # opengl
         # quirks
         # debug
-        # ecosystem
+        ecosystem
         # cursor
         xwayland
         # windowrules
