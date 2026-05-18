@@ -30,7 +30,7 @@ in
         # permissions
         master
         # opengl
-        # quirks
+        quirks
         # debug
         ecosystem
         # cursor
