@@ -16,11 +16,13 @@
         ;
 
       cfg = config.hyprnix.settings.permissions;
+      cfg' = map mkLuaPermission cfg;
 
       permissions = enum [
         "screencopy"
         "plugin"
         "keyboard"
+        "cursorpos"
       ];
 
       modes = enum [
@@ -31,15 +33,15 @@
 
       permissionType = submodule {
         options = {
-          executable = mkOption {
+          binary = mkOption {
             type = either str path;
-            description = "path to executable";
+            description = "path to binary";
             example = "${"lib.getExe pkgs.grim"}";
           };
 
-          permission = mkOption {
+          type = mkOption {
             type = permissions;
-            description = "permission assigned to the executable";
+            description = "permission assigned to the binary";
             example = "screencopy";
           };
 
@@ -51,7 +53,9 @@
         };
       };
 
-      permissionToString = map (p: "${toString p.executable}, ${p.permission}, ${p.mode}");
+      mkLuaPermission = p: {
+        _args = [ p ];
+      };
     in
     {
       options.hyprnix.settings = {
@@ -61,7 +65,7 @@
           description = "Hyprland permissions configuration";
           example = [
             {
-              executable = "${"lib.getExe pkgs.grim"}";
+              binary = "${"lib.getExe pkgs.grim"}";
               permission = "screencopy";
               mode = "allow";
             }
@@ -71,7 +75,7 @@
 
       config = {
         wayland.windowManager.hyprland.settings = {
-          permission = permissionToString cfg;
+          permission = cfg';
         };
       };
     };

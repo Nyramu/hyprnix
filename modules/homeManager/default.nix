@@ -27,7 +27,7 @@ in
         # binds
         # render
         scrolling
-        # permissions
+        permissions
         master
         opengl
         quirks
