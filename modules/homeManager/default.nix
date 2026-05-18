@@ -21,7 +21,7 @@ in
         # exec
         general
         # decoration
-        # input
+        input
         # gesture
         # layout
         # binds
