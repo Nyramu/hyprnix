@@ -15,7 +15,7 @@ in
         dwindle
         monitors
         # group
-        # workspaces
+        workspaces
         # animations
         env
         # exec

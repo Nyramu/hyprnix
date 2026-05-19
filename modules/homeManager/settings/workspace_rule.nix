@@ -1,23 +1,34 @@
-{ lib, ... }:
+{ lib, hyprlib, ... }:
 {
   flake.homeModules.workspaces =
     { config, ... }:
     let
-      inherit (lib) mkOption;
+      inherit (lib) mkOption mapAttrsToList;
+
       inherit (lib.types)
         bool
         str
         ints
         nullOr
-        listOf
+        attrsOf
         submodule
         ;
 
-      cfg = config.hyprnix.settings;
+      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred;
 
-      valueToString = v: if builtins.isBool v then lib.boolToString v else toString v;
+      cfg = config.hyprnix.settings.workspace_rule;
+      cfg' = lib.pipe cfg [
+        (mapAttrsToList (id: rules: rules // { workspace = id; }))
+        (map filterValidAttrs)
+        (map recursiveMkPreferred)
+        (map mkLuaWorkspace)
+      ];
 
-      rulesType = submodule {
+      mkLuaWorkspace = w: {
+        _args = [ w ];
+      };
+
+      ruleType = submodule {
         options = {
           monitor = mkOption {
             type = nullOr str;
@@ -31,40 +42,40 @@
             description = "Whether this workspace should be the default workspace for the given monitor";
           };
 
-          gapsin = mkOption {
+          gaps_in = mkOption {
             type = nullOr ints.unsigned;
             default = null;
             description = "Set the gaps between windows (equivalent to General->gaps_in)";
           };
 
-          gapsout = mkOption {
+          gaps_out = mkOption {
             type = nullOr ints.unsigned;
             default = null;
             description = "Set the gaps between windows and monitor edges (equivalent to General->gaps_out)";
           };
 
-          bordersize = mkOption {
-            type = nullOr ints.positive;
+          border_size = mkOption {
+            type = nullOr ints.unsigned;
             default = null;
             description = "Set the border size around windows (equivalent to General->border_size)";
           };
 
-          border = mkOption {
+          no_border = mkOption {
             type = nullOr bool;
             default = null;
-            description = "Whether to draw borders or not";
+            description = "Whether to disable borders";
           };
 
-          shadow = mkOption {
+          no_shadow = mkOption {
             type = nullOr bool;
             default = null;
-            description = "Whether to draw shadows or not";
+            description = "Whether to disable shadows";
           };
 
-          rounding = mkOption {
+          no_rounding = mkOption {
             type = nullOr bool;
             default = null;
-            description = "Whether to draw rounded windows or not";
+            description = "Whether to disable rounded windows";
           };
 
           decorate = mkOption {
@@ -79,7 +90,13 @@
             description = "Keep this workspace alive even if empty and inactive";
           };
 
-          defaultName = mkOption {
+          on_created_empty = mkOption {
+            type = nullOr str;
+            default = null;
+            description = "A command to be executed once a workspace is created empty (i.e. not created by moving a window to it)";
+          };
+
+          default_name = mkOption {
             type = nullOr str;
             default = null;
             description = "A default name for the workspace.";
@@ -91,7 +108,7 @@
             description = "The layout to use for this workspace.";
           };
 
-          animations = mkOption {
+          animation = mkOption {
             type = nullOr str;
             default = null;
             description = "The animation style to use for this workspace.";
@@ -99,53 +116,25 @@
         };
       };
 
-      workspaceType = submodule {
-        options = {
-          id = mkOption {
-            type = ints.between 1 9;
-            description = "The workspace's id.";
+    in
+    {
+      options.hyprnix.settings.workspace_rule = mkOption {
+        type = attrsOf ruleType;
+        default = null;
+        description = "Hyprland workspace rules configuration.";
+        example = {
+          "1" = {
+            persistent = true;
+            default = true;
           };
-          rules = mkOption {
-            type = rulesType;
-            description = "Rules for this workspace. At least one must be set.";
-          };
+          "2".persistent = true;
         };
       };
 
-      workspaceToString =
-        ws:
-        let
-          activeRules = lib.filterAttrs (_: v: v != null) ws.rules;
-          rulesParts = lib.mapAttrsToList (k: v: "${k}:${valueToString v}") activeRules;
-        in
-        lib.concatStringsSep ", " ([ (toString ws.id) ] ++ rulesParts);
-
-    in
-    {
-      options.hyprnix.settings.workspaces = mkOption {
-        type = listOf workspaceType;
-        default = [ ];
-        description = "Hyprland workspace rules configuration.";
-        example = [
-          {
-            id = 1;
-            rules = {
-              persistent = true;
-              default = true;
-            };
-          }
-        ];
-      };
-
       config = {
-        assertions = lib.concatMap (ws: [
-          {
-            assertion = lib.any (v: v != null) (lib.attrValues ws.rules);
-            message = "hyprnix.settings.workspaces[${toString ws.id}]: at least one rule must be set";
-          }
-        ]) cfg.workspaces;
-
-        wayland.windowManager.hyprland.settings.workspace = map workspaceToString cfg.workspaces;
+        wayland.windowManager.hyprland.settings = {
+          workspace_rule = lib.mkIf (cfg != { }) cfg';
+        };
       };
     };
 }
