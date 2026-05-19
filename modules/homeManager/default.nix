@@ -13,7 +13,7 @@ in
         # keybinds
         misc
         dwindle
-        # monitors
+        monitors
         # group
         # workspaces
         # animations

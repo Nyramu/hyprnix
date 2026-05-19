@@ -8,16 +8,29 @@
         bool
         number
         str
+        int
         ints
+        path
 
         nullOr
         enum
+        either
         listOf
         submodule
         ;
       inherit (hyprlib.types) numbers;
+      inherit (hyprlib.utils) filterValidAttrs mkPreferred;
 
-      cfg = config.hyprnix.settings;
+      cfg = config.hyprnix.settings.monitors;
+      cfg' = lib.pipe cfg [
+        (map filterValidAttrs)
+        (map mkPreferred)
+        (map mkLuaMonitor)
+      ];
+
+      mkLuaMonitor = m: {
+        _args = [ m ];
+      };
 
       monitorType = submodule {
         options = {
@@ -73,10 +86,51 @@
             description = "Color bit depth";
           };
 
+          cm = mkOption {
+            type = nullOr str;
+            default = null;
+            description = "Color management preset";
+            example = "srgb";
+          };
+
+          sdr_eotf = mkOption {
+            type = nullOr (enum [
+              "default"
+              "gamma22"
+              "srgb"
+            ]);
+            default = null;
+            description = "SDR transfer function";
+          };
+
+          sdrbrightness = mkOption {
+            type = nullOr number;
+            default = null;
+            description = "SDR brightness in HDR mode";
+          };
+
+          sdrsaturation = mkOption {
+            type = nullOr number;
+            default = null;
+            description = "SDR brightness in HDR mode";
+          };
+
           vrr = mkOption {
             type = nullOr (ints.between 0 3);
             default = null;
             description = "Variable Refresh Rate (0=off, 1=on, 2=fullscreen only, 3=fullscreen with video or game content type)";
+          };
+
+          icc = mkOption {
+            type = nullOr (either str path);
+            default = null;
+            description = "Absolute path to an ICC profile";
+          };
+
+          reserved_area = mkOption {
+            type = nullOr (either int reservedAreaType);
+            default = null;
+            description = "integer for all sides or table with top/right/bottom/left";
           };
 
           supports_wide_color = mkOption {
@@ -122,13 +176,37 @@
           };
         };
       };
+
+      reservedAreaType = submodule {
+        options = {
+          top = mkOption {
+            type = nullOr number;
+            default = null;
+          };
+
+          bottom = mkOption {
+            type = nullOr number;
+            default = null;
+          };
+
+          left = mkOption {
+            type = nullOr number;
+            default = null;
+          };
+
+          right = mkOption {
+            type = nullOr number;
+            default = null;
+          };
+        };
+      };
     in
     {
       options.hyprnix.settings = {
         monitors = mkOption {
           type = nullOr (listOf monitorType);
           default = [ ];
-          description = "Hyprland monitors configuration (monitorv2)";
+          description = "Hyprland monitors configuration";
           example = {
             output = "DP-1";
             mode = "1920x1080@100";
@@ -138,14 +216,10 @@
         };
       };
 
-      config =
-        let
-          filterNulls = m: lib.filterAttrs (_: v: v != null) m;
-        in
-        {
-          wayland.windowManager.hyprland.settings = {
-            monitorv2 = map filterNulls cfg.monitors;
-          };
+      config = {
+        wayland.windowManager.hyprland.settings = {
+          monitor = cfg';
         };
+      };
     };
 }
