@@ -11,9 +11,18 @@ let
     optionalString
     boolToString
     ;
-  inherit (lib.types) nullOr submodule;
+  inherit (lib.types)
+    nullOr
+    submodule
+    either
+    listOf
+    str
+    number
+    enum
+    addCheck
+    ;
 in
-{
+rec {
   luaConcat = fields: concatStringsSep ", " (filter (s: s != "") fields);
   luaField =
     args: name:
@@ -25,8 +34,22 @@ in
             boolToString v
           else if builtins.typeOf v == "int" || builtins.typeOf v == "float" then
             toString v
+          else if builtins.typeOf v == "string" then
+            ''"${v}"''
+          else if builtins.typeOf v == "list" then
+            "{${concatStringsSep ", " (map toString v)}}"
+          else if builtins.typeOf v == "set" && (v._type or null) == "gradient" then
+            let
+              colorsStr = "{${concatStringsSep ", " (map (c: ''"${c}"'') v.colors)}}";
+            in
+            "{${
+              luaConcat [
+                "colors = ${colorsStr}"
+                (optionalString (v.angle != null) "angle = ${toString v.angle}")
+              ]
+            }}"
           else
-            ''"${v}"'';
+            throw "luaField: unsupported type '${builtins.typeOf v}' for field '${name}'";
       in
       "${name} = ${rendered}"
     );
@@ -63,4 +86,27 @@ in
       };
   };
 
+  hyprlandTypes =
+    let
+      inherit (options) simple nullable;
+    in
+    {
+      gradient = either str (submodule {
+        options = {
+          _type = mkOption {
+            type = enum [ "gradient" ];
+            default = "gradient";
+            readOnly = true;
+            internal = true;
+          };
+          colors = simple (listOf str);
+          angle = nullable number;
+        };
+      });
+
+      vec2 = (addCheck (listOf number) (x: builtins.length x == 2)) // {
+        name = "vec2";
+        description = "list with 2 number values";
+      };
+    };
 }

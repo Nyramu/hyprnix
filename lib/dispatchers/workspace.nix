@@ -7,7 +7,7 @@ let
   inherit (helpers.options) nullableSubmodule simple nullable;
 in
 {
-  options = nullableSubmodule {
+  options = {
     rename = nullableSubmodule {
       workspace = simple str;
       name = nullable str;
