@@ -8,11 +8,29 @@ let
     filterAttrs
     head
     attrNames
+    optionalString
+    boolToString
     ;
   inherit (lib.types) nullOr submodule;
 in
 {
   luaConcat = fields: concatStringsSep ", " (filter (s: s != "") fields);
+  luaField =
+    args: name:
+    optionalString (args ? ${name}) (
+      let
+        v = args.${name};
+        rendered =
+          if builtins.typeOf v == "bool" then
+            boolToString v
+          else if builtins.typeOf v == "int" || builtins.typeOf v == "float" then
+            toString v
+          else
+            ''"${v}"'';
+      in
+      "${name} = ${rendered}"
+    );
+
   callNestedBuilders =
     builders: params:
     let

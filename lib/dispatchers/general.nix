@@ -1,6 +1,5 @@
 { lib }:
 let
-  inherit (lib) boolToString optionalString;
   inherit (lib.types)
     enum
     str
@@ -9,7 +8,7 @@ let
     ;
 
   helpers = import ./helpers.nix { inherit lib; };
-  inherit (helpers) luaConcat;
+  inherit (helpers) luaConcat luaField;
   inherit (helpers.options)
     nullableSubmodule
     simple
@@ -80,37 +79,35 @@ in
       args:
       "hl.dsp.focus({${
         luaConcat [
-          (optionalString (args ? direction) ''direction = "${args.direction}"'')
-          (optionalString (args ? monitor) ''monitor = "${args.monitor}"'')
-          (optionalString (args ? workspace) ''workspace = "${args.workspace}"'')
-          (optionalString (
-            args ? on_current_monitor
-          ) "on_current_monitor = ${boolToString args.on_current_monitor}")
-          (optionalString (args ? window) ''window = "${args.window}"'')
-          (optionalString (args ? urgent_or_last) "urgent_or_last = ${boolToString args.urgent_or_last}")
-          (optionalString (args ? last) "last = ${boolToString args.last}")
+          (luaField args "direction")
+          (luaField args "monitor")
+          (luaField args "workspace")
+          (luaField args "on_current_monitor")
+          (luaField args "window")
+          (luaField args "urgent_or_last")
+          (luaField args "last")
         ]
       }})";
     exit = _: "hl.dsp.exit()";
     submap = name: ''hl.dsp.submap("${name}")'';
-    pass = args: "hl.dsp.pass({ ${optionalString (args ? window) ''window = "${args.window}"''} })";
+    pass = args: "hl.dsp.pass({${luaField args "window"}})";
     send_shortcut =
       args:
       "hl.dsp.send_shortcut({${
         luaConcat [
-          ''mods = "${args.mods}"''
-          ''key = "${args.key}"''
-          (optionalString (args ? window) ''window = "${args.window}"'')
+          (luaField args "mods")
+          (luaField args "key")
+          (luaField args "window")
         ]
       }})";
     send_key_state =
       args:
       "hl.dsp.send_shortcut({${
         luaConcat [
-          ''mods = "${args.mods}"''
-          ''key = "${args.key}"''
-          ''state = "${args.state}"''
-          (optionalString (args ? window) ''window = "${args.window}"'')
+          (luaField args "mods")
+          (luaField args "key")
+          (luaField args "state")
+          (luaField args "window")
         ]
       }})";
     layout = message: ''hl.dsp.layout("${message}")'';
@@ -118,8 +115,8 @@ in
       args:
       "hl.dsp.dpms({${
         luaConcat [
-          (optionalString (args ? action) ''action = "${args.action}"'')
-          (optionalString (args ? monitor) ''monitor = "${args.monitor}"'')
+          (luaField args "action")
+          (luaField args "monitor")
         ]
       }})";
     event = message: ''hl.dsp.event("${message}")'';

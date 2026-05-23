@@ -1,10 +1,9 @@
 { lib }:
 let
-  inherit (lib) optionalString;
   inherit (lib.types) str;
 
   helpers = import ./helpers.nix { inherit lib; };
-  inherit (helpers) luaConcat;
+  inherit (helpers) luaConcat luaField;
   inherit (helpers.options) nullableSubmodule simple nullable;
 in
 {
@@ -29,24 +28,24 @@ in
       args:
       "hl.dsp.workspace.rename({${
         luaConcat [
-          ''workspace = "${args.workspace}"''
-          (optionalString (args ? name) ''name = "${args.name}"'')
+          (luaField args "workspace")
+          (luaField args "name")
         ]
       }})";
     move =
       args:
       "hl.dsp.workspace.move({${
         luaConcat [
-          (optionalString (args ? workspace) ''workspace = "${args.workspace}"'')
-          ''monitor = "${args.monitor}"''
+          (luaField args "workspace")
+          (luaField args "monitor")
         ]
       }})";
     swap_monitors =
       args:
       "hl.dsp.workspace.swap_monitors({${
         luaConcat [
-          ''monitor1 = "${args.monitor1}"''
-          ''monitor2 = "${args.monitor2}"''
+          (luaField args "monitor1")
+          (luaField args "monitor2")
         ]
       }})";
     toggle_special = name: ''hl.dsp.workspace.toggle_special("${name}")'';
