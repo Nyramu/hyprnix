@@ -3,22 +3,15 @@
 let
   inherit (lib)
     mkOption
-    optionalString
     concatStringsSep
     filter
     filterAttrs
     head
     attrNames
     ;
-  inherit (lib.types)
-    nullOr
-    str
-    number
-    submodule
-    ;
+  inherit (lib.types) nullOr submodule;
 in
 {
-  ifPresent = x: optionalString (x != null);
   luaConcat = fields: concatStringsSep ", " (filter (s: s != "") fields);
   callNestedBuilders =
     builders: params:
@@ -29,19 +22,19 @@ in
     builders.${name} active.${name};
 
   options = {
-    simpleStr = mkOption { type = str; };
-    nullableStr = mkOption {
-      type = nullOr str;
-      default = null;
-    };
-    nullableNumber = mkOption {
-      type = nullOr number;
-      default = null;
-    };
-    empty = mkOption {
-      type = nullOr (submodule { });
-      default = null;
-    };
+    simple = type: mkOption { inherit type; };
+    nullable =
+      type:
+      mkOption {
+        type = nullOr type;
+        default = null;
+      };
+    empty =
+      _:
+      mkOption {
+        type = nullOr (submodule { });
+        default = null;
+      };
     nullableSubmodule =
       opts:
       mkOption {

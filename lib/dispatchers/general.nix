@@ -1,58 +1,59 @@
 { lib }:
 let
-  inherit (lib) mkOption;
-  inherit (lib.types) enum;
+  inherit (lib) optionalString;
+  inherit (lib.types)
+    enum
+    str
+    number
+    ;
 
   helpers = import ./helpers.nix { inherit lib; };
-  inherit (helpers) luaConcat ifPresent;
+  inherit (helpers) luaConcat;
   inherit (helpers.options)
     nullableSubmodule
-    nullableStr
-    simpleStr
-    nullableNumber
+    simple
+    nullable
     empty
     ;
 
-  passType = nullableSubmodule { window = simpleStr; };
+  passType = nullableSubmodule { window = simple str; };
 
   send_shortcutType = nullableSubmodule {
-    mods = simpleStr;
-    key = simpleStr;
-    window = simpleStr;
+    mods = simple str;
+    key = simple str;
+    window = simple str;
   };
 
   send_key_stateType = nullableSubmodule {
-    mods = simpleStr;
-    key = simpleStr;
-    state = mkOption {
-      type = enum [
-        "up"
-        "down"
-      ];
-    };
-    window = nullableStr;
+    mods = simple str;
+    key = simple str;
+    state = simple (enum [
+      "up"
+      "down"
+    ]);
+    window = nullable str;
   };
 
   dpmsType = nullableSubmodule {
-    action = nullableStr;
-    monitor = nullableStr;
+    action = nullable str;
+    monitor = nullable str;
   };
 in
 {
   options = {
-    exec_cmd = nullableStr;
-    exec_raw = nullableStr;
-    exit = empty;
-    submap = nullableStr;
+    exec_cmd = nullable str;
+    exec_raw = nullable str;
+    exit = empty { };
+    submap = nullable str;
     pass = passType;
     send_shortcut = send_shortcutType;
     send_key_state = send_key_stateType;
-    layout = nullableStr;
+    layout = nullable str;
     dpms = dpmsType;
-    event = nullableStr;
-    global = nullableStr;
-    force_idle = nullableNumber;
-    no_op = empty;
+    event = nullable str;
+    global = nullable str;
+    force_idle = nullable number;
+    no_op = empty { };
   };
 
   builders = {
@@ -60,36 +61,33 @@ in
     exec_raw = cmd: ''hl.dsp.exec_raw("${cmd}")'';
     exit = _: "hl.dsp.exit()";
     submap = name: ''hl.dsp.submap("${name}")'';
-    pass = { window }: "hl.dsp.pass({ ${ifPresent window ''window = "${window}"''} })";
+    pass = args: "hl.dsp.pass({ ${optionalString (args ? window) ''window = "${args.window}"''} })";
     send_shortcut =
-      {
-        mods,
-        key,
-        window,
-      }:
-      ''hl.dsp.send_shortcut({mods = "${mods}", key = "${key}" ${ifPresent window '', window = "${window}"''}})'';
-    send_key_state =
-      {
-        mods,
-        key,
-        state,
-        window,
-      }:
+      args:
       "hl.dsp.send_shortcut({${
         luaConcat [
-          ''mods = "${mods}"''
-          ''key = "${key}"''
-          ''state = "${state}"''
-          (ifPresent window ''window = "${window}"'')
+          ''mods = "${args.mods}"''
+          ''key = "${args.key}"''
+          (optionalString (args ? window) ''window = "${args.window}"'')
+        ]
+      }})";
+    send_key_state =
+      args:
+      "hl.dsp.send_shortcut({${
+        luaConcat [
+          ''mods = "${args.mods}"''
+          ''key = "${args.key}"''
+          ''state = "${args.state}"''
+          (optionalString (args ? window) ''window = "${args.window}"'')
         ]
       }})";
     layout = message: ''hl.dsp.layout("${message}")'';
     dpms =
-      { action, monitor }:
+      args:
       "hl.dsp.dpms({${
         luaConcat [
-          (ifPresent action ''action = "${action}"'')
-          (ifPresent monitor ''monitor = "${monitor}"'')
+          (optionalString (args ? action) ''action = "${args.action}"'')
+          (optionalString (args ? monitor) ''monitor = "${args.monitor}"'')
         ]
       }})";
     event = message: ''hl.dsp.event("${message}")'';

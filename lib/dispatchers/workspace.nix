@@ -1,49 +1,52 @@
 { lib }:
 let
+  inherit (lib) optionalString;
+  inherit (lib.types) str;
+
   helpers = import ./helpers.nix { inherit lib; };
-  inherit (helpers) luaConcat ifPresent;
-  inherit (helpers.options) nullableSubmodule nullableStr simpleStr;
+  inherit (helpers) luaConcat;
+  inherit (helpers.options) nullableSubmodule simple nullable;
 in
 {
   options = nullableSubmodule {
     rename = nullableSubmodule {
-      workspace = simpleStr;
-      name = nullableStr;
+      workspace = simple str;
+      name = nullable str;
     };
     move = nullableSubmodule {
-      workspace = nullableStr;
-      monitor = simpleStr;
+      workspace = nullable str;
+      monitor = simple str;
     };
     swap_monitors = nullableSubmodule {
-      monitor1 = simpleStr;
-      monitor2 = simpleStr;
+      monitor1 = simple str;
+      monitor2 = simple str;
     };
-    toggle_special = nullableStr;
+    toggle_special = nullable str;
   };
 
   builders = {
     rename =
-      { workspace, name }:
+      args:
       "hl.dsp.workspace.rename({${
         luaConcat [
-          ''workspace = "${workspace}"''
-          (ifPresent name ''name = "${name}"'')
+          ''workspace = "${args.workspace}"''
+          (optionalString (args ? name) ''name = "${args.name}"'')
         ]
       }})";
     move =
-      { workspace, monitor }:
+      args:
       "hl.dsp.workspace.move({${
         luaConcat [
-          (ifPresent workspace ''workspace = "${workspace}"'')
-          ''monitor = "${monitor}"''
+          (optionalString (args ? workspace) ''workspace = "${args.workspace}"'')
+          ''monitor = "${args.monitor}"''
         ]
       }})";
     swap_monitors =
-      { monitor1, monitor2 }:
+      args:
       "hl.dsp.workspace.swap_monitors({${
         luaConcat [
-          ''monitor1 = "${monitor1}"''
-          ''monitor2 = "${monitor2}"''
+          ''monitor1 = "${args.monitor1}"''
+          ''monitor2 = "${args.monitor2}"''
         ]
       }})";
     toggle_special = name: ''hl.dsp.workspace.toggle_special("${name}")'';
