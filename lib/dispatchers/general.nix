@@ -1,9 +1,10 @@
 { lib }:
 let
-  inherit (lib) optionalString;
+  inherit (lib) boolToString optionalString;
   inherit (lib.types)
     enum
     str
+    bool
     number
     ;
 
@@ -15,6 +16,21 @@ let
     nullable
     empty
     ;
+
+  focusType = nullableSubmodule {
+    direction = nullable (enum [
+      "left"
+      "right"
+      "up"
+      "down"
+    ]);
+    monitor = nullable str;
+    workspace = nullable str;
+    on_current_monitor = nullable bool;
+    window = nullable str;
+    urgent_or_last = nullable bool;
+    last = nullable bool;
+  };
 
   passType = nullableSubmodule { window = simple str; };
 
@@ -43,6 +59,7 @@ in
   options = {
     exec_cmd = nullable str;
     exec_raw = nullable str;
+    focus = focusType;
     exit = empty { };
     submap = nullable str;
     pass = passType;
@@ -59,6 +76,21 @@ in
   builders = {
     exec_cmd = cmd: ''hl.dsp.exec_cmd("${cmd}")'';
     exec_raw = cmd: ''hl.dsp.exec_raw("${cmd}")'';
+    focus =
+      args:
+      "hl.dsp.focus({${
+        luaConcat [
+          (optionalString (args ? direction) ''direction = "${args.direction}"'')
+          (optionalString (args ? monitor) ''monitor = "${args.monitor}"'')
+          (optionalString (args ? workspace) ''workspace = "${args.workspace}"'')
+          (optionalString (
+            args ? on_current_monitor
+          ) "on_current_monitor = ${boolToString args.on_current_monitor}")
+          (optionalString (args ? window) ''window = "${args.window}"'')
+          (optionalString (args ? urgent_or_last) "urgent_or_last = ${boolToString args.urgent_or_last}")
+          (optionalString (args ? last) "last = ${boolToString args.last}")
+        ]
+      }})";
     exit = _: "hl.dsp.exit()";
     submap = name: ''hl.dsp.submap("${name}")'';
     pass = args: "hl.dsp.pass({ ${optionalString (args ? window) ''window = "${args.window}"''} })";
