@@ -9,10 +9,14 @@ let
   general = import ./general.nix { inherit lib; };
   workspace = import ./workspace.nix { inherit lib; };
   window = import ./window.nix { inherit lib; };
+  group = import ./group.nix { inherit lib; };
+  cursor = import ./cursor.nix { inherit lib; };
 
   luaBuilders = general.builders // {
     workspace = callNestedBuilders workspace.builders;
     window = callNestedBuilders window.builders;
+    group = callNestedBuilders group.builders;
+    cursor = callNestedBuilders cursor.builders;
   };
 in
 {
@@ -20,6 +24,8 @@ in
     options = general.options // {
       workspace = nullableSubmodule workspace.options;
       window = nullableSubmodule window.options;
+      group = nullableSubmodule group.options;
+      cursor = nullableSubmodule cursor.options;
     };
   };
 
