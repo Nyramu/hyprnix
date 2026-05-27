@@ -18,7 +18,6 @@ in
         workspaces
         # animations
         env
-        # exec
         general
         decoration
         input
