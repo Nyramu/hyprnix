@@ -54,15 +54,6 @@
           description = "Whether to enable a fade animation for CTM changes (hyprsunset). 2 means “auto” which disables them on Nvidia.";
         };
 
-        cm_fs_passthrough = mkOption {
-          type = nullOr (ints.between 0 2);
-          default = null;
-          description = ''
-            Passthrough color settings for fullscreen apps when possible.
-            0 - off, 1 - always, 2 - hdr only
-          '';
-        };
-
         cm_enabled = mkOption {
           type = nullOr bool;
           default = null;
@@ -100,6 +91,16 @@
           '';
         };
 
+        non_shader_cm_interop = mkOption {
+          type = nullOr (ints.between 0 2);
+          default = null;
+          description = ''
+            0 - external ctm (hypersunset, etc.) is disabled in fullscreen
+            1 - external ctm is enabled in fullscreen
+            2 - external ctm is disabled for fullscreen photo/video/game content types
+          '';
+        };
+
         cm_sdr_eotf = mkOption {
           type = nullOr str;
           default = null;
@@ -117,11 +118,43 @@
           default = null;
           description = "Enable commit timing proto. Requires restart";
         };
+
+        use_fp16 = mkOption {
+          type = nullOr (ints.between 0 2);
+          default = null;
+          description = ''
+            Use FP16 buffers internally
+            0 - disabled
+            1 - enabled
+            2 - enabled in hdr mode
+          '';
+        };
+
+        keep_unmodified_copy = mkOption {
+          type = nullOr (ints.between 0 2);
+          default = null;
+          description = ''
+            Keep umodified SDR frame copy for sreensharing
+            0 - disabled
+            1 - on
+            2 - auto (enabled in HDR with SDR modifiers)
+            Set to 1 if screenshots are transparent
+          '';
+        };
+
+        use_shader_blur_blend = mkOption {
+          type = nullOr bool;
+          default = null;
+          description = ''
+            Use experimental blurred bg blending (glitched on rotated screens)
+            Set to true if blur is missing with fp16 or keep_unmodified_copy
+          '';
+        };
       };
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings = {
+        wayland.windowManager.hyprland.settings.config = {
           render = lib.mkIf (cfg' != { }) cfg';
         };
       };

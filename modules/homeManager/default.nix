@@ -24,7 +24,7 @@ in
         # gesture
         layout
         # binds
-        # render
+        render
         scrolling
         permissions
         master
