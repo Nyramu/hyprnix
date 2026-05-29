@@ -21,7 +21,7 @@ in
         general
         decoration
         input
-        # gesture
+        gesture
         layout
         # binds
         render
