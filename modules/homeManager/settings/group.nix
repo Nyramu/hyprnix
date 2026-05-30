@@ -320,6 +320,12 @@
             description = "add or remove upper gap";
           };
 
+          middle_click_close = mkOption {
+            type = nullOr bool;
+            default = null;
+            description = "whether middle clicking the groupbar closes the clicked window";
+          };
+
           blur = mkOption {
             type = nullOr bool;
             default = null;
@@ -330,7 +336,7 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings = {
+        wayland.windowManager.hyprland.settings.config = {
           group = lib.mkIf (cfg' != { }) cfg';
         };
       };

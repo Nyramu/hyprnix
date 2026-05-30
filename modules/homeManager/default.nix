@@ -14,7 +14,7 @@ in
         misc
         dwindle
         monitors
-        # group
+        group
         workspaces
         # animations
         env
