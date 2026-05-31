@@ -16,7 +16,8 @@ in
         monitors
         group
         workspaces
-        # animations
+        curve
+        animation
         env
         general
         decoration
