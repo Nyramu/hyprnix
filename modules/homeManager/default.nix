@@ -24,7 +24,6 @@ in
         input
         gesture
         layout
-        # binds
         render
         scrolling
         permissions
