@@ -10,7 +10,7 @@ in
     in
     {
       imports = with modules; [
-        keybinds
+        bind
         misc
         dwindle
         monitors

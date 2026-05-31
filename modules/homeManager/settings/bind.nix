@@ -1,6 +1,6 @@
 { lib, hyprlib, ... }:
 {
-  flake.homeModules.keybinds =
+  flake.homeModules.bind =
     { config, ... }:
     let
       inherit (lib)
@@ -9,7 +9,6 @@
         filterAttrs
         filterAttrsRecursive
         attrNames
-        concatStringsSep
         concatMap
         ;
 
@@ -37,11 +36,9 @@
           _args = [
             key
             (mkLuaInline expr)
-            (mkLuaInline "{${mkFlagsStr value.flags}}")
+            value.flags
           ];
         }) (mkLuaDispatchers value);
-
-      mkFlagsStr = flags: concatStringsSep ", " (attrNames (filterAttrs (_: v: v) flags));
 
       mkLuaDispatchers =
         b:
