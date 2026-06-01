@@ -82,12 +82,37 @@ example of what you could do:
   ];
 
   hyprnix = {
-    enable = true;
-    systemd.enable = true;
-
     settings = {
-      xwayland.enabled = true;
+      bind = {
+        "SUPER + 1".dispatcher.focus.workspace = "1";
+        "SUPER + SHIFT + 1".dispatcher.window.move = {
+          workspace = "1";
+          follow = true;
+        };
+              
+        "SUPER + F".dispatcher.window.fullscreen.mode = "fullscreen";
+        "SUPER + M".dispatcher.window.fullscreen.mode = "maximized";
 
+        "SUPER + mouse:272" = {
+          dispatcher.window.drag = { };
+          flags.mouse = true;
+        };
+        "SUPER + mouse:273" = {
+          dispatcher.window.resize = { };
+          flags.mouse = true;
+        };
+
+        XF86AudioRaiseVolume = {
+          dispatcher.exec_cmd = "${lib.getExe pkgs.pamixer} -i 5";
+          flags.repeating = true;
+        };
+
+        "SUPER + left".dispatcher.focus.direction = "left";
+        "SUPER + right".dispatcher.focus.direction = "right";
+        "SUPER + up".dispatcher.focus.direction = "up";
+        "SUPER + down".dispatcher.focus.direction = "down";
+      };
+    
       gesture = {
         gestures = [
           {
@@ -232,7 +257,7 @@ use it:
 - Enhanced syntax for keybinds, windowrules, gestures and other Hyprland options
 - Hyprnix-exclusive options like `hyprnix.settings.cursor.hyprcursor.*` that
   make the experience more comfortable. More examples in the configurations above
-- Config errors make the rebuild crash, in line with NixOS logic
+- Config errors (mostly) make the rebuild crash, in line with NixOS logic
 - Gets updated whenever Hyprland changes/adds/removes an option
 
 ## Contributing
