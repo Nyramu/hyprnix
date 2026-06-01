@@ -3,17 +3,16 @@
   flake.homeModules.decoration =
     { config, ... }:
     let
-      inherit (lib) mkOption;
       inherit (lib.types)
         bool
-        nullOr
+        number
         str
         path
         ints
         ;
 
-      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred;
-      inherit (hyprlib.types) numbers;
+      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred mkNullable;
+      inherit (hyprlib.types) numbers tuple;
 
       cfg = config.hyprnix.settings.decoration;
 
@@ -31,260 +30,213 @@
     in
     {
       options.hyprnix.settings.decoration = {
-        rounding = mkOption {
-          type = nullOr ints.unsigned;
-          default = null;
-          description = "rounded corners’ radius (in layout px)";
+        rounding = mkNullable {
+          type = ints.unsigned;
+          description = "rounded corners' radius (in layout px)";
         };
 
-        rounding_power = mkOption {
-          type = nullOr (numbers.between 1 10);
-          default = null;
+        rounding_power = mkNullable {
+          type = numbers.between 1 10;
           description = "adjusts the curve used for rounding corners, larger is smoother, 2.0 is a circle, 4.0 is a squircle, 1.0 is a triangular corner";
         };
 
-        active_opacity = mkOption {
-          type = nullOr (numbers.between 0 1);
-          default = null;
+        active_opacity = mkNullable {
+          type = numbers.between 0 1;
           description = "opacity of active windows";
         };
 
-        inactive_opacity = mkOption {
-          type = nullOr (numbers.between 0 1);
-          default = null;
+        inactive_opacity = mkNullable {
+          type = numbers.between 0 1;
           description = "opacity of inactive windows";
         };
 
-        fullscreen_opacity = mkOption {
-          type = nullOr (numbers.between 0 1);
-          default = null;
+        fullscreen_opacity = mkNullable {
+          type = numbers.between 0 1;
           description = "opacity of fullscreen windows";
         };
 
-        dim_modal = mkOption {
-          type = nullOr bool;
-          default = null;
+        dim_modal = mkNullable {
+          type = bool;
           description = "enables dimming of parents of modal windows";
         };
 
-        dim_inactive = mkOption {
-          type = nullOr bool;
-          default = null;
+        dim_inactive = mkNullable {
+          type = bool;
           description = "enables dimming of inactive windows";
         };
 
-        dim_strength = mkOption {
-          type = nullOr (numbers.between 0 1);
-          default = null;
+        dim_strength = mkNullable {
+          type = numbers.between 0 1;
           description = "how much inactive windows should be dimmed";
         };
 
-        dim_special = mkOption {
-          type = nullOr (numbers.between 0 1);
-          default = null;
+        dim_special = mkNullable {
+          type = numbers.between 0 1;
           description = "how much to dim the rest of the screen by when a special workspace is open";
         };
 
-        dim_around = mkOption {
-          type = nullOr (numbers.between 0 1);
-          default = null;
+        dim_around = mkNullable {
+          type = numbers.between 0 1;
           description = "how much the dim_around window rule should dim by";
         };
 
-        screen_shader = mkOption {
-          type = nullOr path;
-          default = null;
+        screen_shader = mkNullable {
+          type = path;
           description = "a path to a custom shader to be applied at the end of rendering.";
         };
 
-        border_part_of_window = mkOption {
-          type = nullOr bool;
-          default = null;
+        border_part_of_window = mkNullable {
+          type = bool;
           description = "whether the window border should be a part of the window";
         };
 
         blur = {
-          enabled = mkOption {
-            type = nullOr bool;
-            default = null;
+          enabled = mkNullable {
+            type = bool;
             description = "enable kawase window background blur";
           };
 
-          size = mkOption {
-            type = nullOr ints.positive;
-            default = null;
+          size = mkNullable {
+            type = ints.positive;
             description = "blur size (distance)";
           };
 
-          passes = mkOption {
-            type = nullOr ints.positive;
-            default = null;
+          passes = mkNullable {
+            type = ints.positive;
             description = "the amount of passes to perform";
           };
 
-          ignore_opacity = mkOption {
-            type = nullOr bool;
-            default = null;
+          ignore_opacity = mkNullable {
+            type = bool;
             description = "make the blur layer ignore the opacity of the window";
           };
 
-          new_optimizations = mkOption {
-            type = nullOr bool;
-            default = null;
+          new_optimizations = mkNullable {
+            type = bool;
             description = "whether to enable further optimizations to the blur. Recommended to leave on, as it will massively improve performance.";
           };
 
-          xray = mkOption {
-            type = nullOr bool;
-            default = null;
+          xray = mkNullable {
+            type = bool;
             description = "if enabled, floating windows will ignore tiled windows in their blur. Only available if new_optimizations is true. Will reduce overhead on floating blur significantly.";
           };
 
-          noise = mkOption {
-            type = nullOr (numbers.between 0 1);
-            default = null;
+          noise = mkNullable {
+            type = numbers.between 0 1;
             description = "how much noise to apply";
           };
 
-          contrast = mkOption {
-            type = nullOr (numbers.between 0 2);
-            default = null;
+          contrast = mkNullable {
+            type = numbers.between 0 2;
             description = "contrast modulation for blur";
           };
 
-          brightness = mkOption {
-            type = nullOr (numbers.between 0 2);
-            default = null;
+          brightness = mkNullable {
+            type = numbers.between 0 2;
             description = "brightness modulation for blur";
           };
 
-          vibrancy = mkOption {
-            type = nullOr (numbers.between 0 1);
-            default = null;
+          vibrancy = mkNullable {
+            type = numbers.between 0 1;
             description = "Increase saturation of blurred colors";
           };
 
-          vibrancy_darkness = mkOption {
-            type = nullOr (numbers.between 0 1);
-            default = null;
+          vibrancy_darkness = mkNullable {
+            type = numbers.between 0 1;
             description = "How strong the effect of vibrancy is on dark areas";
           };
 
-          special = mkOption {
-            type = nullOr bool;
-            default = null;
+          special = mkNullable {
+            type = bool;
             description = "whether to blur behind the special workspace (note: expensive)";
           };
 
-          popups = mkOption {
-            type = nullOr bool;
-            default = null;
+          popups = mkNullable {
+            type = bool;
             description = "whether to blur popups (e.g. right-click menus)";
           };
 
-          popups_ignorealpha = mkOption {
-            type = nullOr (numbers.between 0 1);
-            default = null;
+          popups_ignorealpha = mkNullable {
+            type = numbers.between 0 1;
             description = "works like ignore_alpha in layer rules. If pixel opacity is below set value, will not blur";
           };
 
-          input_methods = mkOption {
-            type = nullOr bool;
-            default = null;
+          input_methods = mkNullable {
+            type = bool;
             description = "whether to blur input methods (e.g. fcitx5)";
           };
 
-          input_methods_ignorealpha = mkOption {
-            type = nullOr (numbers.between 0 1);
-            default = null;
+          input_methods_ignorealpha = mkNullable {
+            type = numbers.between 0 1;
             description = "works like ignore_alpha in layer rules. If pixel opacity is below set value, will not blur";
           };
         };
 
         shadow = {
-          enabled = mkOption {
-            type = nullOr bool;
-            default = null;
+          enabled = mkNullable {
+            type = bool;
             description = "enable drop shadows on windows";
           };
 
-          range = mkOption {
-            type = nullOr ints.positive;
-            default = null;
-            description = "Shadow range (\"size\") in layout px";
+          range = mkNullable {
+            type = ints.positive;
+            description = ''Shadow range ("size") in layout px'';
           };
 
-          render_power = mkOption {
-            type = nullOr (ints.between 1 4);
-            default = null;
+          render_power = mkNullable {
+            type = ints.between 1 4;
             description = "in what power to render the falloff (more power, the faster the falloff)";
           };
 
-          sharp = mkOption {
-            type = nullOr bool;
-            default = null;
+          sharp = mkNullable {
+            type = bool;
             description = "if enabled, will make the shadows sharp, akin to an infinite render power";
           };
 
-          ignore_window = mkOption {
-            type = nullOr bool;
-            default = null;
-            description = "if true, the shadow will not be rendered behind the window itself, only around it.";
+          color = mkNullable {
+            type = str;
+            description = "shadow's color. Alpha dictates shadow's opacity.";
           };
 
-          color = mkOption {
-            type = nullOr str;
-            default = null;
-            description = "shadow’s color. Alpha dictates shadow’s opacity.";
-          };
-
-          color_inactive = mkOption {
-            type = nullOr str;
-            default = null;
+          color_inactive = mkNullable {
+            type = str;
             description = "inactive shadow color. (if not set, will fall back to color)";
           };
 
-          offset = mkOption {
-            type = nullOr (numbers.tuple 2);
-            default = null;
-            description = "shadow’s rendering offset.";
+          offset = mkNullable {
+            type = tuple number 2;
+            description = "shadow's rendering offset.";
           };
 
-          scale = mkOption {
-            type = nullOr (numbers.between 0 1);
-            default = null;
+          scale = mkNullable {
+            type = numbers.between 0 1;
             description = "shadow's scale";
           };
         };
 
         glow = {
-          enabled = mkOption {
-            type = nullOr bool;
-            default = null;
+          enabled = mkNullable {
+            type = bool;
             description = "enable inner glow on windows";
           };
 
-          range = mkOption {
-            type = nullOr ints.positive;
-            default = null;
-            description = "Glow range (\"size\") in layout px";
+          range = mkNullable {
+            type = ints.positive;
+            description = ''Glow range ("size") in layout px'';
           };
 
-          render_power = mkOption {
-            type = nullOr (ints.between 1 4);
-            default = null;
+          render_power = mkNullable {
+            type = ints.between 1 4;
             description = "in what power to render the falloff (more power, the faster the falloff)";
           };
 
-          color = mkOption {
-            type = nullOr str;
-            default = null;
-            description = "glow’s color. Alpha dictates glow’s opacity.";
+          color = mkNullable {
+            type = str;
+            description = "glow's color. Alpha dictates glow's opacity.";
           };
 
-          color_inactive = mkOption {
-            type = nullOr str;
-            default = null;
+          color_inactive = mkNullable {
+            type = str;
             description = "inactive glow color. (if not set, will fall back to color)";
           };
         };
@@ -292,7 +244,7 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings = {
+        wayland.windowManager.hyprland.settings.config = {
           decoration = lib.mkIf (cfg' != { }) cfg';
         };
 

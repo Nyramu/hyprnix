@@ -47,16 +47,12 @@ example of what you could do:
   hyprnix = {
     enable = true;
     systemd.enable = true;
-    xwayland.enable = true;
     settings = {
-      keybinds = {
-        bind = {
-          "SUPER, RETURN" = "exec, kitty";
-          "SUPER, E" = "exit";
-        };
-        bindl = {
-          # more keybinds
-        };
+      xwayland.enabled = true;
+
+      bind = {
+        "SUPER + RETURN".dispatcher.exec_cmd = "kitty";
+        "SUPER + E".dispatcher.exit = {};
       };
     
       monitors = [
@@ -86,32 +82,56 @@ example of what you could do:
   ];
 
   hyprnix = {
-    enable = true;
-    systemd.enable = true;
-    xwayland.enable = true;
     settings = {
+      bind = {
+        "SUPER + 1".dispatcher.focus.workspace = "1";
+        "SUPER + SHIFT + 1".dispatcher.window.move = {
+          workspace = "1";
+          follow = true;
+        };
+              
+        "SUPER + F".dispatcher.window.fullscreen.mode = "fullscreen";
+        "SUPER + M".dispatcher.window.fullscreen.mode = "maximized";
+
+        "SUPER + mouse:272" = {
+          dispatcher.window.drag = { };
+          flags.mouse = true;
+        };
+        "SUPER + mouse:273" = {
+          dispatcher.window.resize = { };
+          flags.mouse = true;
+        };
+
+        XF86AudioRaiseVolume = {
+          dispatcher.exec_cmd = "${lib.getExe pkgs.pamixer} -i 5";
+          flags.repeating = true;
+        };
+
+        "SUPER + left".dispatcher.focus.direction = "left";
+        "SUPER + right".dispatcher.focus.direction = "right";
+        "SUPER + up".dispatcher.focus.direction = "up";
+        "SUPER + down".dispatcher.focus.direction = "down";
+      };
+    
       gesture = {
         gestures = [
           {
             fingers = 3;
             direction = "pinch";
-            action = {
-              fullscreen = "maximize";
-            };
+            action =  "fullscreen";
+            mode = "maximise";
           }
           {
             fingers = 2;
             direction = "up";
-            mod = "SUPER";
+            mods = "SUPER";
             action = "close";
           }
         ];
       };
       
-      windowrules = [
-        {
-          # You can remove name, making it an anonymous windowrule
-          name = "floating-mpv";
+      window_rule = {
+        "floating-mpv" = {
           match.class = "mpv";
           float = true;
           center = true;
@@ -120,7 +140,7 @@ example of what you could do:
             720
           ];
         } 
-      ];
+      };
 
       decoration = {
         rounding = 8;
@@ -139,66 +159,43 @@ example of what you could do:
         hide_on_key_press = true;
       };
 
-      workspaces = [
-        {
-          id = 1;
-          rules = {
-            default = true;
-            persistent = true;
-          };
-        }
-        {
-          id = 2;
-          rules.persistent = true;
-        }
-      ];
-
-      animations = {
-        enabled = true;
-        workspace_wraparound = true;
-        bezier = {
-          holo = [
-            0.23
-            1
-            0.32
-            1
-          ];
-
-          data = [
-            0.16
-            1
-            0.3
-            1
-          ];
+      workspace_rule = {
+        "1".rules = {
+          default = true;
+          persistent = true;
         };
-
-        animations = [
-          {
-            name = "windowsIn";
-            speed = 5;
-            curve = "holo";
-            style = "slide";
-          }
-          {
-            name = "windowsOut";
-            speed = 4;
-            curve = "holo";
-            style = "popin 100%";
-          }
-          {
-            name = "windowsMove";
-            speed = 5;
-            curve = "holo";
-            style = "slide";
-          }
-          {
-            name = "fade";
-            speed = 5;
-            curve = "data";
-          }
-        ];
+        "2".rules.persistent = true;
       };
-      
+
+      curve = {
+        bezier = {
+          holo = [ 0.23 1 0.32 1 ];
+          data = [ 0.16 1 0.3 1 ];
+        };
+      };
+
+      animation = {
+        windowsIn = {
+          speed = 5;
+          bezier = "holo";
+          style = "slide";
+        };
+        windowsOut = {
+          speed = 4;
+          bezier = "holo";
+          style = "popin 100%";
+        };
+        windowsMove = {
+          speed = 5;
+          bezier = "holo";
+          style = "slide";
+        };
+        fade = {
+          speed = 5;
+          bezier = "data";
+        };
+      };
+
       general = {
         border_size = 2;
         layout = "scrolling";
@@ -216,9 +213,28 @@ example of what you could do:
             
       # etc...
     };
-    extraConfig = ''
-      # Extra configuration lines to append to the bottom of
-      # `~/.config/hypr/hyprland.conf`
+
+    # it's recommended to add the "#lua" comment to activate the lua hilight on most editors
+    extraConfig =
+    # lua
+    ''
+      -- Extra configuration lines to append to the bottom of`~/.config/hypr/hyprland.lua`
+      -- Mostly needed to specify special configs that need the lua syntax
+
+      hl.bind(keys, hl.dsp.exec_cmd("amongus"), { release = true, locked = true })
+
+      hl.bind("SUPER + SHIFT + X", function()
+        -- some logic...
+        hl.dispatch(hl.dsp.window.float({ action = "toggle" }))
+      end)
+
+      hl.on("workspace.move_to_monitor", function(ws, m)
+        hl.notification.create({
+          text = "Workspace: " .. ws.name .. " moved to a monitor at x: " .. m.position.x,
+          timeout = 4000,
+          icon = "ok"
+        })
+      end)
     '';
   };
 }
@@ -241,7 +257,7 @@ use it:
 - Enhanced syntax for keybinds, windowrules, gestures and other Hyprland options
 - Hyprnix-exclusive options like `hyprnix.settings.cursor.hyprcursor.*` that
   make the experience more comfortable. More examples in the configurations above
-- Config errors make the rebuild crash, in line with NixOS logic
+- Config errors (mostly) make the rebuild crash, in line with NixOS logic
 - Gets updated whenever Hyprland changes/adds/removes an option
 
 ## Contributing

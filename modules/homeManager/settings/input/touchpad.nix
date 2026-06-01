@@ -1,75 +1,60 @@
-{ lib, ... }:
+{ lib, hyprlib, ... }:
 {
   flake.homeModules.input =
     { ... }:
     let
-      inherit (lib) mkOption;
-      inherit (lib.types)
-        bool
-        number
-        nullOr
-        enum
-        ;
-      inherit (lib.types.ints)
-        between
-        ;
+      inherit (lib.types) bool number enum;
+      inherit (lib.types.ints) between;
+      inherit (hyprlib.utils) mkNullable;
     in
     {
       options.hyprnix.settings.input.touchpad = {
-        disable_while_typing = mkOption {
-          type = nullOr bool;
-          default = null;
+        disable_while_typing = mkNullable {
+          type = bool;
           description = "Disable the touchpad while typing.";
         };
 
-        natural_scroll = mkOption {
-          type = nullOr bool;
-          default = null;
+        natural_scroll = mkNullable {
+          type = bool;
           description = "Inverts scrolling direction. When enabled, scrolling moves content directly, rather than manipulating a scrollbar.";
         };
 
-        scroll_factor = mkOption {
-          type = nullOr number;
-          default = null;
+        scroll_factor = mkNullable {
+          type = number;
           description = "Multiplier applied to the amount of scroll movement.";
         };
 
-        middle_button_emulation = mkOption {
-          type = nullOr bool;
-          default = null;
+        middle_button_emulation = mkNullable {
+          type = bool;
           description = ''
             Sending LMB and RMB simultaneously will be interpreted as a middle click.
             This disables any touchpad area that would normally send a middle click based on location.
           '';
         };
 
-        tap_button_map = mkOption {
-          type = nullOr (enum [
+        tap_button_map = mkNullable {
+          type = enum [
             "lrm"
             "lmr"
-          ]);
-          default = null;
+          ];
           description = "Sets the tap button mapping for touchpad button emulation. Can be one of lrm (default) or lmr (Left, Middle, Right Buttons)";
         };
 
-        clickfinger_behavior = mkOption {
-          type = nullOr bool;
-          default = null;
+        clickfinger_behavior = mkNullable {
+          type = bool;
           description = ''
             Button presses with 1, 2, or 3 fingers will be mapped to LMB, RMB, and MMB respectively.
             This disables interpretation of clicks based on location on the touchpad.
           '';
         };
 
-        tap-to-click = mkOption {
-          type = nullOr bool;
-          default = null;
+        tap-to-click = mkNullable {
+          type = bool;
           description = "Tapping on the touchpad with 1, 2, or 3 fingers will send LMB, RMB, and MMB respectively.";
         };
 
-        drag_lock = mkOption {
-          type = nullOr (between 0 2);
-          default = null;
+        drag_lock = mkNullable {
+          type = between 0 2;
           description = ''
             When enabled, lifting the finger off while dragging will not drop the dragged item.
             0 -> disabled.
@@ -78,27 +63,23 @@
           '';
         };
 
-        tap-and-drag = mkOption {
-          type = nullOr bool;
-          default = null;
+        tap-and-drag = mkNullable {
+          type = bool;
           description = "Sets the tap and drag mode for the touchpad";
         };
 
-        flip_x = mkOption {
-          type = nullOr bool;
-          default = null;
+        flip_x = mkNullable {
+          type = bool;
           description = "inverts the horizontal movement of the touchpad";
         };
 
-        flip_y = mkOption {
-          type = nullOr bool;
-          default = null;
+        flip_y = mkNullable {
+          type = bool;
           description = "inverts the vertical movement of the touchpad";
         };
 
-        drag_3fd = mkOption {
-          type = nullOr (between 0 2);
-          default = null;
+        drag_3fd = mkNullable {
+          type = between 0 2;
           description = ''
             enables three finger drag.
             0 -> disabled.

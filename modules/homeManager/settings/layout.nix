@@ -3,16 +3,10 @@
   flake.homeModules.layout =
     { config, ... }:
     let
-      inherit (lib) mkOption;
-      inherit (lib.types)
-        int
-        listOf
-        nullOr
-        addCheck
-        ;
+      inherit (lib.types) int;
 
-      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred;
-      inherit (hyprlib.types) numbers;
+      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred mkNullable;
+      inherit (hyprlib.types) numbers tuple;
 
       cfg = config.hyprnix.settings.layout;
       cfg' = lib.pipe cfg [
@@ -22,24 +16,16 @@
     in
     {
       options.hyprnix.settings.layout = {
-        single_window_aspect_ratio = mkOption {
-          type = nullOr (
-            addCheck (listOf int) (l: builtins.length l == 2)
-            // {
-              name = "tuple";
-              description = "list with 2 int values";
-            }
-          );
-          default = null;
+        single_window_aspect_ratio = mkNullable {
+          type = tuple int 2;
           description = ''
             whenever only a single window is shown on a screen, add padding so that it conforms to the specified aspect ratio.
             A value like 4 3 on a 16:9 screen will make it a 4:3 window in the middle with padding to the sides.
           '';
         };
 
-        single_window_aspect_ratio_tolerance = mkOption {
-          type = nullOr (numbers.between 0 1);
-          default = null;
+        single_window_aspect_ratio_tolerance = mkNullable {
+          type = numbers.between 0 1;
           description = ''
             sets a tolerance for single_window_aspect_ratio, so that if the padding that would have been added is smaller than the specified fraction of the height or width of the screen, it will not attempt to adjust the window size
           '';
@@ -48,7 +34,7 @@
 
       config = {
         # Only write actually set values to avoid noise in the file
-        wayland.windowManager.hyprland.settings = {
+        wayland.windowManager.hyprland.settings.config = {
           layout = lib.mkIf (cfg' != { }) cfg';
         };
       };

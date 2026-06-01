@@ -21,13 +21,13 @@ in
         name = "numberBetween";
         description = "number between ${toString low} and ${toString high} (both inclusive)";
       };
-
-    tuple =
-      n:
-      (addCheck (listOf number) (x: builtins.length x == n))
-      // {
-        name = "tuple";
-        description = "list with ${toString n} number values";
-      };
   };
+
+  tuple =
+    type: n:
+    (addCheck (listOf type) (x: builtins.length x == n))
+    // {
+      name = "tuple";
+      description = "list... of type '${if type.name == "either" then type.description else type.name}'";
+    };
 }

@@ -10,21 +10,20 @@ in
     in
     {
       imports = with modules; [
-        keybinds
+        bind
         misc
         dwindle
         monitors
         group
-        workspaces
-        animations
+        workspace_rule
+        curve
+        animation
         env
-        exec
         general
         decoration
         input
         gesture
         layout
-        binds
         render
         scrolling
         permissions
@@ -35,7 +34,7 @@ in
         ecosystem
         cursor
         xwayland
-        windowrules
+        window_rule
       ];
 
       options.hyprnix = {
@@ -65,7 +64,7 @@ in
           default = "";
           description = ''
             Extra configuration lines to append to the bottom of
-            `~/.config/hypr/hyprland.conf`.
+            `~/.config/hypr/hyprland.lua`.
           '';
         };
       };
@@ -73,7 +72,7 @@ in
       config = lib.mkIf cfg.enable {
         wayland.windowManager.hyprland = {
           enable = true;
-          configType = "hyprlang";
+          configType = lib.mkForce "lua";
           systemd.enable = cfg.systemd.enable;
           package = cfg.package;
           portalPackage = cfg.portalPackage;
