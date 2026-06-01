@@ -28,8 +28,6 @@ in
     (addCheck (listOf type) (x: builtins.length x == n))
     // {
       name = "tuple";
-      description = "list with ${toString n} values of type ${
-        if type == number then "number" else type.name
-      }";
+      description = "list... of type '${if type.name == "either" then type.description else type.name}'";
     };
 }
