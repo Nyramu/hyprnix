@@ -19,15 +19,15 @@ rec {
   mkNullable =
     {
       type,
-      description,
+      description ? null,
       example ? null,
     }:
     mkOption (
       {
         type = nullOr type;
         default = null;
-        inherit description;
       }
+      // optionalAttrs (description != null) { inherit description; }
       // optionalAttrs (example != null) { inherit example; }
     );
 }
