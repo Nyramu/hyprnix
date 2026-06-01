@@ -3,18 +3,16 @@
   flake.homeModules.animation =
     { config, ... }:
     let
-      inherit (lib) mkOption mapAttrsToList;
+      inherit (lib) mapAttrsToList mkOption;
       inherit (lib.types)
         str
         bool
         attrsOf
-        nullOr
         submodule
         ;
-
       inherit (lib.types.ints) positive;
 
-      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred;
+      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred mkNullable;
 
       cfg = config.hyprnix.settings.animation;
       cfg' = lib.pipe cfg [
@@ -23,9 +21,7 @@
         (map recursiveMkPreferred)
       ];
 
-      mkLuaAnimation = leaf: args: {
-        _args = [ ({ inherit leaf; } // args) ];
-      };
+      mkLuaAnimation = leaf: args: { _args = [ ({ inherit leaf; } // args) ]; };
 
       animationType = submodule {
         options = {
@@ -35,29 +31,26 @@
             description = "whether the animation is enabled";
           };
 
-          speed = mkOption {
+          speed = mkNullable {
             type = positive;
             description = "amount of ds (1ds = 100ms) the animation will take";
             example = 10;
           };
 
-          bezier = mkOption {
-            type = nullOr str;
-            default = null;
+          bezier = mkNullable {
+            type = str;
             description = "bezier curve name";
             example = "linear";
           };
 
-          spring = mkOption {
-            type = nullOr str;
-            default = null;
+          spring = mkNullable {
+            type = str;
             description = "spring curve name";
             example = "rubber";
           };
 
-          style = mkOption {
-            type = nullOr str;
-            default = null;
+          style = mkNullable {
+            type = str;
             description = "(optional) the animation style";
           };
         };

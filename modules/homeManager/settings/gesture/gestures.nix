@@ -11,11 +11,10 @@
         enum
         submodule
         listOf
-        nullOr
         ;
 
       inherit (hyprlib.types) numbers;
-      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred;
+      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred mkNullable;
 
       cfg = config.hyprnix.settings.gesture.gestures;
 
@@ -72,35 +71,30 @@
             example = "close";
           };
 
-          mods = mkOption {
-            type = nullOr str;
-            default = null;
+          mods = mkNullable {
+            type = str;
             description = "optional modifier mask";
             example = "SUPER";
           };
 
-          scale = mkOption {
-            type = nullOr numbers.unsigned;
-            default = null;
+          scale = mkNullable {
+            type = numbers.unsigned;
             description = "optional gesture delta multiplier";
             example = 1.5;
           };
 
-          disable_inhibit = mkOption {
-            type = nullOr bool;
-            default = null;
+          disable_inhibit = mkNullable {
+            type = bool;
             description = "if true, allows the gesture to bypass shortcut inhibitors";
           };
 
-          workspace_name = mkOption {
-            type = nullOr str;
-            default = null;
+          workspace_name = mkNullable {
+            type = str;
             description = "special workspace name";
           };
 
-          mode = mkOption {
-            type = nullOr str;
-            default = null;
+          mode = mkNullable {
+            type = str;
             description = ''
               value depends on the action.
               action is "fullscreen" -> "maximise" to do maximize instead of fullscreen
@@ -109,9 +103,8 @@
             '';
           };
 
-          zoom_level = mkOption {
-            type = nullOr numbers.positive;
-            default = null;
+          zoom_level = mkNullable {
+            type = numbers.positive;
             description = ''zoom factor if action is "cursor_zoom"'';
           };
         };

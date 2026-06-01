@@ -64,7 +64,7 @@ in
           default = "";
           description = ''
             Extra configuration lines to append to the bottom of
-            `~/.config/hypr/hyprland.conf`.
+            `~/.config/hypr/hyprland.lua`.
           '';
         };
       };

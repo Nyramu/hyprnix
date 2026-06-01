@@ -11,14 +11,13 @@
         str
         ints
         either
-        nullOr
         listOf
         addCheck
         submodule
         ;
-      tuple = n: (addCheck (listOf ints.unsigned) (l: builtins.length l == n));
 
-      inherit (hyprlib.types) numbers;
+      inherit (hyprlib.types) numbers tuple;
+      inherit (hyprlib.utils) mkNullable;
 
       cfg = config.hyprnix.settings.windowrules;
 
@@ -49,8 +48,8 @@
         fullscreen = bool;
         maximize = bool;
         fullscreen_state = ints.between 0 3;
-        move = either str (tuple 2);
-        size = either str (tuple 2);
+        move = either str (tuple number 2);
+        size = either str (tuple number 2);
         center = bool;
         pseudo = bool;
         monitor = either ints.unsigned str;
@@ -94,8 +93,8 @@
           '';
         };
         tag = str;
-        max_size = tuple 2;
-        min_size = tuple 2;
+        max_size = tuple number 2;
+        min_size = tuple number 2;
         border_size = ints.unsigned;
         rounding = ints.unsigned;
         rounding_power = numbers.unsigned;
@@ -126,9 +125,8 @@
 
       windowruleType = submodule {
         options = {
-          name = mkOption {
-            type = nullOr str;
-            default = null;
+          name = mkNullable {
+            type = str;
             description = "Name of the windowrule";
           };
 
@@ -136,9 +134,8 @@
             type = submodule {
               options = lib.mapAttrs (
                 _: type:
-                mkOption {
-                  type = nullOr type;
-                  default = null;
+                mkNullable {
+                  type = type;
                 }
               ) matches;
             };
@@ -148,9 +145,8 @@
         }
         // lib.mapAttrs (
           _: type:
-          mkOption {
-            type = nullOr type;
-            default = null;
+          mkNullable {
+            type = type;
           }
         ) effects;
       };

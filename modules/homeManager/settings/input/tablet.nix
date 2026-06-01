@@ -3,68 +3,59 @@
   flake.homeModules.input =
     { ... }:
     let
-      inherit (lib) mkOption;
       inherit (lib.types)
         bool
         str
-        nullOr
+        number
         ints
         ;
-      inherit (hyprlib.types) numbers;
+      inherit (hyprlib.utils) mkNullable;
+      inherit (hyprlib.types) tuple;
     in
     {
       options.hyprnix.settings.input.tablet = {
-        transform = mkOption {
-          type = nullOr (ints.between (-1) 7);
-          default = null;
+        transform = mkNullable {
+          type = ints.between (-1) 7;
           description = "transform the input from tablets. The possible transformations are the same as those of the monitors. -1 means it’s unset.";
         };
 
-        output = mkOption {
-          type = nullOr str;
-          default = null;
+        output = mkNullable {
+          type = str;
           description = "the monitor to bind tablets. Can be current or a monitor name. Leave empty to map across all monitors.";
         };
 
-        region_position = mkOption {
-          type = nullOr (numbers.tuple 2);
-          default = null;
+        region_position = mkNullable {
+          type = tuple number 2;
           description = "position of the mapped region in monitor layout relative to the top left corner of the bound monitor or all monitors.";
         };
 
-        absolute_region_position = mkOption {
-          type = nullOr bool;
-          default = null;
+        absolute_region_position = mkNullable {
+          type = bool;
           description = "whether to treat the region_position as an absolute position in monitor layout. Only applies when output is empty.";
         };
 
-        region_size = mkOption {
-          type = nullOr (numbers.tuple 2);
-          default = null;
+        region_size = mkNullable {
+          type = tuple number 2;
           description = "size of the mapped region. When this variable is set, tablet input will be mapped to the region. [0, 0] or invalid size means unset.";
         };
 
-        relative_input = mkOption {
-          type = nullOr bool;
-          default = null;
+        relative_input = mkNullable {
+          type = bool;
           description = "whether the input should be relative";
         };
 
-        left_handed = mkOption {
-          type = nullOr bool;
-          default = null;
+        left_handed = mkNullable {
+          type = bool;
           description = "if enabled, the tablet will be rotated 180 degrees";
         };
 
-        active_area_size = mkOption {
-          type = nullOr (numbers.tuple 2);
-          default = null;
+        active_area_size = mkNullable {
+          type = tuple number 2;
           description = "size of tablet’s active area in mm";
         };
 
-        active_area_position = mkOption {
-          type = nullOr (numbers.tuple 2);
-          default = null;
+        active_area_position = mkNullable {
+          type = tuple number 2;
           description = "position of the active area in mm";
         };
       };

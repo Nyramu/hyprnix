@@ -12,7 +12,7 @@
       inherit (lib.types) number attrsOf submodule;
 
       inherit (hyprlib.utils) recursiveMkPreferred;
-      inherit (hyprlib.types) numbers;
+      inherit (hyprlib.types) tuple;
 
       cfg = config.hyprnix.settings.curve;
       cfg' = map recursiveMkPreferred (mapBeziers cfg.bezier ++ mapSprings cfg.spring);
@@ -52,7 +52,7 @@
     {
       options.hyprnix.settings.curve = {
         bezier = mkOption {
-          type = attrsOf (numbers.tuple 4);
+          type = attrsOf (tuple number 4);
           default = { };
           example = {
             linear = [

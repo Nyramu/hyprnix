@@ -1,22 +1,16 @@
-{ lib, ... }:
+{ lib, hyprlib, ... }:
 {
   flake.homeModules.input =
     { ... }:
     let
-      inherit (lib) mkOption;
-      inherit (lib.types)
-        bool
-        nullOr
-        ;
-      inherit (lib.types.ints)
-        between
-        ;
+      inherit (lib.types) bool;
+      inherit (lib.types.ints) between;
+      inherit (hyprlib.utils) mkNullable;
     in
     {
       options.hyprnix.settings.input.virtualkeyboard = {
-        share_states = mkOption {
-          type = nullOr (between 0 2);
-          default = null;
+        share_states = mkNullable {
+          type = between 0 2;
           description = ''
             Unify key down states and modifier states with other keyboards.
             0 -> no.
@@ -25,9 +19,8 @@
           '';
         };
 
-        release_pressed_on_close = mkOption {
-          type = nullOr bool;
-          default = null;
+        release_pressed_on_close = mkNullable {
+          type = bool;
           description = "Release all pressed keys by virtual keyboard on close.";
         };
       };

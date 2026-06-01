@@ -1,18 +1,17 @@
-{ lib, ... }:
+{ lib, hyprlib, ... }:
 {
   flake.homeModules.env =
     { config, ... }:
     let
-      inherit (lib) mkOption mapAttrsToList;
-
+      inherit (lib) mapAttrsToList;
       inherit (lib.types)
         str
         number
-
-        nullOr
         attrsOf
         either
         ;
+
+      inherit (hyprlib.utils) mkNullable;
 
       cfg = config.hyprnix.settings.env;
       cfg' = mapAttrsToList mkLuaEnv cfg;
@@ -25,9 +24,8 @@
       };
     in
     {
-      options.hyprnix.settings.env = mkOption {
-        type = nullOr (attrsOf (either str number));
-        default = null;
+      options.hyprnix.settings.env = mkNullable {
+        type = attrsOf (either str number);
         description = "Environment variables to set, as name-value pairs.";
         example = {
           HYPRLAND_TRACE = 1;

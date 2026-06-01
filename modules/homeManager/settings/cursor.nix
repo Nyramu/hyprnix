@@ -3,16 +3,14 @@
   flake.homeModules.cursor =
     { config, ... }:
     let
-      inherit (lib) mkOption;
       inherit (lib.types)
         bool
         str
-        nullOr
         package
         ints
         ;
 
-      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred;
+      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred mkNullable;
       inherit (hyprlib.types) numbers;
 
       cfg = config.hyprnix.settings.cursor;
@@ -34,21 +32,18 @@
     in
     {
       options.hyprnix.settings.cursor = {
-        invisible = mkOption {
-          type = nullOr bool;
-          default = null;
+        invisible = mkNullable {
+          type = bool;
           description = "don't render cursors";
         };
 
-        sync_gsettings_theme = mkOption {
-          type = nullOr bool;
-          default = null;
+        sync_gsettings_theme = mkNullable {
+          type = bool;
           description = "sync xcursor theme with gsettings, it applies cursor-theme and cursor-size on theme load to gsettings making most CSD gtk based clients use same xcursor theme and size.";
         };
 
-        no_hardware_cursors = mkOption {
-          type = nullOr (ints.between 0 2);
-          default = null;
+        no_hardware_cursors = mkNullable {
+          type = ints.between 0 2;
           description = ''
             disables hardware cursors.
             0 - use hw cursors if possible,
@@ -57,9 +52,8 @@
           '';
         };
 
-        no_break_fs_vrr = mkOption {
-          type = nullOr (ints.between 0 2);
-          default = null;
+        no_break_fs_vrr = mkNullable {
+          type = ints.between 0 2;
           description = ''
             disables scheduling new frames on cursor movement for fullscreen apps with VRR enabled to avoid framerate spikes
             (may require no_hardware_cursors = 1)
@@ -67,42 +61,36 @@
           '';
         };
 
-        min_refresh_rate = mkOption {
-          type = nullOr ints.unsigned;
-          default = null;
+        min_refresh_rate = mkNullable {
+          type = ints.unsigned;
           description = ''
             minimum refresh rate for cursor movement when no_break_fs_vrr = 1
             Set to minimum supported refresh rate or higher
           '';
         };
 
-        hotspot_padding = mkOption {
-          type = nullOr ints.unsigned;
-          default = null;
+        hotspot_padding = mkNullable {
+          type = ints.unsigned;
           description = "the padding, in logical px, between screen edges and the cursor";
         };
 
-        inactive_timeout = mkOption {
-          type = nullOr numbers.unsigned;
-          default = null;
+        inactive_timeout = mkNullable {
+          type = numbers.unsigned;
           description = "in seconds, after how many seconds of cursor’s inactivity to hide it. Set to 0 for never.";
         };
 
-        no_warps = mkOption {
-          type = nullOr bool;
-          default = null;
+        no_warps = mkNullable {
+          type = bool;
           description = "if true, will not warp the cursor in many cases (focusing, keybinds, etc)";
         };
 
-        persistent_warps = mkOption {
-          type = nullOr bool;
-          default = null;
+        persistent_warps = mkNullable {
+          type = bool;
           description = "When a window is refocused, the cursor returns to its last position relative to that window, rather than to the centre.";
         };
 
-        warp_on_change_workspace = mkOption {
-          type = nullOr (ints.between 0 2);
-          default = null;
+        warp_on_change_workspace = mkNullable {
+          type = ints.between 0 2;
           description = ''
             Move the cursor to the last focused window after changing the workspace.
             Options:
@@ -111,9 +99,8 @@
           '';
         };
 
-        warp_on_toggle_special = mkOption {
-          type = nullOr (ints.between 0 2);
-          default = null;
+        warp_on_toggle_special = mkNullable {
+          type = ints.between 0 2;
           description = ''
             Move the cursor to the last focused window when toggling a special workspace.
             Options:
@@ -122,51 +109,43 @@
           '';
         };
 
-        default_monitor = mkOption {
-          type = nullOr str;
-          default = null;
+        default_monitor = mkNullable {
+          type = str;
           description = "the name of a default monitor for the cursor to be set to on startup (see hyprctl monitors for names)";
         };
 
-        zoom_factor = mkOption {
-          type = nullOr numbers.positive;
-          default = null;
+        zoom_factor = mkNullable {
+          type = numbers.positive;
           description = "the factor to zoom by around the cursor. Like a magnifying glass. Minimum 1.0 (meaning no zoom)";
         };
 
-        zoom_rigid = mkOption {
-          type = nullOr bool;
-          default = null;
+        zoom_rigid = mkNullable {
+          type = bool;
           description = "whether the zoom should follow the cursor rigidly (cursor is always centered if it can be) or loosely";
         };
 
-        zoom_detached_camera = mkOption {
-          type = nullOr bool;
-          default = null;
+        zoom_detached_camera = mkNullable {
+          type = bool;
           description = "detach the camera from the mouse when zoomed in, only ever moving the camera to keep the mouse in view when it goes past the screen edges";
         };
 
-        hide_on_key_press = mkOption {
-          type = nullOr bool;
-          default = null;
+        hide_on_key_press = mkNullable {
+          type = bool;
           description = "Hides the cursor when you press any key until the mouse is moved.";
         };
 
-        hide_on_touch = mkOption {
-          type = nullOr bool;
-          default = null;
+        hide_on_touch = mkNullable {
+          type = bool;
           description = "Hides the cursor when the last input was a touch input until a mouse input is done.";
         };
 
-        hide_on_tablet = mkOption {
-          type = nullOr bool;
-          default = null;
+        hide_on_tablet = mkNullable {
+          type = bool;
           description = "Hides the cursor when the last input was a tablet input until a mouse input is done.";
         };
 
-        use_cpu_buffer = mkOption {
-          type = nullOr (ints.between 0 2);
-          default = null;
+        use_cpu_buffer = mkNullable {
+          type = ints.between 0 2;
           description = ''
             (NVIDIA Only)
             Makes HW cursors use a CPU buffer. Required on NVIDIA to have HW cursors.
@@ -174,40 +153,34 @@
           '';
         };
 
-        warp_back_after_non_mouse_input = mkOption {
-          type = nullOr bool;
-          default = null;
+        warp_back_after_non_mouse_input = mkNullable {
+          type = bool;
           description = "Warp the cursor back to where it was after using a non-mouse input to move it, and then returning back to mouse.";
         };
 
-        zoom_disable_aa = mkOption {
-          type = nullOr bool;
-          default = null;
+        zoom_disable_aa = mkNullable {
+          type = bool;
           description = "disable antialiasing when zooming, which means things will be pixelated instead of blurry";
         };
 
         hyprcursor = {
-          enable = mkOption {
-            type = nullOr bool;
-            default = null;
+          enable = mkNullable {
+            type = bool;
             description = "whether to enable hyprcursor support";
           };
 
-          package = mkOption {
-            type = nullOr package;
-            default = null;
+          package = mkNullable {
+            type = package;
             description = "set cursor's package to install";
           };
 
-          name = mkOption {
-            type = nullOr str;
-            default = null;
+          name = mkNullable {
+            type = str;
             description = "set cursor's name. Requires Hyprland restart.";
           };
 
-          size = mkOption {
-            type = nullOr ints.positive;
-            default = null;
+          size = mkNullable {
+            type = ints.positive;
             description = "set cursor's size. Requires Hyprland restart.";
           };
         };

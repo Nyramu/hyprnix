@@ -1,4 +1,8 @@
 { lib }:
+let
+  inherit (lib) mkOption optionalAttrs;
+  inherit (lib.types) nullOr;
+in
 rec {
   filterValidAttrs = (
     a:
@@ -11,4 +15,19 @@ rec {
   mkPreferred = lib.mkOverride 75;
 
   recursiveMkPreferred = (lib.mapAttrsRecursive (_: mkPreferred));
+
+  mkNullable =
+    {
+      type,
+      description,
+      example ? null,
+    }:
+    mkOption (
+      {
+        type = nullOr type;
+        default = null;
+        inherit description;
+      }
+      // optionalAttrs (example != null) { inherit example; }
+    );
 }

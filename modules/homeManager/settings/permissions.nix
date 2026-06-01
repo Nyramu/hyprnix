@@ -9,7 +9,6 @@
         path
         str
 
-        nullOr
         enum
         listOf
         submodule
@@ -53,14 +52,12 @@
         };
       };
 
-      mkLuaPermission = p: {
-        _args = [ p ];
-      };
+      mkLuaPermission = p: { _args = [ p ]; };
     in
     {
       options.hyprnix.settings = {
         permissions = mkOption {
-          type = nullOr (listOf permissionType);
+          type = listOf permissionType;
           default = [ ];
           description = "Hyprland permissions configuration";
           example = [

@@ -3,18 +3,17 @@
   flake.homeModules.workspaces =
     { config, ... }:
     let
-      inherit (lib) mkOption mapAttrsToList;
+      inherit (lib) mapAttrsToList mkOption;
 
       inherit (lib.types)
         bool
         str
         ints
-        nullOr
         attrsOf
         submodule
         ;
 
-      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred;
+      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred mkNullable;
 
       cfg = config.hyprnix.settings.workspace_rule;
       cfg' = lib.pipe cfg [
@@ -30,87 +29,73 @@
 
       ruleType = submodule {
         options = {
-          monitor = mkOption {
-            type = nullOr str;
-            default = null;
+          monitor = mkNullable {
+            type = str;
             description = "Binds a workspace to a monitor.";
           };
 
-          default = mkOption {
-            type = nullOr bool;
-            default = null;
+          default = mkNullable {
+            type = bool;
             description = "Whether this workspace should be the default workspace for the given monitor";
           };
 
-          gaps_in = mkOption {
-            type = nullOr ints.unsigned;
-            default = null;
+          gaps_in = mkNullable {
+            type = ints.unsigned;
             description = "Set the gaps between windows (equivalent to General->gaps_in)";
           };
 
-          gaps_out = mkOption {
-            type = nullOr ints.unsigned;
-            default = null;
+          gaps_out = mkNullable {
+            type = ints.unsigned;
             description = "Set the gaps between windows and monitor edges (equivalent to General->gaps_out)";
           };
 
-          border_size = mkOption {
-            type = nullOr ints.unsigned;
-            default = null;
+          border_size = mkNullable {
+            type = ints.unsigned;
             description = "Set the border size around windows (equivalent to General->border_size)";
           };
 
-          no_border = mkOption {
-            type = nullOr bool;
-            default = null;
+          no_border = mkNullable {
+            type = bool;
             description = "Whether to disable borders";
           };
 
-          no_shadow = mkOption {
-            type = nullOr bool;
-            default = null;
+          no_shadow = mkNullable {
+            type = bool;
             description = "Whether to disable shadows";
           };
 
-          no_rounding = mkOption {
-            type = nullOr bool;
-            default = null;
+          no_rounding = mkNullable {
+            type = bool;
             description = "Whether to disable rounded windows";
           };
 
-          decorate = mkOption {
-            type = nullOr bool;
-            default = null;
+          decorate = mkNullable {
+            type = bool;
             description = "Whether to draw window decorations or not";
           };
 
-          persistent = mkOption {
-            type = nullOr bool;
-            default = null;
+          persistent = mkNullable {
+            type = bool;
             description = "Keep this workspace alive even if empty and inactive";
           };
 
-          on_created_empty = mkOption {
-            type = nullOr str;
-            default = null;
+          on_created_empty = mkNullable {
+            type = str;
             description = "A command to be executed once a workspace is created empty (i.e. not created by moving a window to it)";
           };
 
-          default_name = mkOption {
-            type = nullOr str;
-            default = null;
+          default_name = mkNullable {
+            type = str;
             description = "A default name for the workspace.";
           };
 
-          layout = mkOption {
-            type = nullOr str;
-            default = null;
+          layout = mkNullable {
+            type = str;
             description = "The layout to use for this workspace.";
           };
 
-          animation = mkOption {
-            type = nullOr str;
-            default = null;
+          animation = mkNullable {
+            type = str;
             description = "The animation style to use for this workspace.";
           };
         };
@@ -120,7 +105,7 @@
     {
       options.hyprnix.settings.workspace_rule = mkOption {
         type = attrsOf ruleType;
-        default = null;
+        default = { };
         description = "Hyprland workspace rules configuration.";
         example = {
           "1" = {
