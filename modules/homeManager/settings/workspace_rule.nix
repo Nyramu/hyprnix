@@ -1,6 +1,6 @@
 { lib, hyprlib, ... }:
 {
-  flake.homeModules.workspaces =
+  flake.homeModules.workspace_rule =
     { config, ... }:
     let
       inherit (lib) mapAttrsToList mkOption;
@@ -17,7 +17,7 @@
 
       cfg = config.hyprnix.settings.workspace_rule;
       cfg' = lib.pipe cfg [
-        (mapAttrsToList (id: rules: rules // { workspace = id; }))
+        (mapAttrsToList (workspace: rules: rules // { inherit workspace; }))
         (map filterValidAttrs)
         (map recursiveMkPreferred)
         (map mkLuaWorkspace)

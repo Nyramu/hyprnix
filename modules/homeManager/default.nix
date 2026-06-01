@@ -15,7 +15,7 @@ in
         dwindle
         monitors
         group
-        workspaces
+        workspace_rule
         curve
         animation
         env
@@ -34,7 +34,7 @@ in
         ecosystem
         cursor
         xwayland
-        # windowrules
+        window_rule
       ];
 
       options.hyprnix = {
