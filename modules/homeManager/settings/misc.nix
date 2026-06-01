@@ -138,7 +138,7 @@
           type = str;
           description = ''
             The title regex to be used for windows that should not be swallowed by the windows specified in swallow_regex(e.g. wev).
-            The regex is matched against the parent (e.g. Kitty) window’s title on the assumption that it changes to whatever process it’s running.
+            The regex is matched against the parent (e.g. Kitty) window's title on the assumption that it changes to whatever process it's running.
           '';
         };
 
@@ -200,7 +200,7 @@
 
         render_unfocused_fps = mkNullable {
           type = positive;
-          description = "the maximum limit for render_unfocused windows’ fps in the background (see also Window-Rules - render_unfocused)";
+          description = "the maximum limit for render_unfocused windows' fps in the background (see also Window-Rules - render_unfocused)";
         };
 
         disable_xdg_env_checks = mkNullable {
@@ -215,7 +215,7 @@
 
         lockdead_screen_delay = mkNullable {
           type = between 100 5000;
-          description = "delay after which the \"lockdead\" screen will appear in case a lockscreen app fails to cover all the outputs (5 seconds max)";
+          description = ''delay after which the "lockdead" screen will appear in case a lockscreen app fails to cover all the outputs (5 seconds max)'';
         };
 
         enable_anr_dialog = mkNullable {

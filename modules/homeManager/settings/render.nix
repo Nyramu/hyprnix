@@ -29,7 +29,7 @@
           description = ''
             Enables direct scanout. Direct scanout attempts to reduce lag when there is only one fullscreen application on a screen (e.g. game).
             It is also recommended to set this to 0 if the fullscreen application shows graphical glitches.
-            0 - off, 1 - on, 2 - auto (on with content type ‘game’)
+            0 - off, 1 - on, 2 - auto (on with content type "game")
           '';
         };
 

@@ -16,7 +16,7 @@
       options.hyprnix.settings.input.tablet = {
         transform = mkNullable {
           type = ints.between (-1) 7;
-          description = "transform the input from tablets. The possible transformations are the same as those of the monitors. -1 means it’s unset.";
+          description = "transform the input from tablets. The possible transformations are the same as those of the monitors. -1 means it's unset.";
         };
 
         output = mkNullable {
@@ -51,7 +51,7 @@
 
         active_area_size = mkNullable {
           type = tuple number 2;
-          description = "size of tablet’s active area in mm";
+          description = "size of tablet's active area in mm";
         };
 
         active_area_position = mkNullable {

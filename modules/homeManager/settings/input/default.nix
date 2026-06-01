@@ -89,7 +89,7 @@
             "flat"
             "custom"
           ];
-          description = "Sets the cursor acceleration profile. Leave empty to use libinput’s default mode for your input device.";
+          description = "Sets the cursor acceleration profile. Leave empty to use libinput's default mode for your input device.";
         };
 
         force_no_accel = mkNullable {
@@ -181,7 +181,7 @@
 
         mouse_refocus = mkNullable {
           type = bool;
-          description = "If disabled, mouse focus won’t switch to the hovered window unless the mouse crosses a window boundary when follow_mouse=1.";
+          description = "If disabled, mouse focus won't switch to the hovered window unless the mouse crosses a window boundary when follow_mouse=1.";
         };
 
         float_switch_override_focus = mkNullable {

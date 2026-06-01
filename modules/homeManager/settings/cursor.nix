@@ -47,7 +47,7 @@
           description = ''
             disables hardware cursors.
             0 - use hw cursors if possible,
-            1 - don’t use hw cursors,
+            1 - don't use hw cursors,
             2 - auto (disable when tearing)
           '';
         };
@@ -57,7 +57,7 @@
           description = ''
             disables scheduling new frames on cursor movement for fullscreen apps with VRR enabled to avoid framerate spikes
             (may require no_hardware_cursors = 1)
-            0 - off, 1 - on, 2 - auto (on with content type ‘game’)
+            0 - off, 1 - on, 2 - auto (on with content type "game")
           '';
         };
 
@@ -76,7 +76,7 @@
 
         inactive_timeout = mkNullable {
           type = numbers.unsigned;
-          description = "in seconds, after how many seconds of cursor’s inactivity to hide it. Set to 0 for never.";
+          description = "in seconds, after how many seconds of cursor's inactivity to hide it. Set to 0 for never.";
         };
 
         no_warps = mkNullable {

@@ -90,7 +90,7 @@
 
         group_on_movetoworkspace = mkNullable {
           type = bool;
-          description = "whether using movetoworkspace[silent] will merge the window into the workspace’s solitary unlocked group";
+          description = "whether using movetoworkspace[silent] will merge the window into the workspace's solitary unlocked group";
         };
 
         col.border_active = mkNullable {
@@ -226,17 +226,17 @@
 
           text_color_inactive = mkNullable {
             type = str;
-            description = "color for inactive windows’ titles in the groupbar (if unset, defaults to text_color)";
+            description = "color for inactive windows' titles in the groupbar (if unset, defaults to text_color)";
           };
 
           text_color_locked_active = mkNullable {
             type = str;
-            description = "color for the active window’s title in a locked group (if unset, defaults to text_color)";
+            description = "color for the active window's title in a locked group (if unset, defaults to text_color)";
           };
 
           text_color_locked_inactive = mkNullable {
             type = str;
-            description = "color for inactive windows’ titles in locked groups (if unset, defaults to text_color_inactive)";
+            description = "color for inactive windows' titles in locked groups (if unset, defaults to text_color_inactive)";
           };
 
           col.active = mkNullable {

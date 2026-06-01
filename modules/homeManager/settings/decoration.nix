@@ -32,7 +32,7 @@
       options.hyprnix.settings.decoration = {
         rounding = mkNullable {
           type = ints.unsigned;
-          description = "rounded corners’ radius (in layout px)";
+          description = "rounded corners' radius (in layout px)";
         };
 
         rounding_power = mkNullable {
@@ -180,7 +180,7 @@
 
           range = mkNullable {
             type = ints.positive;
-            description = "Shadow range (\"size\") in layout px";
+            description = ''Shadow range ("size") in layout px'';
           };
 
           render_power = mkNullable {
@@ -195,7 +195,7 @@
 
           color = mkNullable {
             type = str;
-            description = "shadow’s color. Alpha dictates shadow’s opacity.";
+            description = "shadow's color. Alpha dictates shadow's opacity.";
           };
 
           color_inactive = mkNullable {
@@ -205,7 +205,7 @@
 
           offset = mkNullable {
             type = tuple number 2;
-            description = "shadow’s rendering offset.";
+            description = "shadow's rendering offset.";
           };
 
           scale = mkNullable {
@@ -222,7 +222,7 @@
 
           range = mkNullable {
             type = ints.positive;
-            description = "Glow range (\"size\") in layout px";
+            description = ''Glow range ("size") in layout px'';
           };
 
           render_power = mkNullable {
@@ -232,7 +232,7 @@
 
           color = mkNullable {
             type = str;
-            description = "glow’s color. Alpha dictates glow’s opacity.";
+            description = "glow's color. Alpha dictates glow's opacity.";
           };
 
           color_inactive = mkNullable {

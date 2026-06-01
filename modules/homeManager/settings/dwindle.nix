@@ -38,8 +38,8 @@
         smart_split = mkNullable {
           type = bool;
           description = ''
-            If enabled, allows a more precise control over the window split direction based on the cursor’s position.
-            The window is conceptually divided into four triangles, and cursor’s triangle determines the split direction.
+            If enabled, allows a more precise control over the window split direction based on the cursor's position.
+            The window is conceptually divided into four triangles, and cursor's triangle determines the split direction.
             This feature also turns on preserve_split.
           '';
         };
@@ -47,8 +47,8 @@
         smart_resizing = mkNullable {
           type = bool;
           description = ''
-            If enabled, resizing direction will be determined by the mouse’s position on the window (nearest to which corner).
-            Else, it is based on the window’s tiling position.
+            If enabled, resizing direction will be determined by the mouse's position on the window (nearest to which corner).
+            Else, it is based on the window's tiling position.
           '';
         };
 

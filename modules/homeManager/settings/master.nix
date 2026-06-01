@@ -93,8 +93,8 @@
         smart_resizing = mkNullable {
           type = bool;
           description = ''
-            if enabled, resizing direction will be determined by the mouse’s position on the window (nearest to which corner).
-            Else, it is based on the window’s tiling position.
+            if enabled, resizing direction will be determined by the mouse's position on the window (nearest to which corner).
+            Else, it is based on the window's tiling position.
           '';
         };
 

@@ -144,7 +144,7 @@
 
           border_overlap = mkNullable {
             type = bool;
-            description = "if true, windows snap such that only one border’s worth of space is between them";
+            description = "if true, windows snap such that only one border's worth of space is between them";
           };
 
           respect_gaps = mkNullable {
