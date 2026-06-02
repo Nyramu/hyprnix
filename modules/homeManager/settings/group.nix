@@ -12,8 +12,14 @@
         ints
         ;
 
-      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred mkNullable;
+      inherit (hyprlib.utils)
+        filterValidAttrs
+        mkPreferred
+        recursiveMkPreferred
+        mkNullable
+        ;
       inherit (hyprlib.types) numbers;
+      inherit (hyprlib.types.hyprland) gradient;
 
       font_weight = either (ints.between 100 1000) (enum [
         "thin"
@@ -32,16 +38,27 @@
 
       cfg = config.hyprnix.settings.group;
       cfg' = lib.pipe cfg [
+        flattenCols
         filterValidAttrs
-        parseColOptions
         recursiveMkPreferred
+        fixColsPriority
       ];
 
-      parseColOptions = (
+      flattenCols =
         attrs:
-        (lib.mapAttrs (k: v: if lib.isAttrs v then parseColOptions v else v) (removeAttrs attrs [ "col" ]))
+        (removeAttrs attrs [ "col" ])
         // lib.mapAttrs' (n: v: lib.nameValuePair "col.${n}" v) (attrs.col or { })
-      );
+        // {
+          groupbar =
+            (removeAttrs attrs.groupbar [ "col" ])
+            // lib.mapAttrs' (n: v: lib.nameValuePair "col.${n}" v) (attrs.groupbar.col or { });
+        };
+
+      fixColsPriority =
+        let
+          wrapCols = lib.mapAttrs (n: v: if lib.hasPrefix "col." n && !(v ? _type) then mkPreferred v else v);
+        in
+        attrs: (wrapCols attrs) // { groupbar = wrapCols (attrs.groupbar or { }); };
     in
     {
       options.hyprnix.settings.group = {
@@ -94,22 +111,22 @@
         };
 
         col.border_active = mkNullable {
-          type = str;
+          type = gradient;
           description = "active group border color";
         };
 
         col.border_inactive = mkNullable {
-          type = str;
+          type = gradient;
           description = "inactive (out of focus) group border color";
         };
 
         col.border_locked_active = mkNullable {
-          type = str;
+          type = gradient;
           description = "active locked group border color";
         };
 
         col.border_locked_inactive = mkNullable {
-          type = str;
+          type = gradient;
           description = "inactive locked group border color";
         };
 
@@ -240,22 +257,22 @@
           };
 
           col.active = mkNullable {
-            type = str;
+            type = gradient;
             description = "active group bar background color";
           };
 
           col.inactive = mkNullable {
-            type = str;
+            type = gradient;
             description = "inactive (out of focus) group bar background color";
           };
 
           col.locked_active = mkNullable {
-            type = str;
+            type = gradient;
             description = "active locked group bar background color";
           };
 
           col.locked_inactive = mkNullable {
-            type = str;
+            type = gradient;
             description = "inactive locked group bar background color";
           };
 

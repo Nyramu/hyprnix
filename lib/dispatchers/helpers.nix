@@ -11,16 +11,7 @@ let
     optionalString
     boolToString
     ;
-  inherit (lib.types)
-    nullOr
-    submodule
-    either
-    listOf
-    str
-    number
-    enum
-    addCheck
-    ;
+  inherit (lib.types) nullOr submodule;
 in
 rec {
   luaConcat = fields: concatStringsSep ", " (filter (s: s != "") fields);
@@ -85,28 +76,4 @@ rec {
         default = null;
       };
   };
-
-  hyprlandTypes =
-    let
-      inherit (options) simple nullable;
-    in
-    {
-      gradient = either str (submodule {
-        options = {
-          _type = mkOption {
-            type = enum [ "gradient" ];
-            default = "gradient";
-            readOnly = true;
-            internal = true;
-          };
-          colors = simple (listOf str);
-          angle = nullable number;
-        };
-      });
-
-      vec2 = (addCheck (listOf number) (x: builtins.length x == 2)) // {
-        name = "vec2";
-        description = "list with 2 number values";
-      };
-    };
 }

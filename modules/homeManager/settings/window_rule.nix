@@ -16,6 +16,7 @@
         ;
 
       inherit (hyprlib.types) numbers tuple;
+      inherit (hyprlib.types.hyprland) gradient;
       inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred mkNullable;
 
       cfg = config.hyprnix.settings.window_rule;
@@ -24,19 +25,6 @@
         (map filterValidAttrs)
         (map recursiveMkPreferred)
       ];
-
-      gradientType = submodule {
-        options = {
-          _type = mkOption {
-            type = enum [ "gradient" ];
-            default = "gradient";
-            readOnly = true;
-            internal = true;
-          };
-          colors = mkOption { type = either str (tuple str 2); };
-          angle = mkNullable { type = number; };
-        };
-      };
 
       matches = {
         class = str;
@@ -99,7 +87,7 @@
         no_max_size = bool;
         stay_focused = bool;
         animation = str;
-        border_color = either str gradientType;
+        border_color = gradient;
         idle_inhibit = enum [
           "none"
           "always"
