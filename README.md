@@ -119,7 +119,7 @@ example of what you could do:
             fingers = 3;
             direction = "pinch";
             action =  "fullscreen";
-            mode = "maximise";
+            mode = "maximize";
           }
           {
             fingers = 2;
