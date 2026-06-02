@@ -10,13 +10,17 @@ let
     ;
 
   helpers = import ./helpers.nix { inherit lib; };
-  inherit (helpers) luaConcat luaField hyprlandTypes;
+  inherit (helpers) luaConcat luaField;
   inherit (helpers.options)
     nullableSubmodule
     simple
     nullable
     empty
     ;
+
+  types = import ../types.nix { inherit lib; };
+  inherit (types) tuple;
+  inherit (types.hyprland) gradient;
 
   actionType = enum [
     "toggle"
@@ -115,8 +119,8 @@ let
       str
       number
       bool
-      hyprlandTypes.vec2
-      hyprlandTypes.gradient
+      (tuple number 2)
+      gradient
     ]);
     window = nullable str;
   };

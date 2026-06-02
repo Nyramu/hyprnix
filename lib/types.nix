@@ -1,6 +1,23 @@
 { lib }:
 let
-  inherit (lib.types) number addCheck listOf;
+  inherit (lib) mkOption;
+  inherit (lib.types)
+    str
+    number
+    addCheck
+    listOf
+    either
+    submodule
+    ;
+  utils = import ./utils.nix { inherit lib; };
+  inherit (utils) mkNullable;
+
+  complexGradientType = submodule {
+    options = {
+      colors = mkOption { type = listOf str; };
+      angle = mkNullable { type = number; };
+    };
+  };
 in
 {
   numbers = {
@@ -21,6 +38,10 @@ in
         name = "numberBetween";
         description = "number between ${toString low} and ${toString high} (both inclusive)";
       };
+  };
+
+  hyprland = {
+    gradient = either str complexGradientType;
   };
 
   tuple =

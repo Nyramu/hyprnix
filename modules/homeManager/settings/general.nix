@@ -12,20 +12,32 @@
         ;
       inherit (lib.types.ints) between positive unsigned;
 
-      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred mkNullable;
+      inherit (hyprlib.utils)
+        filterValidAttrs
+        mkPreferred
+        recursiveMkPreferred
+        mkNullable
+        ;
+      inherit (hyprlib.types.hyprland) gradient;
 
       cfg = config.hyprnix.settings.general;
       cfg' = lib.pipe cfg [
+        flattenCols
         filterValidAttrs
-        parseColOptions
         recursiveMkPreferred
+        fixColsPriority
       ];
 
-      parseColOptions = (
+      flattenCols =
         attrs:
         (removeAttrs attrs [ "col" ])
-        // lib.mapAttrs' (n: v: lib.nameValuePair "col.${n}" v) (attrs.col or { })
-      );
+        // lib.mapAttrs' (n: v: lib.nameValuePair "col.${n}" v) (attrs.col or { });
+
+      fixColsPriority =
+        let
+          wrapCols = lib.mapAttrs (n: v: if lib.hasPrefix "col." n && !(v ? _type) then mkPreferred v else v);
+        in
+        attrs: (wrapCols attrs);
     in
     {
       options.hyprnix.settings.general = {
@@ -55,22 +67,22 @@
         };
 
         col.inactive_border = mkNullable {
-          type = str;
+          type = gradient;
           description = "border color for inactive windows";
         };
 
         col.active_border = mkNullable {
-          type = str;
+          type = gradient;
           description = "border color for the active window";
         };
 
         col.nogroup_border = mkNullable {
-          type = str;
+          type = gradient;
           description = "inactive border color for window that cannot be added to a group (see denywindowfromgroup dispatcher)";
         };
 
         col.nogroup_border_active = mkNullable {
-          type = str;
+          type = gradient;
           description = "active border color for window that cannot be added to a group";
         };
 
