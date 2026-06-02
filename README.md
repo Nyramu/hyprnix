@@ -119,7 +119,7 @@ example of what you could do:
             fingers = 3;
             direction = "pinch";
             action =  "fullscreen";
-            mode = "maximise";
+            mode = "maximize";
           }
           {
             fingers = 2;
@@ -160,11 +160,11 @@ example of what you could do:
       };
 
       workspace_rule = {
-        "1".rules = {
+        "1" = {
           default = true;
           persistent = true;
         };
-        "2".rules.persistent = true;
+        "2".persistent = true;
       };
 
       curve = {
@@ -214,7 +214,7 @@ example of what you could do:
       # etc...
     };
 
-    # it's recommended to add the "#lua" comment to activate the lua hilight on most editors
+    # it's recommended to add the "#lua" comment to activate the lua highlight on most editors
     extraConfig =
     # lua
     ''

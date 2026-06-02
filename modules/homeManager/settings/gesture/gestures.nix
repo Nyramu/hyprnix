@@ -97,7 +97,7 @@
             type = str;
             description = ''
               value depends on the action.
-              action is "fullscreen" -> "maximise" to do maximize instead of fullscreen
+              action is "fullscreen" -> "maximize" to do maximize instead of fullscreen
               action is "float" -> "float" or "tile" to force a direction of floating
               action is "cursor_zoom" -> "mult" to use a multiplier or "live" to update continuously during the pinch
             '';
