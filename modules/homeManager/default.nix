@@ -35,6 +35,7 @@ in
         cursor
         xwayland
         window_rule
+        layer_rule
       ];
 
       options.hyprnix = {
