@@ -1,0 +1,17 @@
+name: Nix Flake Check
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  check:
+    runs-on: codeberg-tiny
+    steps:
+      - uses: https://data.forgejo.org/actions/checkout@v6
+
+      - uses: https://github.com/cachix/install-nix-action@v31
+
+      - name: Run nix flake check
+        run: nix flake check
