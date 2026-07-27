@@ -10,16 +10,19 @@
         filterAttrsRecursive
         attrNames
         concatMap
+        genAttrs
         ;
 
       inherit (lib.types)
         attrsOf
         bool
+        nullOr
         submodule
         ;
 
       inherit (lib.generators) mkLuaInline;
       inherit (hyprlib.dispatchers) mkLuaDispatcher;
+      inherit (hyprlib.utils) mkNullable;
 
       dispatcherType = hyprlib.dispatchers.type;
 
@@ -47,13 +50,34 @@
         in
         map (name: mkLuaDispatcher name active.${name}) (attrNames active);
 
+      flagNames = [
+        "locked"
+        "release"
+        "click"
+        "drag"
+        "long_press"
+        "repeating"
+        "non_consuming"
+        "auto_consuming"
+        "mouse"
+        "transparent"
+        "ignore_mods"
+        "dont_inhibit"
+        "submap_universal"
+        "allow_input_capture"
+      ];
+
+      flagType = mkNullable { type = bool; };
+
       bindType = submodule {
         options = {
           dispatcher = mkOption {
             type = dispatcherType;
           };
           flags = mkOption {
-            type = attrsOf bool;
+            type = nullOr (submodule {
+              options = genAttrs flagNames (_: flagType);
+            });
             default = { };
           };
         };
