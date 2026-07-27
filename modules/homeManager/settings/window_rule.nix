@@ -36,6 +36,7 @@
         float = bool;
         fullscreen = bool;
         pin = bool;
+        stableid = str;
         focus = bool;
         group = bool;
         modal = bool;
@@ -71,6 +72,7 @@
           "activate"
           "activatefocus"
           "fullscreenoutput"
+          "x11configurerequest"
         ];
         content = enum [
           "none"
@@ -126,6 +128,13 @@
         scroll_mouse = numbers.unsigned;
         scroll_touchpad = numbers.unsigned;
         confine_pointer = bool;
+        tonemap = enum [
+          "on"
+          "off"
+          "clamp"
+          "limited"
+        ];
+        no_xdg_drags = bool;
       };
 
       window_ruleType = submodule {

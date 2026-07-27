@@ -6,13 +6,13 @@
       inherit (lib.types)
         bool
         number
-        str
         path
         ints
         ;
 
       inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred mkNullable;
       inherit (hyprlib.types) numbers tuple;
+      inherit (hyprlib.types.hyprland) gradient;
 
       cfg = config.hyprnix.settings.decoration;
 
@@ -194,12 +194,12 @@
           };
 
           color = mkNullable {
-            type = str;
+            type = gradient;
             description = "shadow's color. Alpha dictates shadow's opacity.";
           };
 
           color_inactive = mkNullable {
-            type = str;
+            type = gradient;
             description = "inactive shadow color. (if not set, will fall back to color)";
           };
 
@@ -231,13 +231,25 @@
           };
 
           color = mkNullable {
-            type = str;
+            type = gradient;
             description = "glow's color. Alpha dictates glow's opacity.";
           };
 
           color_inactive = mkNullable {
-            type = str;
+            type = gradient;
             description = "inactive glow color. (if not set, will fall back to color)";
+          };
+        };
+
+        motion_blur = {
+          enabled = mkNullable {
+            type = bool;
+            description = "enable motion blur on moving / resizing windows";
+          };
+
+          samples = mkNullable {
+            type = ints.positive;
+            description = "The amount of samples to render. More will mean clearer blur, at the cost of more compute.";
           };
         };
       };
