@@ -36,6 +36,7 @@
         float = bool;
         fullscreen = bool;
         pin = bool;
+        stableid = str;
         focus = bool;
         group = bool;
         modal = bool;
