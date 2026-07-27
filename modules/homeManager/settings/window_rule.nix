@@ -133,6 +133,7 @@
           "clamp"
           "limited"
         ];
+        no_xdg_drags = bool;
       };
 
       window_ruleType = submodule {
