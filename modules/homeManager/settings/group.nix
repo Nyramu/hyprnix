@@ -136,6 +136,11 @@
             description = "enables groupbars";
           };
 
+          disable_when_only = mkNullable {
+            type = bool;
+            description = "disable if contains single window. Considered only if enabled == true";
+          };
+
           font_family = mkNullable {
             type = str;
             description = "font used to display groupbar titles, use misc:font_family if not specified";
