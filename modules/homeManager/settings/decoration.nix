@@ -240,6 +240,18 @@
             description = "inactive glow color. (if not set, will fall back to color)";
           };
         };
+
+        motion_blur = {
+          enabled = mkNullable {
+            type = bool;
+            description = "enable motion blur on moving / resizing windows";
+          };
+
+          samples = mkNullable {
+            type = ints.positive;
+            description = "The amount of samples to render. More will mean clearer blur, at the cost of more compute.";
+          };
+        };
       };
 
       config = {
