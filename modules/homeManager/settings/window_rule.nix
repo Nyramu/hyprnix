@@ -72,6 +72,7 @@
           "activate"
           "activatefocus"
           "fullscreenoutput"
+          "x11configurerequest"
         ];
         content = enum [
           "none"
