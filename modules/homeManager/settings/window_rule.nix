@@ -127,6 +127,12 @@
         scroll_mouse = numbers.unsigned;
         scroll_touchpad = numbers.unsigned;
         confine_pointer = bool;
+        tonemap = enum [
+          "on"
+          "off"
+          "clamp"
+          "limited"
+        ];
       };
 
       window_ruleType = submodule {
