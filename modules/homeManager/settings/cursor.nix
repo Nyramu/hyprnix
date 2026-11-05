@@ -99,6 +99,17 @@
           '';
         };
 
+        warp_on_monitor_change = mkNullable {
+          type = ints.between (-1) 2;
+          description = ''
+            Move the cursor to the last focused window when focusing a different monitor.
+            Options:
+            -1 (Same as warp_on_change_workspace),
+            0 (Disabled), 1 (Enabled),
+            2 (Force - ignores cursor.no_warps option)
+          '';
+        };
+
         warp_on_toggle_special = mkNullable {
           type = ints.between 0 2;
           description = ''

@@ -100,11 +100,6 @@
           '';
         };
 
-        layers_hog_keyboard_focus = mkNullable {
-          type = bool;
-          description = "If true, will make keyboard-interactive layers keep their focus on mouse move (e.g. wofi, bemenu)";
-        };
-
         animate_manual_resizes = mkNullable {
           type = bool;
           description = "If true, will animate manual window resizes/moves";
@@ -181,8 +176,11 @@
         };
 
         exit_window_retains_fullscreen = mkNullable {
-          type = bool;
-          description = "if true, closing a fullscreen window makes the next focused window fullscreen";
+          type = between 0 3;
+          description = ''
+            whether closing a fullscreen window makes the next focused window fullscreen.
+            0 - disable, 1 - enable, 2 - only when grouped, 3 - only when not grouped
+          '';
         };
 
         initial_workspace_tracking = mkNullable {
@@ -231,6 +229,27 @@
         size_limits_tiled = mkNullable {
           type = bool;
           description = "whether to apply min_size and max_size rules to tiled windows";
+        };
+
+        bell_sound = mkNullable {
+          type = str;
+          description = "path to custom wav/ogg system bell. `none` or an empty string mute it. `default` uses the system's current one.";
+        };
+
+        new_float_force_onscreen = mkNullable {
+          type = between 0 2;
+          description = ''
+            whether new floating windows must be placed on-screen.
+            0 - no limit, 1 - must be partially visible, 2 - must be fully in-bounds
+          '';
+        };
+
+        float_force_onscreen = mkNullable {
+          type = between 0 2;
+          description = ''
+            whether existing floating windows must remain on-screen.
+            0 - no limit, 1 - must be partially visible, 2 - must be fully in-bounds
+          '';
         };
 
         disable_watchdog_warning = mkNullable {

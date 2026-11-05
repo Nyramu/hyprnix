@@ -45,6 +45,7 @@ let
     state = simple (enum [
       "up"
       "down"
+      "repeat"
     ]);
     window = nullable str;
   };
@@ -70,6 +71,7 @@ in
     global = nullable str;
     force_idle = nullable number;
     no_op = empty { };
+    reload_config = empty { };
   };
 
   builders = {
@@ -102,7 +104,7 @@ in
       }})";
     send_key_state =
       args:
-      "hl.dsp.send_shortcut({${
+      "hl.dsp.send_key_state({${
         luaConcat [
           (luaField args "mods")
           (luaField args "key")
@@ -123,5 +125,6 @@ in
     global = message: ''hl.dsp.global("${message}")'';
     force_idle = seconds: "hl.dsp.force_idle(${seconds})";
     no_op = _: "hl.dsp.no_op()";
+    reload_config = _: "hl.dsp.reload_config()";
   };
 }

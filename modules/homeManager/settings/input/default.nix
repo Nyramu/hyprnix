@@ -217,6 +217,11 @@
             2 force enables all scroll wheel events to be handled.
           '';
         };
+
+        swallow_focus_click = mkNullable {
+          type = bool;
+          description = "If enabled, the click that changes window focus is not forwarded to the window.";
+        };
       };
 
       config = {

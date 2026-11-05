@@ -11,6 +11,7 @@ in
     {
       imports = with modules; [
         bind
+        binds
         misc
         dwindle
         monitors
@@ -32,6 +33,7 @@ in
         quirks
         debug
         ecosystem
+        layers
         cursor
         xwayland
         window_rule

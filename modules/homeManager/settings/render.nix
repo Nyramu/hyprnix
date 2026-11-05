@@ -133,6 +133,19 @@
             Set to true if blur is missing with fp16 or keep_unmodified_copy
           '';
         };
+
+        async_commit = mkNullable {
+          type = bool;
+          description = "Submit eligible output commits asynchronously.";
+        };
+
+        not_shown_fifo_lock = mkNullable {
+          type = ints.between 0 2;
+          description = ''
+            Control fifo locking for not shown surfaces.
+            0 - always, 1 - ignore_unfocused, 2 - never
+          '';
+        };
       };
 
       config = {

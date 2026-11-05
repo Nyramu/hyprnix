@@ -53,8 +53,11 @@
         };
 
         follow_focus = mkNullable {
-          type = bool;
-          description = "when a window is focused, should the layout move to bring it into view automatically";
+          type = ints.between 0 2;
+          description = ''
+            Behaviour of the scrolling tape when a window is in focus.
+            0 - focus never moves the tape, 1 - focus may move the tape and mouse clicks always do, 2 - focus may move the tape.
+          '';
         };
 
         follow_min_visible = mkNullable {
