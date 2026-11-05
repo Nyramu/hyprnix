@@ -4,5 +4,6 @@
     types = import "${self.outPath}/lib/types.nix" { inherit lib; };
     utils = import "${self.outPath}/lib/utils.nix" { inherit lib; };
     dispatchers = import "${self.outPath}/lib/dispatchers" { inherit lib; };
+    lua = import "${self.outPath}/lib/lua.nix" { inherit lib; };
   };
 }
