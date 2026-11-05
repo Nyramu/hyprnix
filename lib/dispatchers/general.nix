@@ -71,6 +71,7 @@ in
     global = nullable str;
     force_idle = nullable number;
     no_op = empty { };
+    reload_config = empty { };
   };
 
   builders = {
@@ -124,5 +125,6 @@ in
     global = message: ''hl.dsp.global("${message}")'';
     force_idle = seconds: "hl.dsp.force_idle(${seconds})";
     no_op = _: "hl.dsp.no_op()";
+    reload_config = _: "hl.dsp.reload_config()";
   };
 }

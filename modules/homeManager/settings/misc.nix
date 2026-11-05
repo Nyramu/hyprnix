@@ -231,6 +231,27 @@
           description = "whether to apply min_size and max_size rules to tiled windows";
         };
 
+        bell_sound = mkNullable {
+          type = str;
+          description = "path to custom wav/ogg system bell. `none` or an empty string mute it. `default` uses the system's current one.";
+        };
+
+        new_float_force_onscreen = mkNullable {
+          type = between 0 2;
+          description = ''
+            whether new floating windows must be placed on-screen.
+            0 - no limit, 1 - must be partially visible, 2 - must be fully in-bounds
+          '';
+        };
+
+        float_force_onscreen = mkNullable {
+          type = between 0 2;
+          description = ''
+            whether existing floating windows must remain on-screen.
+            0 - no limit, 1 - must be partially visible, 2 - must be fully in-bounds
+          '';
+        };
+
         disable_watchdog_warning = mkNullable {
           type = bool;
           description = "whether to disable the warning about not using start-hyprland";

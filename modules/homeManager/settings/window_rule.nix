@@ -135,6 +135,8 @@
           "limited"
         ];
         no_xdg_drags = bool;
+        no_glow = bool;
+        no_wobble = bool;
       };
 
       window_ruleType = submodule {

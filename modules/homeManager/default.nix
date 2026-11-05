@@ -11,6 +11,7 @@ in
     {
       imports = with modules; [
         bind
+        binds
         misc
         dwindle
         monitors

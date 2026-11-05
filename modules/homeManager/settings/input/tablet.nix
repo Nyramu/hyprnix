@@ -14,6 +14,11 @@
     in
     {
       options.hyprnix.settings.input.tablet = {
+        enabled = mkNullable {
+          type = bool;
+          description = "Whether input is enabled for tablets.";
+        };
+
         transform = mkNullable {
           type = ints.between (-1) 7;
           description = "transform the input from tablets. The possible transformations are the same as those of the monitors. -1 means it's unset.";
