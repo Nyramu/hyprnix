@@ -103,11 +103,11 @@
           description = "claims support for all cm proto features (requires restart)";
         };
 
-        invalidate_fp16 = mkNullable {
-          type = ints.between 0 2;
+        invalidate_buffers = mkNullable {
+          type = ints.between 0 1;
           description = ''
-            Allow fp16 buffer invalidation (invalidation increases performance but produces glitches on some systems).
-            0 - not allowed, 1 - allowed, 2 - not allowed on nvidia
+            Allow buffer invalidation (invalidation increases performance but produces glitches on some systems).
+            0 - disable, 1 - enable
           '';
         };
       };

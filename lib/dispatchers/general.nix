@@ -45,6 +45,7 @@ let
     state = simple (enum [
       "up"
       "down"
+      "repeat"
     ]);
     window = nullable str;
   };
@@ -102,7 +103,7 @@ in
       }})";
     send_key_state =
       args:
-      "hl.dsp.send_shortcut({${
+      "hl.dsp.send_key_state({${
         luaConcat [
           (luaField args "mods")
           (luaField args "key")

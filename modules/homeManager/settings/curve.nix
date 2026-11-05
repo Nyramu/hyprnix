@@ -45,7 +45,7 @@
         options = {
           mass = mkOption { type = number; };
           stiffness = mkOption { type = number; };
-          dampening = mkOption { type = number; };
+          damping = mkOption { type = number; };
         };
       };
     in
@@ -71,7 +71,7 @@
             rubber = {
               mass = 1;
               stiffness = 70;
-              dampening = 10;
+              damping = 10;
             };
           };
         };

@@ -32,6 +32,7 @@ in
         quirks
         debug
         ecosystem
+        layers
         cursor
         xwayland
         window_rule

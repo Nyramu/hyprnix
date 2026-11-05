@@ -100,11 +100,6 @@
           '';
         };
 
-        layers_hog_keyboard_focus = mkNullable {
-          type = bool;
-          description = "If true, will make keyboard-interactive layers keep their focus on mouse move (e.g. wofi, bemenu)";
-        };
-
         animate_manual_resizes = mkNullable {
           type = bool;
           description = "If true, will animate manual window resizes/moves";
@@ -181,8 +176,11 @@
         };
 
         exit_window_retains_fullscreen = mkNullable {
-          type = bool;
-          description = "if true, closing a fullscreen window makes the next focused window fullscreen";
+          type = between 0 3;
+          description = ''
+            whether closing a fullscreen window makes the next focused window fullscreen.
+            0 - disable, 1 - enable, 2 - only when grouped, 3 - only when not grouped
+          '';
         };
 
         initial_workspace_tracking = mkNullable {
