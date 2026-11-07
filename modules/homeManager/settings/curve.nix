@@ -11,11 +11,11 @@
         ;
       inherit (lib.types) number attrsOf submodule;
 
-      inherit (hyprlib.utils) recursiveMkPreferred;
+      inherit (hyprlib.lua) renderSection;
       inherit (hyprlib.types) tuple;
 
       cfg = config.hyprnix.settings.curve;
-      cfg' = map recursiveMkPreferred (mapBeziers cfg.bezier ++ mapSprings cfg.spring);
+      cfg' = mapBeziers cfg.bezier ++ mapSprings cfg.spring;
 
       mapBeziers =
         beziers:
@@ -78,8 +78,11 @@
       };
 
       config = {
-        wayland.windowManager.hyprland.settings = {
-          curve = cfg';
+        wayland.windowManager.hyprland.extraLuaFiles = lib.mkIf (cfg' != [ ]) {
+          "animations" = {
+            # Curves must be defined before animations reference them.
+            content = lib.mkBefore (renderSection "curve" cfg');
+          };
         };
       };
     };
