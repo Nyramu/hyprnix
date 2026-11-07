@@ -16,7 +16,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     import-tree.url = "github:vic/import-tree";
-    ndg.url = "github:feel-co/ndg/v2.8.1";
+    ndg.url = "github:feel-co/ndg/v2.10.2";
   };
 
   outputs =
