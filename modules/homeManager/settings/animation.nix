@@ -12,13 +12,13 @@
         ;
       inherit (lib.types.ints) positive;
 
-      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred mkNullable;
+      inherit (hyprlib.utils) filterValidAttrs mkNullable;
+      inherit (hyprlib.lua) renderSection;
 
       cfg = config.hyprnix.settings.animation;
       cfg' = lib.pipe cfg [
         filterValidAttrs
         (mapAttrsToList mkLuaAnimation)
-        (map recursiveMkPreferred)
       ];
 
       mkLuaAnimation = leaf: args: { _args = [ ({ inherit leaf; } // args) ]; };
@@ -70,8 +70,10 @@
       };
 
       config = {
-        wayland.windowManager.hyprland.settings = {
-          animation = cfg';
+        wayland.windowManager.hyprland.extraLuaFiles = lib.mkIf (cfg' != [ ]) {
+          "animations" = {
+            content = lib.mkAfter (renderSection "animation" cfg');
+          };
         };
       };
     };

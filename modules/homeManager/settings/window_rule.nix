@@ -17,13 +17,13 @@
 
       inherit (hyprlib.types) numbers tuple;
       inherit (hyprlib.types.hyprland) gradient;
-      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred mkNullable;
+      inherit (hyprlib.utils) filterValidAttrs mkNullable;
+      inherit (hyprlib.lua) renderSection;
 
       cfg = config.hyprnix.settings.window_rule;
       cfg' = lib.pipe cfg [
         (mapAttrsToList (name: params: params // { inherit name; }))
         (map filterValidAttrs)
-        (map recursiveMkPreferred)
       ];
 
       matches = {
@@ -176,8 +176,10 @@
         };
       };
       config = {
-        wayland.windowManager.hyprland.settings = {
-          window_rule = cfg';
+        wayland.windowManager.hyprland.extraLuaFiles = lib.mkIf (cfg' != [ ]) {
+          "windowrules" = {
+            content = renderSection "window_rule" cfg';
+          };
         };
       };
     };

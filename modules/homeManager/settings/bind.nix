@@ -23,6 +23,7 @@
       inherit (lib.generators) mkLuaInline;
       inherit (hyprlib.dispatchers) mkLuaDispatcher;
       inherit (hyprlib.utils) mkNullable;
+      inherit (hyprlib.lua) renderSection;
 
       dispatcherType = hyprlib.dispatchers.type;
 
@@ -97,8 +98,11 @@
       };
 
       config = {
-        wayland.windowManager.hyprland.settings = {
-          bind = lib.mkIf (cfg' != { }) cfg';
+        wayland.windowManager.hyprland.extraLuaFiles = lib.mkIf (cfg' != [ ]) {
+          "keybindings" = {
+            autoLoad = true;
+            content = renderSection "bind" cfg';
+          };
         };
       };
     };

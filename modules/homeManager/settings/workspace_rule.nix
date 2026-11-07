@@ -13,13 +13,13 @@
         submodule
         ;
 
-      inherit (hyprlib.utils) filterValidAttrs recursiveMkPreferred mkNullable;
+      inherit (hyprlib.utils) filterValidAttrs mkNullable;
+      inherit (hyprlib.lua) renderSection;
 
       cfg = config.hyprnix.settings.workspace_rule;
       cfg' = lib.pipe cfg [
         (mapAttrsToList (workspace: rules: rules // { inherit workspace; }))
         (map filterValidAttrs)
-        (map recursiveMkPreferred)
         (map mkLuaWorkspace)
       ];
 
@@ -117,8 +117,10 @@
       };
 
       config = {
-        wayland.windowManager.hyprland.settings = {
-          workspace_rule = lib.mkIf (cfg != { }) cfg';
+        wayland.windowManager.hyprland.extraLuaFiles = lib.mkIf (cfg' != [ ]) {
+          "workspacerules" = {
+            content = renderSection "workspace_rule" cfg';
+          };
         };
       };
     };
